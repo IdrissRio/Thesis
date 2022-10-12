@@ -1,0 +1,79 @@
+\documentclass[a4paper, 10pt, twoside, openright]{book}
+
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage[usenames]{color}
+%\usepackage{pstricks, pst-node}
+\usepackage{fancyhdr}
+\usepackage{sectsty}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{bibunits}
+\usepackage{url}
+\usepackage{float}
+\usepackage[fit]{truncate}
+\usepackage{epstopdf}
+\usepackage{multirow}
+\usepackage{alltt}
+\usepackage{array}
+%\usepackage{algorithmic}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+
+\usepackage{lic_bok}
+
+% page margins
+\newcommand{\myPage}{
+ \setlength{\voffset}{1pt}
+ \setlength{\hoffset}{-2.4in}
+ \setlength{\textheight}{640pt}
+ \setlength{\textwidth}{327pt}
+ \setlength{\oddsidemargin}{93pt}
+ \setlength{\evensidemargin}{195pt}
+ \setlength{\marginparsep}{0pt}
+}
+\myPage
+
+\title{Thesis title here}
+\author{First Name Last Name}
+\begin{document}
+\thispagestyle{empty}
+\usefont{T1}{phv}{l}{n}
+\begin{tikzpicture}
+\node at (9,11)
+    [rectangle, fill=white, draw=white,
+    minimum width=18cm, minimum height=22cm]
+    {};
+% help lines: (0,0) is bottom left, and (12,20) is top right
+%\draw[help lines,step=.2] (0,0) grid (18,22);
+%\draw[help lines,line width=.6pt,step=1] (0,0) grid (18,22);
+
+% Text
+\node at (9,10.5) [text width = 12cm, align = right]%, fill=blue!10]
+  (text) {%
+\huge\textbf{THESIS TITLE}\\[9.5cm]
+\huge\textbf{AUTHOR NAME}\\[1.5cm]
+\large Doctoral Dissertation, 2015\\[0.4cm]
+\Large Department of Computer Science\\[0.1cm]
+Lund University
+};
+% Line
+\node at (0,5.3) [inner sep = 0pt] (line-left) {};
+\node at (18,5.3) [inner sep = 0pt] (line-right) {};
+\path[thick] (line-left) edge (line-right);
+% sigill
+\node at (5,4.2)
+    [ellipse, fill=white, draw=white,
+    minimum height = 3.8cm, minimum width = 3.8cm] {};
+\node at (5,3.1) (pic) {\scalebox{0.44}{\includegraphics{lomacdsvs.eps}}};
+\node at (5,1.2) 
+    [rectangle, fill=white, draw=white, 
+    minimum width = 5cm, minimum height = 2cm] {};
+% pic
+%\node at (7,12) {\pgfimage[width=8cm]{frontpage/figs/drawing}};
+\end{tikzpicture}
+\end{document}
+

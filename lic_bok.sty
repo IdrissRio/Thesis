@@ -1,0 +1,137 @@
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesPackage{lic_bok} [2002/12/18 v0.1]
+
+%\newcommand{\todo}[1]{}
+%\newcommand{\todo}[1]{
+%       \begin{description} 
+%               \item[\textsc{ToDo:}] \framebox{\parbox[t]{0.75\textwidth}{#1}} 
+%       \end{description}
+%}
+
+%\newcommand{\todo}[1]{\framebox{TODO: #1}}
+
+%\addtolength{\topmargin}{-5\baselineskip}
+%\addtolength{\headsep}{\baselineskip}
+%\addtolength{\textheight}{8\baselineskip}
+%\addtolength{\textwidth}{-2mm}
+%\addtolength{\evensidemargin}{-4mm}
+%\addtolength{\oddsidemargin}{4mm}
+%\addtolength{\headsep}{-2mm}
+
+\newlength{\bbls}
+\setlength{\bbls}{\baselineskip}
+\widowpenalty=2000
+\clubpenalty=4000
+
+%\addtolength{\evensidemargin}{-2mm}
+%\addtolength{\oddsidemargin}{-3mm}
+%\addtolength{\textwidth}{6mm}
+
+\newenvironment{proof}{\noindent\bfseries Proof \normalfont\nolinebreak\phantom{.}}
+{
+        {\nolinebreak\nopagebreak[4]\hspace{\stretch{1}}\mbox{
+                \raisebox{\height}{\fbox{}}}\par
+        }
+        \pagebreak[1]\medskip
+}
+
+\newcommand\blankpagestyle{empty}
+\def\cleardoublepage{\clearpage
+  \if@twoside \ifodd\c@page
+  \else
+    \hbox{}\thispagestyle{\blankpagestyle}\newpage
+    \if@twocolumn\hbox{}\newpage\fi
+  \fi\fi
+}
+
+\def\CSLTH{Department of Computer Science\\Lund University}
+
+
+%\def\fnum@figure{figurename~\thefigure\normalfont }
+
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+  \sbox\@tempboxa{\bfseries #1:~ \normalfont  #2}%
+  \ifdim \wd\@tempboxa >\hsize
+    \bfseries #1:~ \normalfont  #2\par
+  \else
+    \global \@minipagefalse
+   \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip}
+
+%\if@twoside
+%\renewcommand{\chaptermark}[1]{\markboth{\normalfont \scshape \if@mainmatter \thechapter.\ \fi #1}{}}
+%\renewcommand{\sectionmark}[1]{\markright{\normalfont \scshape \thesection\ #1}{}}
+%\else
+%\fi
+
+%\renewcommand\chapter{\if@openright\cleardoublepage\else\clearpage\fi
+%                    \thispagestyle{empty}%
+%                    \global\@topnum\z@
+%                    \@afterindentfalse
+%                    \secdef\@chapter\@schapter}
+%\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
+%                       \if@mainmatter
+%                         \refstepcounter{chapter}%
+%                         \typeout{\@chapapp\space\thechapter.}%
+%                         \addcontentsline{toc}{chapter}%
+%                                   {\protect\numberline{\thechapter}#1}%
+%                       \else
+%                         \addcontentsline{toc}{chapter}{#1}%
+%                       \fi
+%                    \else
+%                      \addcontentsline{toc}{chapter}{#1}%
+%                    \fi
+%                    \chaptermark{#1}%
+%                    \addtocontents{lof}{\protect\addvspace{10\p@}}%
+%                    \addtocontents{lot}{\protect\addvspace{10\p@}}%
+%                    \if@twocolumn
+%                      \@topnewpage[\@makechapterhead{#2}]%
+%                    \else
+%                      \@makechapterhead{#2}%
+%                      \@afterheading
+%                    \fi}
+%\def\@makechapterhead#1{%
+%  \noindent\begin{minipage}{\textwidth}
+%  %\vspace{5\bbls}
+%  \rule{0pt}{4\bbls}
+%  {\parindent \z@ \raggedright \normalfont
+%    \ifnum \c@secnumdepth >\m@ne
+%      \if@mainmatter
+%        \Large\scshape \@chapapp\space \thechapter \normalfont 
+%        \par\nobreak
+%      \fi
+%    \fi
+%    \interlinepenalty\@M
+%    \mbox{\parbox[b]{\textwidth}{\raggedright\Huge\scshape#1\par\nobreak}
+%    \rule{0pt}{5\bbls}}
+%    \rule{0pt}{1.5\bbls}
+%    \hrule\mbox{}
+%    \rule{0pt}{3.5\bbls}
+%    %\vspace*{4\bbls}
+%  }
+%  \end{minipage}
+%  }
+%\def\@schapter#1{\if@twocolumn
+%                   \@topnewpage[\@makeschapterhead{#1}]%
+%                 \else
+%                   \@makeschapterhead{#1}%
+%                   \@afterheading
+%                 \fi}
+%\def\@makeschapterhead#1{%
+%  %\vspace*{5\bbls}
+%  {\rule{0pt}{4\bbls}
+%\parindent \z@ \raggedright
+%    \normalfont
+%    \interlinepenalty\@M
+%    \mbox{\parbox[b]{\textwidth}{\raggedright\Huge\scshape#1\par\nobreak}
+%    \rule{0pt}{5\bbls}}
+%    \rule{0pt}{1.5\bbls}
+%    \hrule 
+%    %\mbox{}\rule{2pt}{3.5\bbls}
+%    \vspace*{4\bbls}
+%  }}
+\endinput
+%%
+%% End of file `svenbook.cls'.
