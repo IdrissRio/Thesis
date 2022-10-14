@@ -1,2 +1,4 @@
 # Thesis
-This repository contains my Licentiate Thesis
+This repository contains Idriss Riouak's Licentiate Thesis
+
+
