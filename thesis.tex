@@ -35,6 +35,9 @@
 \usepackage{courier}
 \usepackage{rotating}
 \usepackage{xspace}
+\usepackage{booktabs}
+
+
 
 \usepackage[backend=bibtex8,maxcitenames=2,mincrossrefs=99,style=alphabetic,doi=false,isbn=false,url=false,refsegment=chapter,defernumbers=true,sorting=nyt]{biblatex}
 \addbibresource{refs}
@@ -46,6 +49,20 @@
 %\defbibheading{bibintoc}{%
 %  \addcontentsline{toc}{chapter}{\bibname}%
 %  \section*{References}}
+
+\newcommand{\paperIref}{%
+Idriss Riouak, Christoph Reichenbach, G\"{o}rel Hedin and Niklas Fors
+``A Precise Framework for Source-Level Control-Flow Analysis'.
+In \emph{21st International Working Conference on Source Code Analysis and Manipulation (SCAM),
+pp. 1--11}. Virtual, 2021.
+}
+\newcommand{\paperIIref}{%
+Idriss Riouak, G\"{o}rel Hedin, Christoph Reichenbach and Niklas Fors
+``JFeature: Know Your Corpus!''.
+In \emph{22st International Working Conference on Source Code Analysis and Manipulation (SCAM),
+pp. 236--241s}. Limassol, Cyprus, 2022.
+}
+
 
 
 \newtheorem{definition}{Definition}
@@ -61,10 +78,10 @@
 		coll, with, contributes, to, when, root, then,
 		nta, circular, lazy,
 		rewrite,
-		class, extends, boolean, false, true, 
+		class, extends, boolean, false, true,
 		while, do, for, each, if, else, switch, case,
 		this, abstract, void, new, return, null,
-		try, finally, public, aspect, implements, 
+		try, finally, public, aspect, implements,
 		interface, protected, int, super
 	},
 	otherkeywords = { ::=, *, <, >, :, [, ], ?, =},
@@ -76,7 +93,7 @@
 \lstset{keywordstyle=\ttfamily\bfseries}
 \lstset{commentstyle=\itshape\sffamily}
 \lstset{tabsize=4}
-\lstset{xleftmargin=0.2cm} 
+\lstset{xleftmargin=0.2cm}
 \lstset{basewidth=0.6em}
 \lstset{fontadjust= true}
 \lstset{lineskip=0.7pt}
@@ -108,7 +125,7 @@
 
 %Page size
 \newcommand{\myGeometry}{
-  \usepackage[paperwidth=164mm, paperheight=232mm, 
+  \usepackage[paperwidth=164mm, paperheight=232mm,
     width=115mm,  height=190mm, twoside, hmarginratio=3:2]{geometry}
   \usepackage[frame, a4, dvips, mount2=1]{crop}
   \setlength{\topmargin}{-35mm}
@@ -281,7 +298,7 @@ Sweden  \linebreak[2]
 
 Email: \url{idriss.riouak@cs.lth.se} \linebreak[2]
 
-Typeset using \LaTeX \\ 
+Typeset using \LaTeX \\
 
 Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 
@@ -300,7 +317,8 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 % kappa
 %------------------------------------
 
-%\include{kappa/abstract}
+\include{kappa/abstract}
+\include{kappa/contribution}
 
 \setcounter{tocdepth}{1}
 \tableofcontents
@@ -318,7 +336,7 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 
 
 %\part{Construction of Extensible Semantic Editors}
-%\include{kappa/intro}
+\include{kappa/introduction}
 
 
 % remove the paper number(the LaTeX chapter) from all numberings
@@ -349,11 +367,12 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 
 
 \setcounter{chapter}{0}
+
 \renewcommand{\chaptername}{Paper}
 
 \part{Included Papers}
 \addtolength{\apa}{2cm}
-%\include{paper-ldta11}
+% \input{papers/intrajpaper/IntraJ}
 %\addtolength{\apa}{2cm}
 %\include{paper-scp}
 %\addtolength{\apa}{2cm}
