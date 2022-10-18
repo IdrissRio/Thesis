@@ -40,17 +40,52 @@ to approximate the analyses introducing imprecision, e.g., adding a new possible
 of imprecision is a trade-off between the precision of the analysis and the complexity
 of the analysis. The more precise the analysis, the more complex it is. 
 The more imprecise the analysis, the higher the probability of reporting 
-false positives and false negatives to the user. This thesis will mainly focus on
-a class of static analysis techniques called control-flow and data-flow analysis. 
+false positives and false negatives to the user. 
+% Discuss control flow graphs and dataflow analysis
+
+Like any other software project, the development of a static analysis tool
+it is a complex process that involves several steps, including the design of 
+flexible and extensible architecture, i.e., a software architecture that is 
+easy to extend and maintain. In this thesis, we employ the Declarative Programming
+paradigm to overcome this issue. Declarative Programming is a programming 
+paradigm that allows the programmer to specify what are the properties of a
+program without specifying how to compute them (i.e., without specifying the 
+algorithm). We used as declarative formalism an extension of Attribute Grammars. Attribute Grammars
+were first introduced in 1968 by Donald Knuth and are a formalism for the specification
+of the semantics of programming languages. Attribute Grammars are a generalisation
+of Context-Free Grammars, which are a formalism for the specification of the syntax
+of programming languages. 
+Attribute grammars allow to decorate the nodes of an Abstract Syntax Tree (AST) with attributes. 
+The attributes are computed by the attribute grammar rules, i.e., the values are specified
+through equations. Reference Attribute Grammars extend Knuth's Attribute Grammars
+with reference attributes whose values are references to other AST nodes. 
+There are many implementations of Reference Attribute Grammars systems, including
+the metacompiler and langauge JastAdd, used to implement large-scale compilers, such as,
+ExtendJ and JModelica, and static analysis tools like the one described in this thesis.
+Other famous implementations of Reference Attribute Grammars systems are Kiama and Silver, 
+the latter being used to implement a C and Java compiler.
+
+In this thesis we present a declarative and language independent framework for 
+construcing control-flow graph on top of the AST.
 
 
-\section{Background}
+This thesis will mainly focus on a class of static analysis techniques called
+ control-flow and data-flow analysis. 
 
 
-\section{State-of-the-art}
+\subsection{Background}
+Static analysis is a technique that allows to analyse the source code of a program
+through an evaluation process based on the structure, on the form and the content
+of the source code. 
 
 
-\section{Reference Attribute Grammars}
+
+
+
+\subsection{State-of-the-art}
+
+
+\subsection{Reference Attribute Grammars}
 
 
 
