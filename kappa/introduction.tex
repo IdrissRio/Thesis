@@ -7,18 +7,18 @@ and characteristics of a computer program. Program analysis applications are wid
 used in numerous areas of Computer Science, including compiler construction,
 e.g., to perform optimisations; software engineering, e.g., to detect bugs or
 code smells; security and privacy, e.g., to detect vulnerabilities; safety
-critical systems, e.g., avionic, automotive, medical, to detect safety
-violations; and many others.
+critical systems, e.g., avionic, automotive, and medical, to detect safety
+violations, and many others.
 We can distinguish between static and dynamic program analysis techniques.
 
 Dynamic analysis involves executing the program under analysis and gathering
-detaild information about its behaviour. Widley used dynamic analysis applications
+detailed information about its behaviour. Widely used dynamic analysis applications
 are, for instance, tracing, profiling, and step-by-step debugging. More sophisticated dynamic
 analysis techniques are based on symbolic execution, which consists in executing
-the program under analysis with symbolic inputs, and then solving the resulting
+the program under analysis with symbolic inputs and then solving the resulting
 constraints to obtain concrete values for the program variables. Symbolic execution
-is used, for instance, to detect buffer overflows, to perform program verification,
-and to perform program synthesis.
+is used, for instance, to detect buffer overflows, perform program verification,
+and perform program synthesis.
 Negatively, the properties verified using dynamic analysis techniques 
 are dependent on the parameter used to execute the application. For example, if the
 program under analysis is a web server, the properties verified by dynamic analysis
@@ -26,33 +26,22 @@ are dependent on the requests issued to the web server. Moreover, dynamic analys
 techniques are not able to detect properties that are not reachable, i.e., dead code.
 
 
-Static program analysis, is the the practise of reasoning about a program's behaviour without executing it.
+Static program analysis is the practice of reasoning about a program's behaviour without executing it.
 The analysis is performed by a static analysis tool,
 which is a program that takes as input the source code of other programs and
 generates a set of properties that hold for the program being analysed as output.
 The properties verified by static analysis techniques are independent of the input
 used to execute the program under analysis. Moreover, static analysis techniques can analyse unreachable code.
-The main limitations of static analysis techiniques are the results of the Turing and Rice undecidability
-theorems, i.e., it is not possible to perform sound and complete static analysis of a program for non-trivial properties, e.g., 
+The main limitations of static analysis techniques are the results of the Turing and Rice undecidability
+theorems, i.e., it is impossible to perform sound and complete static analysis of a program for non-trivial properties, e.g., 
 we cannot always prove whether a program terminates or not. However, it is possible
-to approximate the analyses introducting imprecision, e.g., adding a new possible answer
-``I don't know'' to  ``It terminates'' or ``It does not terminate''. The introduction 
+to approximate the analyses introducing imprecision, e.g., adding a new possible answer
+``I do not know'' to  ``It terminates'' or ``It does not terminate''. The introduction 
 of imprecision is a trade-off between the precision of the analysis and the complexity
 of the analysis. The more precise the analysis, the more complex it is. 
-The more imprecise is the analysis, the higher is the probability of reporting 
-to the user false positives and false negatives. In this thesis, we will mainly focus on
-a class of static analysis techiniques called control-flow and data-flow analysis. 
-
-
-
-
-
-
-
-
-
-
-
+The more imprecise the analysis, the higher the probability of reporting 
+false positives and false negatives to the user. This thesis will mainly focus on
+a class of static analysis techniques called control-flow and data-flow analysis. 
 
 
 \section{Background}
