@@ -6,7 +6,7 @@ Program Analysis is the branch of Computer Science that investigates the behavio
 and characteristics of a computer program. Program analysis applications are widely
 used in numerous areas of Computer Science, including compiler construction,
 e.g., to perform optimisations; software engineering, e.g., to detect bugs or
-code smells; security and privacy, e.g., to detect vulnerabilities; safety
+code smells; security, e.g., to detect vulnerabilities; safety
 critical systems, e.g., avionic, automotive, and medical, to detect safety
 violations, and many others.
 We can distinguish between static and dynamic program analysis techniques.
@@ -26,8 +26,8 @@ are dependent on the requests issued to the web server. Moreover, dynamic analys
 techniques are not able to detect properties that are not reachable, i.e., dead code.
 
 
-Static program analysis is the practice of reasoning about a program's behaviour without executing it.
-The analysis is performed by a static analysis tool,
+Static program analysis, static analysis for short, is the practice of reasoning
+about a program's behaviour without executing it. The analysis is performed by a static analysis tool,
 which is a program that takes as input the source code of other programs and
 generates a set of properties that hold for the program being analysed as output.
 The properties verified by static analysis techniques are independent of the input
@@ -41,7 +41,33 @@ of imprecision is a trade-off between the precision of the analysis and the comp
 of the analysis. The more precise the analysis, the more complex it is. 
 The more imprecise the analysis, the higher the probability of reporting 
 false positives and false negatives to the user. 
-% Discuss control flow graphs and dataflow analysis
+
+
+Among the numerous approaches to static program analysis, dataflow analysis stands out.
+Dataflow analysis is utilised to examine the data dependencies between programme entities
+(such as variables, expressions, and statements) in order to infer and collect constraints
+on the values of the program's entities. Dataflow applications include, for instance,
+constant propagation, registers optimisations, and, null-pointer exception detection.
+Dataflow analysis is performed on the program's control-flow graph (CFG), which is a
+directed graph where the nodes represent the program statements or expressions,
+and the edges reflect the program control-flow. In most cases, the CFG is constructed 
+from an intermediate representation of the program's source code (IR).
+Different IRs are emplyed for different purposes. For instance, the Abstract Syntax Tree (AST), which
+is the tree representation of the program constructed by the parser, is used to perform semantics checks, e.g.,
+name analysis and type analysis. Wheras, more low-level IRs, such as the Three Address Code (TAC),
+are used to perform optimisations, e.g., registers allocations and dead code elimination. The advantage
+of building the CFG on a low-level IR is that the CFG is more compact and requires 
+less engineering effort to build it, in that, the implementation can be reused by each 
+compiler front-end that targets the same IR.
+% The main disadvantage is that the information
+% contained in the IR is not easy to map back to the original source code and, therefore,
+% the analysis results are not easy to understand by the user.
+
+
+
+
+
+
 
 Like any other software project, the development of a static analysis tool
 it is a complex process that involves several steps, including the design of 
@@ -65,27 +91,27 @@ ExtendJ and JModelica, and static analysis tools like the one described in this 
 Other famous implementations of Reference Attribute Grammars systems are Kiama and Silver, 
 the latter being used to implement a C and Java compiler.
 
-In this thesis we present a declarative and language independent framework for 
-construcing control-flow graph on top of the AST.
+In Paper I, we present IntraCFG, a declarative and language-independent framework for 
+construcing control-flow graph superimposed on top of the AST. In the same paper, we
+present the implementation of a static analysis tool, called IntraJ, that uses IntraCFG
+to perform static analysis on Java programs. IntraJ supports two different dataflow analysis:
+null-pointer exception analysis and dead assignments detection, that are, a forward and 
+backward analysis, respectively. 
+In Paper II, we discuss the lack of autmated tools that helps the researcher 
+selecting appropriate and relevant corpora for the evaluation of static analysis tools, and more
+generally, for the evaluation of any software engineering tool. We present a tool, called
+JFeature, that automatically extracts a set of features, divided in different categories,
+from Java programs. We used JFeature to extract relevant features introduced in different 
+Java versions, and we conducted an empirical study on four well-known Java corpora analysing 
+their modernity. We figured out that only one of the four corpora is modern enough to be used
+for evaluating Java 8 applications.
+
+ \subsection{Thesis Outline}
 
 
-This thesis will mainly focus on a class of static analysis techniques called
- control-flow and data-flow analysis. 
-
-
-\subsection{Background}
-Static analysis is a technique that allows to analyse the source code of a program
-through an evaluation process based on the structure, on the form and the content
-of the source code. 
 
 
 
-
-
-\subsection{State-of-the-art}
-
-
-\subsection{Reference Attribute Grammars}
 
 
 
