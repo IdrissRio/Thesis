@@ -1,0 +1,191 @@
+\newcommand{\dataflow}{data-flow}
+\newcommand{\Dataflow}{Data-flow}
+\newcommand{\code}[1]{\texttt{\lstinline[basicstyle=\normalsize\ttfamily,identifierstyle={\normalsize},commentstyle={\normalsize\itshape},keywordstyle={\normalsize\bfseries},ndkeywordstyle={\normalsize},stringstyle={\normalsize\ttfamily},numberstyle={\normalsize}]!#1!}}
+\newcommand{\CFG}{CFG}
+\newcommand{\intraj}{\textsc{Intra}J}
+\newcommand{\jastaddjintraflow}{\textsc{jastaddj-intraflow}}
+\newcommand{\jji}{\code{JJI}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cE}{\rightarrowtail}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cM}{\mathcal{M}}
+
+\newcommand{\mSyn}{\ensuremath{\uparrow}}
+\newcommand{\mInh}{\ensuremath{\downarrow}}
+\newcommand{\mHOA}{\ensuremath{\rightarrow}}
+\newcommand{\mColl}{\ensuremath{\square}}
+\newcommand{\mCirc}{\ensuremath{\circlearrowleft}}
+
+\newcommand{\Abase}[1]{\textcolor{ATGsym}{\mbox{\umlcode{#1}}}}
+\newcommand{\Asyn}[2]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\mSyn{}\umlcode{#2}}}}
+\newcommand{\Asynaccess}[2]{\umlcode{get}\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}\textcolor{black}{\umlcode{()}}.\mSyn{}\umlcode{#2}\textcolor{black}{()}}}}
+\newcommand{\Ainh}[2]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\mInh{}\umlcode{#2}}}}
+\newcommand{\Ainhdef}[3]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\umlcode{\astnode{#2}}.\mInh{}\umlcode{#3}}}}
+\newcommand{\Ahoa}[1]{\textcolor{ATGsym}{\mbox{\mHOA{}\umlcode{#1}}}}
+\newcommand{\Acoll}[1]{\textcolor{ATGsym}{\mbox{\mColl{}\umlcode{#1}}}}
+\newcommand{\Acirc}[1]{\textcolor{ATGsym}{\mbox{\mCirc{}\umlcode{#1}}}}
+
+
+\newcommand{\umlcode}[1]{\textrm{#1}}  % Style of code used in UML fragments
+\newcommand{\astnodestyle}{\ttfamily\color{magenta}}
+\newcommand{\astnode}[1]{\texttt{\textcolor{magenta}{#1}}}  % Style used for AST node types
+
+\newcommand{\ASTUnrestricted}{AST-unrestricted}
+\newcommand{\ParentFirst}{Parent-First}
+
+\newcommand{\project}[1]{\textsc{#1}}
+\newcommand{\tool}[1]{\textsc{#1}}
+
+% can't get fbox to work reliably in the UML code, and adjustbox and nested \tikz don't work at all
+%\newcommand{\dfapi}{\textsf{\setlength{\fboxsep}{0pt}\fcolorbox{blue}{white}{df-api}}}
+\newcommand{\dfapi}{\textbf{\textcolor{black}{[df-api]}}}
+\newcommand{\nameapi}{\textbf{\textcolor{black}{[name-api]}}}
+
+\newcommand{\frameworkname}{\textsc{Intra}CFG}
+\newcommand{\intracfg}{\textsc{\frameworkname}}
+
+\newcommand{\node}{\mathsf{n}}
+\newcommand{\Null}{\mathtt{NULL}}
+\newcommand{\Notnull}{\mathtt{NOTNULL}}
+\newcommand{\gen}{\mathtt{gen}}
+\renewcommand{\kill}{\mathtt{kill}}
+
+\newcommand{\In}{\mathtt{in}}
+\newcommand{\Out}{\mathtt{out}}
+\newcommand{\Use}{\mathtt{use}}
+\newcommand{\Def}{\mathtt{def}}
+\newcommand{\tf}{f_t}
+\newcommand{\mCi}[1]{ { \textcolor{black!30}{\scriptstyle \pm\text{#1}}}}%Condifdence interval
+
+\newcommand{\CR}[1]{\textbf{[}\textcolor{blue!60!black}{\textbf{CR:} #1}\textbf{]}}
+\newcommand{\Ckw}[1]{\texttt{\textbf{#1}}}
+\newcommand{\auxlabel}[1]{{\scriptsize{$\textrm{\texttt{#1}}$}}}
+\newcommand{\auxlabeli}[2]{{\scriptsize{$\textrm{\texttt{#2}}_{#1}$}}}
+\newcommand{\auxlabelbox}[1]{\tikz[baseline=-0.7ex] \node[rectangle, minimum width=0, thin, draw, rounded corners, fill=white, inner sep=2pt, outer sep=0pt] (N) {\auxlabel{#1}};}
+\newcommand{\auxlabelboxhoa}[1]{\tikz[baseline=-0.7ex] \node[rectangle, dashed,minimum width=0, thin, draw, rounded corners, fill=white, inner sep=2pt, outer sep=0pt] (N) {\auxlabel{#1}};}
+
+%\newcommand{\auxlabelboxi}[2]{\tikz \node[rectangle, minimum width=0, thin, draw, rounded corners, fill=white] {\auxlabeli{#1}{#2}};}
+
+
+\newcommand{\Prod}{::=}
+\newcommand{\terminal}[1]{\textcolor{green!50!black}{\textit{#1}}}
+\newcommand{\vmetavar}[1]{\textcolor{cyan!30!black}{\textsf{\textbf{#1}}}}
+\newcommand{\vcode}[1]{\textsf{\textcolor{green!35!black}{{#1}}}}
+\newcommand{\vterminal}[1]{\vcode{#1}}
+\newcommand{\nta}[1]{\ensuremath{\textit{#1}}}
+\newcommand{\tuple}[1]{\ensuremath{\langle #1 \rangle}}
+\newcommand{\nt}[1]{\ensuremath{\tuple{\hspace{-0.02cm}\nta{#1}\hspace{0.02cm}}}}
+\newcommand{\VB}{\ |\ }
+\newcommand{\Gcomment}[1]{\textrm{\textcolor{black!50!white}{({#1})}}}
+\newcommand{\sem}[1]{\ensuremath{\llbracket #1 \rrbracket}}
+%\newcommand{\semNPA}[1]{\ensuremath{\sem{#1}_{\textit{NPA}}}}
+\newcommand{\semNPA}[1]{\ensuremath{\sem{#1}}}
+
+\newcommand{\listingsfontsize}{\scriptsize}
+
+\newcommand{\NAmark}{\multicolumn{1}{c}{\textcolor{black!40!white}{-}}}
+\newcommand{\NAmarkR}{\multicolumn{1}{c|}{\textcolor{black!40!white}{-}}}
+\newcommand{\Tcenter}[1]{\multicolumn{1}{c}{#1}}
+\newcommand{\TcenterR}[1]{\multicolumn{1}{c|}{#1}}
+\newcommand{\succarrow}{\tikz[baseline=-0.7ex] \draw[succarrow, thick, -{Stealth[scale=0.9, inset=0pt, angle'=45]}] (0,0) -- (0.3,0.0);}
+
+\colorlet{hlgreen}{green}
+\colorlet{hlorange}{orange}
+\colorlet{hlgreenhalf}{green!50!white}
+\colorlet{hlorangehalf}{orange!50!white}
+
+\DeclareRobustCommand{\hlgreen}[1]{{\sethlcolor{hlgreenhalf}\hl{#1}}}
+\DeclareRobustCommand{\hlorange}[1]{{\sethlcolor{hlorangehalf}\hl{#1}}}
+
+\definecolor{ATGsym}{HTML}{206010}
+
+\definecolor{SQ}{HTML}{0080ff}
+\definecolor{JJI}{HTML}{ff0080}
+\definecolor{IJnonH}{HTML}{004010}
+\definecolor{IJH}{HTML}{00ff20}
+
+\definecolor{succarrow}{HTML}{4e90e2}	% adapted from RunningExample.tex
+
+\definecolor{lightblue}{HTML}{006699}		%#006699
+\definecolor{lightgreen}{HTML}{669900}		%#669900
+\lstdefinelanguage{JastAdd}{
+  %keyword1&2&6
+  morekeywords = [1]{abstract, class, continue, default, enum, extends, false, final, finally, implements, import, instanceof, interface, native, new, null, package, private, protected, public, static, strictfp, throws, transient, true, void, volatile, length, assert, case, return, super, this, throw, catch, do, if, else, switch, synchronized, while, try, ?},
+  %keyword3
+  morekeywords = [2]{inh, syn, coll, with, eq, NTA, contributes, to, for, each, circular, with}, %JASTADD keywords
+  %keyword4
+  morekeywords = [3]{CFGNode, Assignments, Assign,AssignBitwiseExpr, TrueLiteral, Entry,ConstructorDecl,UnceckedException, TryWithResorucesStmt, NTAFinallyBlock,ClassDecl, CloseListNTA, BreakStmt,ThrowStmt,TryStmt,ReturnStmt, ContinueStmt, Exit, Expr, AssignShiftExpr, AssignMultiplicativeExpr, IntegerLiteral, AssignAdditiveExpr, UnaryIncDec,DoStmt,VariableDeclarator, NumericLiteral, ParameterDeclaration, FieldDeclarator, PostfixExpr, PreIncExpr, PreDecExpr, ReachedLVal, Variable,EQOp,CFGSupport, ForStmt, EmptyStmt, MethodDecl, ExprStmt, AssignStmt, IfStmt, AndOp, LessOp, WhileStmt, Block, AssignExpr, PostUnaryInc, PostUnaryDec, Entry, Exit, EQExpr, VarAccess, CFGRoot }, %ASTnode typess
+  %keyword5
+  morekeywords = [4]{Array, ArrayList, Boolean, Byte,  BitSet, BufferedReader,Collections, Character, Class, Double, Float, Gamma, AbsDomain, NULL, NOTNULL, TOP,Integer, HashMap, PrintWriter, String, StringBuffer, StringBuilder, Thread, boolean, byte, char, color, double, float, int, long, short, FloatDict, FloatList, IntDict, IntList, JSONArray, JSONObject, PFont, PGraphics, PImage, PShader, PShape, PVector, StringDict, StringList, Table, TableRow, XML, Set, HashSet},
+  %keywordstyle = [1]\color{lightblue},
+  %keywordstyle = [2]\color{lightgreen},
+  keywordstyle = [1]\bfseries,
+  keywordstyle = [2]\bfseries,
+  keywordstyle = [3]\astnodestyle,
+  keywordstyle = [4]\color{orange},
+  sensitive = true,
+  morecomment = [l]{//},
+  morecomment = [s]{/*}{*/},
+  morecomment = [s]{/**}{*/},
+  commentstyle = \color{gray},
+  morestring = [b]",
+  morestring = [b]',
+  stringstyle = \color{purple}
+}
+\lstset{
+  basicstyle=\listingsfontsize\ttfamily,
+  identifierstyle={\listingsfontsize},
+  commentstyle={\listingsfontsize\itshape},
+  keywordstyle={\listingsfontsize\bfseries},
+  ndkeywordstyle={\listingsfontsize},
+  stringstyle={\listingsfontsize\ttfamily},
+  frame={tb},
+  breaklines=true,
+  breakatwhitespace=true, %To avoid linebreaks between \code{} and comma.
+  columns=[l]{fullflexible},
+  numbers=none,
+  numberstyle={\listingsfontsize},
+  stepnumber=1,
+  mathescape
+%	escapeinside     = {@}{@}, %General escape does not seem to work in lstinline/GH.
+}
+
+\makeatletter
+\pgfdeclareshape{topbottombox}{
+  \inheritsavedanchors[from=rectangle]
+  \inheritanchorborder[from=rectangle]
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{base}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north west}
+  \backgroundpath{
+    %  store lower right in xa/ya and upper right in xb/yb
+    \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+ }
+}
+\makeatother
+
+
+% Patch UML package pgf-umlcd to be able to write abstract grammar as class name.
+
+\newbool{ANON}
+%\booltrue{ANON}
+\boolfalse{ANON}
+\newcommand{\anon}[2]
+{\ifbool{ANON}{
+   #1
+}{
+   #2
+}}

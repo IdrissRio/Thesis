@@ -1,2 +1,98 @@
-\chapter{Reference Attribute Grammars}
+\chapter{Attribute Grammars}
+Attribute Grammars were first introduced in 1968 by Donald Knuth and are a formalism for the specification
+of the semantics of programming languages. Attributes are used to decorate nodes of the AST
+and are defeined by a pure function, i.e., side-effect free, that can access other attributes of the same node or of its children.
+Attributes are define using equations. We can distinguish two types of attributes: synthesized attributes and inherited attributes.
+For the sake of redability, we borrow the notation introduced in pattern, 
+where attribute names are preceded by a symbol that indicates the type of the attribute.
+We reserve the symbol \Abase{x} to denote the attribute name and the symbol $e$ to denote the attribute value,
+e.g., a constant, a function of the node's children, or a function of the node's children 
+and the node's own attributes. 
+
+Synthesized attributes are defined by equations of the form:
+\begin{equation*}
+\Asyn{A}{x} = e
+\end{equation*}
+where \astnode{A} is the name of the node type.
+Inherited attributes are defined by two parts: a declaration and an equation.
+\begin{equation*}
+\Ainh{A}{x} \quad\quad \quad\quad \Ainhdef{B}{*}{x} = e
+\end{equation*}
+where \astnode{A} and \astnode{B} are node types. 
+The first part of the equation declares the attribute \Ainh{A}{x} as inherited by \astnode{A},
+so that every node of type \astnode{A} has can access it. The second part of the 
+equation defines the attribute for each child of \astnode{B}. The whildcard \astnode{*}
+indicates that the attribute is defined and broadcasted to all children of \astnode{B} with type \astnode{A}.
+
+% \begin{example}
+Let us consider the following abstract grammar:
+% \begin{minipage}[t]{0.5\textwidth}
+    \begin{align*}
+        A& ::= B \mid C \\ 
+        B& \\
+        C&
+    \end{align*}
+% \end {minipage}
+and the following attribute declarations:
+% \begin{minipage}[t]{0.5\textwidth}
+    \begin{align*}
+        \Asyn{A}{z}& = \Asyn{B}{x} + 1 \\
+        \Asyn{B}{x}& = 2 \\
+        \Asyn{C}{v}& = 5 \\
+        \Ainh{C}{y}& \\
+        \Ainhdef{A}{C}{y}& = \Asyn{A}{z} + \Asyn{C}{v} \\
+    \end{align*}
+% \end {minipage}
+The value for the synthesized attribute \Asyn{A}{z} is computed by solving 
+the equation systems for the attributes \Asyn{A}{z} and \Asyn{B}{x}:
+\begin{align*}
+    \Asyn{A}{z} &= \Asyn{B}{x} + 1 \\
+    \Asyn{B}{x} &= 2
+\end{align*}
+leading to \Asyn{A}{z} = 3 and \Asyn{B}{x} = 2.
+The value for the inherited attribute \Ainh{C}{y} is defined by the node \astnode{A} for
+each child of type \astnode{C}. The value of \Ainh{C}{y} is computed by solving the equation system:
+\begin{align*}
+    \Ainh{C}{y} &= \Asyn{A}{z} + \Asyn{C}{v} \\
+    \Asyn{C}{v} &= 5\\
+    \Asyn{A}{z} &= 3
+\end{align*}
+resulting in \Ainh{C}{y} = 8.
+
+
+\begin{figure}
+
+    \begin{tikzpicture}[scale=0.7,edge from parent/.style={draw,-latex},sibling distance=8em,
+      every node/.style = {align=center,scale=1},
+      astnode/.style={shape=rectangle, draw, fill=white, minimum width=5mm,%
+      minimum height=10mm},
+      contributor/.style={shape=rectangle, draw, fill=red!20},
+      attribute/.style={shape=rectangle, draw, fill=orange!20}]
+    
+    \node [astnode,draw] (A) {\code{A}}
+      child {node [astnode] (B) {\code{B}}}
+      child {node [astnode] (C) {\code{C}}
+    }
+    ;
+    \node [attribute , draw, right=0pt of A] (B) {\code{features()}};
+    
+    \matrix [draw, below right = 60pt and -210pt,inner sep=1ex,cells={nodes={font=\sffamily,anchor=west}}] at (B) {
+      \node [attribute] {}; & \node{Collection Attribute}; \\
+      \node [contributor] {};  & \node{Contributor Node};\\
+      \node [rectangle,draw] {}; & \node{AST Node}; \\
+      \draw[-latex,dotted,color=red](0,0) -- ++ (0.3,0); & \node{Contribution};\\
+    };
+    \end{tikzpicture}
+    \caption{\label{fig:featureExample}Example definitions of features.}
+    \end{figure}
+
+
+
+% \end{example}
+
+
+
 \section{Reference Attribute Grammars}
+
+
+

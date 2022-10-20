@@ -12,6 +12,7 @@
 \usepackage{float}
 \usepackage[fit]{truncate}
 \usepackage{epstopdf}
+\usepackage{amsmath}
 \usepackage{multirow}
 \usepackage{alltt}
 \usepackage{array}
@@ -20,6 +21,7 @@
 \usepackage{pdfpages}
 %\usepackage[version=0.96]{pgf}
 \usepackage{tikz}
+\usetikzlibrary{positioning}
 \usepackage[fancy,color=orange]{tikz-inet}
 \usetikzlibrary{arrows,shapes,snakes,automata,backgrounds,petri,patterns,shadows,shapes.callouts}
 \usepackage{clrscode}
@@ -271,9 +273,26 @@ pp. 236--241s}. Limassol, Cyprus, 2022.
               \fi}
 %-----------------------------------------------
 \makeatother
+% \usepackage{fontspec}
+\usepackage{mdframed} % Add easy frames to paragraphs
+\usepackage{xparse} % Add support for \NewDocumentEnvironment
+
+\newmdenv[ % Define mdframe settings and store as leftrule
+  linecolor=black,
+  topline=false,
+  bottomline=false,
+  rightline=false,
+  skipabove=\topsep,
+  skipbelow=\topsep
+]{leftrule}
+
+\NewDocumentEnvironment{example}{O{\textbf{Example}}} % Define example environment
+{\begin{leftrule}\noindent\textcolor{black}{#1}\par}
+{\end{leftrule}}
 
 
 \begin{document}
+
 \frontmatter
 
 %------------------------------------
