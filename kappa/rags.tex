@@ -66,24 +66,28 @@ resulting in \Ainh{C}{y} = 8.
       every node/.style = {align=center,scale=1},
       astnode/.style={shape=rectangle, draw, fill=white, minimum width=5mm,%
       minimum height=10mm},
-      contributor/.style={shape=rectangle, draw, fill=red!20},
-      attribute/.style={shape=rectangle, draw, fill=orange!20}]
+      synthesized/.style={shape=rectangle, draw, fill=orange!15},
+      inherited/.style={shape=rectangle, draw, fill=blue!15}
+      ]
     
     \node [astnode,draw] (A) {\code{A}}
       child {node [astnode] (B) {\code{B}}}
       child {node [astnode] (C) {\code{C}}
     }
     ;
-    \node [attribute , draw, right=0pt of A] (B) {\code{features()}};
+    \node [synthesized , draw, right=0pt of A] (AA) {\Asyn{A}{z} = \Asyn{B}{x} + 1 = 3};
+    \node [synthesized , draw, left=0pt of B] (BB) {\Asyn{B}{x} = 2};
+    \node [synthesized , draw, right=0pt of C] (CC) {\Asyn{C}{v} = 5};
+    \node [inherited , draw, below right =0pt of C] (CC) {\Ainh{C}{y} = \Asyn{A}{z} + \Asyn{C}{v} = 8};
     
-    \matrix [draw, below right = 60pt and -210pt,inner sep=1ex,cells={nodes={font=\sffamily,anchor=west}}] at (B) {
-      \node [attribute] {}; & \node{Collection Attribute}; \\
-      \node [contributor] {};  & \node{Contributor Node};\\
+    \matrix [draw, below right = -50pt and -180pt,inner sep=1ex,cells={nodes={font=\sffamily,anchor=west}}] at (B) {
+      \node [synthesized] {}; & \node{Synthesized attributes}; \\
+      \node [inherited] {}; & \node{Inherited attributes}; \\
       \node [rectangle,draw] {}; & \node{AST Node}; \\
-      \draw[-latex,dotted,color=red](0,0) -- ++ (0.3,0); & \node{Contribution};\\
+      \draw[-latex,dotted,color=black](0,0) -- ++ (0.3,0); & \node{Child relation}; \\
     };
     \end{tikzpicture}
-    \caption{\label{fig:featureExample}Example definitions of features.}
+    \caption{\label{fig:ragsExample} Graphical representation of the attribute grammar example.}
     \end{figure}
 
 
