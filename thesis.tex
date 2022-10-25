@@ -4,7 +4,6 @@
 \usepackage{times}
 \usepackage{graphicx}
 \usepackage[usenames,dvipsnames]{color}
-%\usepackage{pstricks, pst-node}
 \usepackage{fancyhdr}
 \usepackage{sectsty}
 \usepackage{listings}
@@ -38,6 +37,8 @@
 \usepackage{rotating}
 \usepackage{xspace}
 \usepackage{booktabs}
+
+
 % \usepackage{pstricks-add, cellspace}
 % \setlength{\cellspacetoplimit}{2pt}
 % \setlength{\cellspacebottomlimit}{2pt}
@@ -46,16 +47,16 @@
 
 
 
-\usepackage[backend=bibtex8,maxcitenames=2,mincrossrefs=99,style=alphabetic,doi=false,isbn=false,url=false,refsegment=chapter,defernumbers=true,sorting=nyt]{biblatex}
-\addbibresource{refs}
+\usepackage[backend=bibtex8,mincrossrefs=99,style=alphabetic,doi=false,isbn=false,url=false,refsegment=chapter,defernumbers=true,sorting=nyt]{biblatex}
+\addbibresource{Thesis.bib}
 \defbibheading{subbibliography}{\addcontentsline{toc}{section}{References}\section*{References}}
 
-%\usepackage{bibunits}
-%\usepackage{cite}
+% \usepackage{bibunits}
+% \usepackage{cite}
 
-%\defbibheading{bibintoc}{%
-%  \addcontentsline{toc}{chapter}{\bibname}%
-%  \section*{References}}
+\defbibheading{bibintoc}{%
+ \addcontentsline{toc}{chapter}{\bibname}%
+ \section*{References}}
 
 \newcommand{\paperIref}{%
 Idriss Riouak, Christoph Reichenbach, G\"{o}rel Hedin and Niklas Fors
@@ -413,6 +414,8 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 %\addtolength{\apa}{2cm}
 %\include{paper-toplas}
 
+
+\printbibliography
 
 
 \end{document}

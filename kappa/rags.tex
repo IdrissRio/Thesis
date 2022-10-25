@@ -1,4 +1,5 @@
 \chapter{Attribute Grammars}
+\label{chap:attr-grammars}
 Attribute Grammars were first introduced in 1968 by Donald Knuth and are a formalism for the specification
 of the semantics of programming languages. Attributes are used to decorate nodes of the AST
 and are defeined by a pure function, i.e., side-effect free, that can access other attributes of the same node or of its children.
@@ -24,44 +25,8 @@ so that every node of type \astnode{A} has can access it. The second part of the
 equation defines the attribute for each child of \astnode{B}. The whildcard \astnode{*}
 indicates that the attribute is defined and broadcasted to all children of \astnode{B} with type \astnode{A}.
 
-% \begin{example}
-Let us consider the following abstract grammar:
-% \begin{minipage}[t]{0.5\textwidth}
-    \begin{align*}
-        A& ::= B \mid C \\ 
-        B& \\
-        C&
-    \end{align*}
-% \end {minipage}
-and the following attribute declarations:
-% \begin{minipage}[t]{0.5\textwidth}
-    \begin{align*}
-        \Asyn{A}{z}& = \Asyn{B}{x} + 1 \\
-        \Asyn{B}{x}& = 2 \\
-        \Asyn{C}{v}& = 5 \\
-        \Ainh{C}{y}& \\
-        \Ainhdef{A}{C}{y}& = \Asyn{A}{z} + \Asyn{C}{v} \\
-    \end{align*}
-% \end {minipage}
-The value for the synthesized attribute \Asyn{A}{z} is computed by solving 
-the equation systems for the attributes \Asyn{A}{z} and \Asyn{B}{x}:
-\begin{align*}
-    \Asyn{A}{z} &= \Asyn{B}{x} + 1 \\
-    \Asyn{B}{x} &= 2
-\end{align*}
-leading to \Asyn{A}{z} = 3 and \Asyn{B}{x} = 2.
-The value for the inherited attribute \Ainh{C}{y} is defined by the node \astnode{A} for
-each child of type \astnode{C}. The value of \Ainh{C}{y} is computed by solving the equation system:
-\begin{align*}
-    \Ainh{C}{y} &= \Asyn{A}{z} + \Asyn{C}{v} \\
-    \Asyn{C}{v} &= 5\\
-    \Asyn{A}{z} &= 3
-\end{align*}
-resulting in \Ainh{C}{y} = 8.
-
 
 \begin{figure}
-
     \begin{tikzpicture}[scale=0.7,edge from parent/.style={draw,-latex},sibling distance=8em,
       every node/.style = {align=center,scale=1},
       astnode/.style={shape=rectangle, draw, fill=white, minimum width=5mm,%
@@ -88,15 +53,142 @@ resulting in \Ainh{C}{y} = 8.
     };
     \end{tikzpicture}
     \caption{\label{fig:ragsExample} Graphical representation of the attribute grammar example.}
-    \end{figure}
+\end{figure}
 
+Let us consider the following abstract grammar:
 
+    \begin{align*}
+        A& ::= B \mid C \\ 
+        B& \\
+        C&
+    \end{align*}
 
-% \end{example}
-
+and the following attribute declarations:
+    \begin{align*}
+        \Asyn{A}{z}& = \Asyn{B}{x} + 1 \\
+        \Asyn{B}{x}& = 2 \\
+        \Asyn{C}{v}& = 5 \\
+        \Ainh{C}{y}& \\
+        \Ainhdef{A}{C}{y}& = \Asyn{A}{z} + \Asyn{C}{v} \\
+    \end{align*}
+The value for the synthesized attribute \Asyn{A}{z} is computed by solving 
+the equation systems for the attributes \Asyn{A}{z} and \Asyn{B}{x}:
+\begin{align*}
+    \Asyn{A}{z} &= \Asyn{B}{x} + 1 \\
+    \Asyn{B}{x} &= 2
+\end{align*}
+leading to \Asyn{A}{z} = 3 and \Asyn{B}{x} = 2.
+The value for the inherited attribute \Ainh{C}{y} is defined by the node \astnode{A} for
+each child of type \astnode{C}. The value of \Ainh{C}{y} is computed by solving the equation system:
+\begin{align*}
+    \Ainh{C}{y} &= \Asyn{A}{z} + \Asyn{C}{v} \\
+    \Asyn{C}{v} &= 5\\
+    \Asyn{A}{z} &= 3
+\end{align*}
+resulting in \Ainh{C}{y} = 8. Figure~\ref{fig:ragsExample} depicts the described example.
 
 
 \section{Reference Attribute Grammars}
+\label{sec:rag}
+Reference Attribute Grammars (RAGs) where introduced in~\cite{DBLP:journals/informaticaSI/Hedin00}
+and are an extension of Attribute Grammars to Object-Oriented languages. While attributes in Attribute Grammars
+can only refer to terminal values, RAGs allow attributes to refer to non-terminals i.e., node in the AST.
+RAGs are well-suited for the analysis of object-oriented languages, since they enable 
+the definition of relation between AST nodes. Attributes that refer to 
+to AST nodes can declaratively construct relation, i.e., graphs, on the AST.
+Examples of the relations that can be constructed using RAGs are:
+\begin{itemize}
+    \item Name analysis: checks that all names are well-defined and used correctly. A relation between 
+    the name and the definition of the name is constructed,
+    \item Type analysis: checks that all expressions have a valid type. A relation between the expression
+    and its type is constructed,
+    \item Graph of a class hierarchy: a graph where nodes are classes and edges are inheritance relations,
+    \item Control flow graph: a graph where nodes are statements and/or expressions, and edges are control flow relations, and,
+    \item Call graph: a graph where nodes are methods and edges are method calls.
+\end{itemize}
 
+\subsection{The JastAdd Metacompiler}
+\label{sec:jastadd}
+The JastAdd metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a tool for the construction of
+Reference Attribute Grammars. The JastAdd metacompiler is a Java-based tool that generates
+Java code from a RAG. The generated code can be used to construct an AST and to perform
+analysis on the AST.
+The JastAdd metacompiler is based on the following components:
+\begin{itemize}
+    \item The JastAdd language: a language for the definition of RAGs. 
+    The JastAdd language allow to specify the abstract grammar of a language, and,
+    with a java-like syntax, the attributes of the RAG.
+    \item The JastAdd compiler: a compiler that generates Java code from a RAG.
+\end{itemize}
+
+\begin{figure}
+    \begin{center}
+        \begin{tikzpicture}
+            \tikzstyle{block} = [rectangle, draw, text centered, minimum height=10em, minimum width=10em]
+            \tikzstyle{line} = [draw, -latex]
+            \node [block] (A) {
+                \begin{lstlisting}[language=JastAdd]
+aspect AttrDecl {
+  syn int A.x() = 1;
+  syn int B.x() = 2;
+}
+                \end{lstlisting}
+            };
+            \node [block, right=of A, yshift=5em] (B) {
+                \begin{lstlisting}[language=JastAdd]
+class A {
+    public int x(){
+    return 1;
+    }
+}
+                \end{lstlisting}
+            };
+            \node [block, below=of B] (C) {
+                \begin{lstlisting}[language=JastAdd]
+class B {
+    public int x(){
+        return 2;
+    }
+}
+                  \end{lstlisting}
+             };
+        
+             \node (v1) at (-1.3,0) {};
+             \node (v2) at (1.8,0) {};
+             \node (v3) at (3.4,1.3) {};
+             \node (v4) at (6.3,1.3) {};
+             \node (v5) at (6.3,2.3) {};
+             \node (v6) at (3.4,2.3) {};
+             \node (v7) at (1.8,0.3) {};
+             \node (v8) at (-1.3,0.3) {};
+             \draw[opacity=0.2,fill=blue] (v1.center)--(v2.center)--(v3.center)--(v4.center)--(v5.center)--(v6.center)--(v7.center)--(v8.center)--(v1.center);
+        
+             \fill [opacity=0.2,blue]
+                 (v1) \foreach \i in {2,...,8}{ -- (v\i) } -- cycle;
+            
+            \node (vv1) at (-1.3,-0.01) {};
+            \node (vv2) at (1.8,-0.01) {};
+            \node (vv3) at (3.4,-2.3) {};
+            \node (vv4) at (6.3,-2.3) {};
+            \node (vv5) at (6.3,-3.3) {};
+            \node (vv6) at (3.4,-3.3) {};
+            \node (vv7) at (1.8,-0.3) {};
+            \node (vv8) at (-1.3,-0.3) {};
+            \draw[opacity=0.2,fill=red] (vv1.center)--(vv2.center)--(vv3.center)--(vv4.center)--(vv5.center)--(vv6.center)--(vv7.center)--(vv8.center)--(vv1.center);
+        
+            \fill [opacity=0.2,red]
+                (v1) \foreach \i in {2,...,8}{ -- (vv\i) } -- cycle;
+        \end{tikzpicture}
+    \end{center}
+    \caption{\label{fig:interType} Example of intertype declaration.}
+\end{figure}
+
+
+JastAdd supports intertype declarations for the definition of attributes. An intertype declaration
+of an attribute is a declaration that is performed into an aspect that, at compile time, 
+is inlined in the class specified in the intertype declaration. The example in Figure~\ref{fig:interType}
+shows an intertype declaration of an attribute. The attribute \Asyn{A}{x} is defined in the aspect
+\texttt{AttrDecl} and is inlined in the class \texttt{A} and in the class \texttt{B} with two
+different implementations: \Asyn{A}{x}=1 and \Asyn{B}{x}=2.
 
 
