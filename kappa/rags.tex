@@ -206,7 +206,7 @@ JastAdd supports intertype declarations for the definition of attributes. An int
 of an attribute is a declaration that is performed into an aspect that, at compile time, 
 is inlined in the class specified in the intertype declaration. The example in Figure~\ref{fig:interType}
 shows an intertype declaration of an attribute. 
-The attribtues \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrDecl} 
+The attributes \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrDecl} 
 that is inlined in the classes \code{A} and \code{B} respectively.
 
 JastAdd supports not only synthesized and inherited attributes, but also:
@@ -216,7 +216,7 @@ JastAdd supports not only synthesized and inherited attributes, but also:
     to it. Attributes of this kind are widely used, especially in the definition of 
     type-checking rules.
     \begin{lstlisting}[language=JastAdd]
-        syn Type A.compatible(Type t) = this.type() == t;
+        syn boolean Type.compatibleType(Type t) = this == t;
     \end{lstlisting}
     
 
@@ -235,7 +235,7 @@ JastAdd supports not only synthesized and inherited attributes, but also:
         syn nta Exit MethodDecl.exit() = new Exit();
     \end{lstlisting}
     We use the right-arrow symbol to denote HOAs, e.g.,  \Ahoa{MethodDecl}{entry} and \Ahoa{MethodDecl}{exit}.
-    \item \emph{Circular Attribute}: an attribute that which definition might depend direclty
+    \item \emph{Circular Attribute}: an attribute which definition might depend direclty
     or indirectly on itself. In JastaAdd, circular attributes are expressed using the \code{circular}
     keyword. To guarantee termination, circular attributes are evaluated in a fixed-point
     computation, i.e., the attribute is evaluated until the value of the attribute does not change.
@@ -243,10 +243,29 @@ JastAdd supports not only synthesized and inherited attributes, but also:
     \begin{itemize}
         \item All the possible values computed by the attribute must be placed 
         in a lattice of finite height.
-        \item The 
+        \item The intermediate results of the fix-point algorithm must increase 
+        or decrease monotonically\footnote{In this Thesis, boolean circular attributes start
+        as \emph{false} and monotonically grow with $\vee$, while set-typed circular attributes
+        start as the empty set and monotonically grow with $\cup$.}. 
     \end{itemize}
+    We use the symbol \AcircSyn{A}{x} to denote a circular synthesized attribute.
 
-    \item \emph{Collection Attribute}: an attribute that returns a collection of values.
+    \item \emph{Collection Attribute}: have no equations, but contributions. The
+    result of a collection attribute is the aggreatation of contributions that can
+    come frome anywhere else in the AST. A contribution clause is associated with
+    an AST node type and describes information to be included in a collection
+    attribute, possibly under certain conditions. Collection attributes, are expecially
+    useful in compiler construction, to collect all the semantic errors in a program 
+    from anywhere in the AST. In JastAdd, collection attributes are defined using the 
+    \code{coll} keyword. For example, the following collection attribute collects all
+    the type errors in a program:
+    \begin{lstlisting}[language=JastAdd]
+coll Set<Errors> Program.errors();
+Expr contributes  when type.compatibleType(expectedType()) to Program.errors();
+    \end{lstlisting}
+    We use the following notation to denote the collection attribute \code{errors}: \Acoll{Program}{errors}
+
+    
 \end{itemize}
 
 
