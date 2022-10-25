@@ -22,7 +22,7 @@
 \newcommand{\Asynaccess}[2]{\umlcode{get}\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}\textcolor{black}{\umlcode{()}}.\mSyn{}\umlcode{#2}\textcolor{black}{()}}}}
 \newcommand{\Ainh}[2]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\mInh{}\umlcode{#2}}}}
 \newcommand{\Ainhdef}[3]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\umlcode{\astnode{#2}}.\mInh{}\umlcode{#3}}}}
-\newcommand{\Ahoa}[1]{\textcolor{ATGsym}{\mbox{\mHOA{}\umlcode{#1}}}}
+\newcommand{\Ahoa}[2]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\mHOA{}\umlcode{#2}}}}
 \newcommand{\Acoll}[1]{\textcolor{ATGsym}{\mbox{\mColl{}\umlcode{#1}}}}
 \newcommand{\Acirc}[1]{\textcolor{ATGsym}{\mbox{\mCirc{}\umlcode{#1}}}}
 
@@ -117,7 +117,7 @@
   %keyword4
   morekeywords = [3]{CFGNode, Assignments, Assign,AssignBitwiseExpr, TrueLiteral, Entry,ConstructorDecl,UnceckedException, TryWithResorucesStmt, NTAFinallyBlock,ClassDecl, CloseListNTA, BreakStmt,ThrowStmt,TryStmt,ReturnStmt, ContinueStmt, Exit, Expr, AssignShiftExpr, AssignMultiplicativeExpr, IntegerLiteral, AssignAdditiveExpr, UnaryIncDec,DoStmt,VariableDeclarator, NumericLiteral, ParameterDeclaration, FieldDeclarator, PostfixExpr, PreIncExpr, PreDecExpr, ReachedLVal, Variable,EQOp,CFGSupport, ForStmt, EmptyStmt, MethodDecl, ExprStmt, AssignStmt, IfStmt, AndOp, LessOp, WhileStmt, Block, AssignExpr, PostUnaryInc, PostUnaryDec, Entry, Exit, EQExpr, VarAccess, CFGRoot }, %ASTnode typess
   %keyword5
-  morekeywords = [4]{Array, ArrayList, Boolean, Byte,  BitSet, BufferedReader,Collections, Character, Class, Double, Float, Gamma, AbsDomain, NULL, NOTNULL, TOP,Integer, HashMap, PrintWriter, String, StringBuffer, StringBuilder, Thread, boolean, byte, char, color, double, float, int, long, short, FloatDict, FloatList, IntDict, IntList, JSONArray, JSONObject, PFont, PGraphics, PImage, PShader, PShape, PVector, StringDict, StringList, Table, TableRow, XML, Set, HashSet},
+  morekeywords = [4]{Array, ArrayList, Boolean, Byte,  BitSet, BufferedReader,Collections, Character, Class, Double, Float, Gamma, AbsDomain, NULL, NOTNULL, TOP,Integer, HashMap, PrintWriter, String, StringBuffer, StringBuilder, Thread, boolean, byte, char, color, double, float, int,Type, long, short, FloatDict, FloatList, IntDict, IntList, JSONArray, JSONObject, PFont, PGraphics, PImage, PShader, PShape, PVector, StringDict, StringList, Table, TableRow, XML, Set, HashSet},
   %keywordstyle = [1]\color{lightblue},
   %keywordstyle = [2]\color{lightgreen},
   keywordstyle = [1]\bfseries,

@@ -58,7 +58,7 @@ indicates that the attribute is defined and broadcasted to all children of \astn
 Let us consider the following abstract grammar:
 
     \begin{align*}
-        A& ::= B C \\ 
+        A& ::= B \quad C \\ 
         B& \\
         C&
     \end{align*}
@@ -132,7 +132,7 @@ The abstract grammar is defined in a \code{.ast} file with the following syntax:
 where each line defines a non-terminal, i.e., a node in the AST.
 The attributes are defined in a \code{.jrag} file with the following syntax:
     \begin{lstlisting}[language=JastAdd]
-        syn int A.z() = B.x + 1;
+        syn int A.z() = B.x() + 1;
         syn int B.x() = 2;
         syn int C.v() = 5;
         inh int C.y();
@@ -205,8 +205,49 @@ class B {
 JastAdd supports intertype declarations for the definition of attributes. An intertype declaration
 of an attribute is a declaration that is performed into an aspect that, at compile time, 
 is inlined in the class specified in the intertype declaration. The example in Figure~\ref{fig:interType}
-shows an intertype declaration of an attribute. The attribute \Asyn{A}{x} is defined in the aspect
-\texttt{AttrDecl} and is inlined in the class \texttt{A} and in the class \texttt{B} with two
-different implementations: \Asyn{A}{x}=1 and \Asyn{B}{x}=2.
+shows an intertype declaration of an attribute. 
+The attribtues \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrDecl} 
+that is inlined in the classes \code{A} and \code{B} respectively.
+
+JastAdd supports not only synthesized and inherited attributes, but also:
+\begin{itemize}
+    \item \emph{Parametrised Attribute}: the value of the attribute might depend
+    not only on the AST node itself, but also on the value of the arguments supplied
+    to it. Attributes of this kind are widely used, especially in the definition of 
+    type-checking rules.
+    \begin{lstlisting}[language=JastAdd]
+        syn Type A.compatible(Type t) = this.type() == t;
+    \end{lstlisting}
+    
+
+    \item \emph{Higher-Order Attribute (HOA)}\footnote{Also known as \emph{Non-Terminal Attributes (NTA)}.}:
+    the value of an HOA is a freshly new subtree. Are called \emph{Higher-Order Attributes}
+    because are attribute and at the same time a non-terminal, therefore they can be attributed.
+    The subtree computed by an HOA behaves like a normal non-terminal, i.e., it can be
+    attributed and it can be used in the definition of other attributes. In JastAdd, HOAs
+    are defined using the \code{nta} keyword. HOAs are widely used to reify information 
+    that are not explicit in the source-code and therefore, not present in the AST.
+    For example, when constructing a CFG of a method, is always useful to specify
+    a unique entry point and a unique exit point for the method. In JastAdd, this can be
+    achived using an HOA:
+    \begin{lstlisting}[language=JastAdd]
+        syn nta Entry MethodDecl.entry() = new Entry();
+        syn nta Exit MethodDecl.exit() = new Exit();
+    \end{lstlisting}
+    We use the right-arrow symbol to denote HOAs, e.g.,  \Ahoa{MethodDecl}{entry} and \Ahoa{MethodDecl}{exit}.
+    \item \emph{Circular Attribute}: an attribute that which definition might depend direclty
+    or indirectly on itself. In JastaAdd, circular attributes are expressed using the \code{circular}
+    keyword. To guarantee termination, circular attributes are evaluated in a fixed-point
+    computation, i.e., the attribute is evaluated until the value of the attribute does not change.
+    The requirements, that are not checked by JastAdd, to guarantee termination are:
+    \begin{itemize}
+        \item All the possible values computed by the attribute must be placed 
+        in a lattice of finite height.
+        \item The 
+    \end{itemize}
+
+    \item \emph{Collection Attribute}: an attribute that returns a collection of values.
+\end{itemize}
+
 
 
