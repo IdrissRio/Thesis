@@ -1,8 +1,105 @@
 \chapter{Control-Flow Analysis}
 \section{Control-Flow Analysis}
 \label{sec:controlflow}
-Control-Flow Analysis is the process of determining the control-flow graph of a program. 
-The control-flow graph is a directed graph whose nodes are the basic blocks of the
-program and whose edges are the control-flow edges.
+Control-Flow Analysis is a static analysis technique used to determin the control-flow graph (CFG) of a program.
+The CFG is a directed graph representing all the possible path that a program can
+take during its execution. The CFG of a program is used to perform many static analyses, such as
+data-flow analysis, and to perform program transformations, e.g., loop unrolling.
 
-\section{Control-Flow Analysis using Reference Attribute Grammars}
+
+Let us consider the graph $\mathcal{G}=(B,F)$ where $B$ is the set of nodes 
+of the graph and $F$ is the set of edges. Each node $b$ of $B$ represents a
+basic block of the program. A basic block is a sequence of instructions with one and only one
+entry point and exit point. Meaning that there is no jump instruction in the middle of a basic block.
+The edges of $F$ represent the possible transitions between basic blocks. Given two
+basic blocks $b_1$ and $b_2$, there is an edge \CFGEdge{b_1}{b_2} in $F$ if $b_2$ is an immediate
+successor of $b_1$.
+\begin{definition}
+    Given a basic block $b$, we define the set of successor of $b$ as 
+    $$ \text{succ(b)} = \{b_2 \mid \CFGEdge{b}{b_2} \in F\}.$$
+\end{definition}
+The predecessor relation is defined in a similar way:
+\begin{definition}
+    Given a basic block $b$, we define the set of predecessor of $b$ as the 
+    inverse of the successor relation:
+    $$ \text{pred(b)} = \{b_1 \mid \CFGEdge{b_1}{b} \in F\} = \text{succ}^{-1}\text{(b)}.$$
+\end{definition}
+Among $B$, we can distinguish two special nodes: the entry node $b_{\text{entry}}$ and 
+the exit node $b_{\text{exit}}$. The entry node is the node from which the program starts its execution.
+The exit node is the node to which the program returns after its execution. The entry node is the only node
+with no predecessor, and the exit node is the only node with no successor. More 
+formally, we can define the entry node as the unique node $b_{\text{entry}}$ such that
+$$ \forall b \in B, \text{pred}(b) \neq \emptyset \Rightarrow b = b_{\text{entry}}.$$
+Similarly, we can define the exit node as the unique node $b_{\text{exit}}$ such that
+$$ \forall b \in B, \text{succ}(b) \neq \emptyset \Rightarrow b = b_{\text{exit}}.$$
+\begin{definition}
+    A path in $\mathcal{G}$ is a sequence of basic blocks $b_1, \ldots, b_n$ such that
+    $$ \forall i \in \{1, \ldots, n-1\},  b_{i+1} \in \text{succ}(b_i).$$
+\end{definition}
+
+
+Most of the time, the CFG is constructed on top of an intermediate representation
+(IR) of the program. The IR is a language that is easier to analyze than the original
+source language. The IR is usually a low-level language, such as LLVM IR or Java Bytecode, that are
+closer to the machine code than the source language. 
+Moreover, since the IR is usually targeted by serveral different langauges, 
+it requires less engineering effort to implement a control-flow analysis for the IR than for each
+source language.
+A less common approach is to construct the CFG on top of the source language.
+This method fits well for imperative languages, where the control-flow is 
+explicit in the source code. For functional languages, the
+control-flow is implicit in the source code, and the CFG is usually constructed
+on top of the IR.
+
+
+
+
+\section{Control-Flow Analysis Using RAGs}
+\label{sec:cfarag}
+In this section, we discuss IntraCFG, a declarative and language independent framework for 
+constructing CFGs using RAGs. IntraCFG is the second attempt to implement a control-flow analysis
+on top of the AST using RAGs. The first attempt was the \texttt{JastAddJ-intraflow}, which was
+implemented on the \texttt{JastAddJ} compiler. IntraCFG tries to overcome the limitations of
+\texttt{JastAddJ-intraflow} by providing a more general and flexible framework.
+Before discussing IntraCFG and JastAddJ-Intraflow, we first introduce the 
+SimpliC language, a simple imperative language, that we use to illustrate the use of IntraCFG.
+
+\subsection{SimpliC}
+SimpliC is a simple imperative language subset of the C language.
+The syntax of SimpliC is defined by the following abstract syntax:
+\begin{lstlisting}[caption={Syntax of the SimpliC language}]
+% Program ::= Function*
+% Function ::= Type id Param* Block
+% Param ::= Type id
+% Block ::= Stmt*
+Stmt ::= Block | IfStmt | WhileStmt | ReturnStmt | ExprStmt | DeclStmt | AssignStmt
+IfStmt ::= Cond:Expr Then:Expr Else:Expr
+WhileStmt ::= Cond:Expr Body:Expr
+ReturnStmt ::= Expr
+ExprStmt ::= Expr
+DeclStmt ::= Type id Init:Expr
+AssignStmt ::= Dest:Expr Source:Expr
+Expr ::= id | Numeral | true | false | Add | Less | Not | Call
+Add ::= Left:Expr Right:Expr
+Less ::= Left:Expr Right:Expr
+Not ::= Expr
+Call ::= id Arg:Expr*
+\end{lstlisting}
+The starting symbol of the SimpliC language is the \texttt{Program} non-terminal.
+A \texttt{Program} is a list of \texttt{Function}s. A \texttt{Function} is a function
+declaration, which is composed of a return type, a name, a list of parameters, and a body.
+The body of a function is a \texttt{Block}, which is a list of statements. A \texttt{Block}
+is a sequence of statements, which can be nested. The statements of SimpliC are
+\texttt{IfStmt}, \texttt{WhileStmt}, \texttt{ReturnStmt}, \texttt{ExprStmt}, \texttt{DeclStmt},
+and \texttt{AssignStmt}. Reguarding expressions, we decided to include only the most basic
+expressions, such as variable reference (\texttt{Id}),  \texttt{Numeral}, \texttt{Bool}
+and some binary operators (\texttt{Add}, \texttt{Less} and \texttt{Not}).
+For the sake of simplicity, we did not include \texttt{BreakStmt} as the control-flow Analysis
+solution is similar to the one of \texttt{ReturnStmt}. 
+
+\subsection{JastAddJ-Intraflow}
+\label{sec:jastaddj-intraflow}
+The \texttt{JastAddJ-intraflow} is the first framework designed for the construction of CFGs
+using RAGs. It is not langauge agnostic as it targets the Java language. 
+
+
