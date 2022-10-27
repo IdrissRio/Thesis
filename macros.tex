@@ -194,3 +194,146 @@
 }{
    #2
 }}
+
+
+\newcommand{\paperIref}{%
+Idriss Riouak, Christoph Reichenbach, G\"{o}rel Hedin and Niklas Fors
+``A Precise Framework for Source-Level Control-Flow Analysis'.
+In \emph{21st International Working Conference on Source Code Analysis and Manipulation (SCAM),
+pp. 1--11}. Virtual, 2021.
+}
+\newcommand{\paperIIref}{%
+Idriss Riouak, G\"{o}rel Hedin, Christoph Reichenbach and Niklas Fors
+``JFeature: Know Your Corpus!''.
+In \emph{22st International Working Conference on Source Code Analysis and Manipulation (SCAM),
+pp. 236--241s}. Limassol, Cyprus, 2022.
+}
+
+
+
+
+
+% From here on, the macros.tex file contains settings about the layout of the 
+% Thesis itself. Do not change anything below this line unless you know what
+% you are doing.
+ 
+
+% Defines the layout settings for the thesis
+\newcommand{\pageSettings}{
+ \setlength{\voffset}{3pt}
+ \setlength{\hoffset}{-1in}
+ \setlength{\textheight}{520pt}
+ \setlength{\textwidth}{327pt}
+ \setlength{\oddsidemargin}{93pt}
+ \setlength{\evensidemargin}{195pt}
+\setlength{\marginparsep}{0pt}
+}
+
+
+% ------------------ Change Chapter title row layout
+\makeatletter
+\def\thickhrulefill{\leavevmode \leaders \hrule height 1ex \hfill \kern \z@}
+\def\@makechapterhead#1{%
+  \markmargin%
+  \addtolength{\spiff}{3cm}%
+  \vspace*{10\p@}%
+  {\parindent \z@ \raggedleft \reset@font
+            \sffamily \bfseries \scshape %\@chapapp{} \thechapter%
+        \par\nobreak%
+        \interlinepenalty\@M%
+    \Huge #1\par\nobreak
+    \hrulefill
+    \par\nobreak
+    \vskip 80\p@
+  }}
+\def\@makeschapterhead#1{%
+  \vspace*{10\p@}%
+  {\parindent \z@ \raggedleft \reset@font
+            \sffamily \bfseries \scshape \vphantom{\@chapapp{} \thechapter}
+        \par\nobreak
+        \interlinepenalty\@M
+    \Huge  #1\par\nobreak
+    \hrulefill
+    \par\nobreak
+    \vskip 80\p@
+  }}
+
+%------------------------ part page layout
+%% from book.cls:
+\renewcommand\part{%
+   \if@openright
+      \cleardoublepage
+   \else
+      \clearpage
+   \fi
+   \thispagestyle{plain}%
+  \if@twocolumn
+    \onecolumn
+    \@tempswatrue
+  \else
+    \@tempswafalse
+  \fi
+  \null\vfil
+  \secdef\@part\@spart}
+
+\def\@part[#1]#2{%
+    \ifnum \c@secnumdepth >-2\relax
+      \refstepcounter{part}%
+      \addcontentsline{toc}{part}{#1}%
+    \else
+      \addcontentsline{toc}{part}{#1}%
+    \fi
+    \markboth{}{}%
+    {\centering
+     \interlinepenalty \@M
+     \normalfont
+     \Huge \reset@font \hrulefill \\ \raggedleft \vspace{5mm} \sffamily%
+            \bfseries \scshape {#2} \hspace{15mm}\ \\ \hrulefill \par}%
+    \@endpart}
+\def\@spart#1{%
+    {\centering
+     \interlinepenalty \@M
+     \normalfont
+     \Huge \sffamily \bfseries scshape #1\par}%
+    \@endpart}
+\def\@endpart{\vfil    %% \newpage -- HWL: no pagebreak with part env
+              \if@twoside
+                \null
+                \thispagestyle{empty}%
+                %%\newpage
+              \fi
+              \if@tempswa
+                \twocolumn
+              \fi}
+\makeatother
+%-----------------------------------------------
+
+
+
+%Make fancy header and no footer
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\fancyhf{}
+\fancyhead[LE, RO]{\bfseries\thepage}
+\fancyhead[LO]{\itshape \rightmark}
+\fancyhead[RE]{\truncate{.95\headwidth}{\itshape \leftmark}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}%
+\setlength{\headheight}{75pt}
+\fancypagestyle{plain}{
+  \fancyfoot[LE, RO]{\chapterFoot}
+  \fancyhead{}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+\newcommand{\chapterFoot}{}
+\newcommand{\markmargin}{}
+\newlength{\spiff}
+
+\pageSettings % -------------------------> Applying the style to the thesis. See macros.tex for more details
+\allsectionsfont{\sffamily} % -----------> All sections in sans serif
+
+
+\newtheorem{definition}{Definition}
+\newcommand{\Chapter}[1]{Chapter~\ref{#1}}

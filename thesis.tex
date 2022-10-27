@@ -1,5 +1,4 @@
 \documentclass[a4paper, 10pt, twoside, openright]{book}
-
 \usepackage[T1]{fontenc}
 \usepackage{times}
 \usepackage{graphicx}
@@ -7,289 +6,27 @@
 \usepackage{fancyhdr}
 \usepackage{sectsty}
 \usepackage{listings}
-\usepackage{url}
 \usepackage{float}
 \usepackage[fit]{truncate}
-\usepackage{epstopdf}
 \usepackage{amsmath}
 \usepackage{multirow}
-\usepackage{alltt}
-\usepackage{array}
-\usepackage{algorithmic}
-\usepackage{lic_bok}
 \usepackage{pdfpages}
-%\usepackage[version=0.96]{pgf}
 \usepackage{tikz}
-\usetikzlibrary{positioning}
 \usepackage[fancy,color=orange]{tikz-inet}
-\usetikzlibrary{arrows,shapes,snakes,automata,backgrounds,petri,patterns,shadows,shapes.callouts}
-\usepackage{clrscode}
-\usepackage{boxedminipage}
-\usepackage[nooneline]{subfigure}
-\usepackage{wrapfig}
-\usepackage{comment}
-\usepackage{pgfplots}
-\usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{multicol}
-\usepackage{colortbl}
-\usepackage{courier}
-\usepackage{rotating}
-\usepackage{xspace}
 \usepackage{booktabs}
 
 
-% \usepackage{pstricks-add, cellspace}
-% \setlength{\cellspacetoplimit}{2pt}
-% \setlength{\cellspacebottomlimit}{2pt}
-% %
-% % \usepackage{auto-pst-pdf}
-
-
-
+% Bibliography setting and style
 \usepackage[backend=bibtex8,mincrossrefs=99,style=alphabetic,doi=false,isbn=false,url=false,refsegment=chapter,defernumbers=true,sorting=nyt]{biblatex}
 \addbibresource{Thesis.bib}
 \defbibheading{subbibliography}{\addcontentsline{toc}{section}{References}\section*{References}}
 
-% \usepackage{bibunits}
-% \usepackage{cite}
+\include{macros}
 
 \defbibheading{bibintoc}{%
  \addcontentsline{toc}{chapter}{\bibname}%
  \section*{References}}
-
-\newcommand{\paperIref}{%
-Idriss Riouak, Christoph Reichenbach, G\"{o}rel Hedin and Niklas Fors
-``A Precise Framework for Source-Level Control-Flow Analysis'.
-In \emph{21st International Working Conference on Source Code Analysis and Manipulation (SCAM),
-pp. 1--11}. Virtual, 2021.
-}
-\newcommand{\paperIIref}{%
-Idriss Riouak, G\"{o}rel Hedin, Christoph Reichenbach and Niklas Fors
-``JFeature: Know Your Corpus!''.
-In \emph{22st International Working Conference on Source Code Analysis and Manipulation (SCAM),
-pp. 236--241s}. Limassol, Cyprus, 2022.
-}
-
-
-
-\newtheorem{definition}{Definition}
-
-% JastAdd code listings
-\newcommand{\figcodesize}{\fontsize{8pt}{8pt}}
-\newcommand{\codesize}{\fontsize{8pt}{8pt}}
-\newcommand\figcodestart{\vspace*{-5pt}}
-\lstdefinelanguage{jastadd}
-{
-	morekeywords = {
-		syn, inh, eq, ast, jrag,
-		coll, with, contributes, to, when, root, then,
-		nta, circular, lazy,
-		rewrite,
-		class, extends, boolean, false, true,
-		while, do, for, each, if, else, switch, case,
-		this, abstract, void, new, return, null,
-		try, finally, public, aspect, implements,
-		interface, protected, int, super
-	},
-	otherkeywords = { ::=, *, <, >, :, [, ], ?, =},
- 	sensitive = true,
-	escapeinside={/+}{+/},
-}
-\lstset{language=jastadd}
-\lstset{basicstyle=\footnotesize\ttfamily}
-\lstset{keywordstyle=\ttfamily\bfseries}
-\lstset{commentstyle=\itshape\sffamily}
-\lstset{tabsize=4}
-\lstset{xleftmargin=0.2cm}
-\lstset{basewidth=0.6em}
-\lstset{fontadjust= true}
-\lstset{lineskip=0.7pt}
-\lstset{aboveskip=\baselineskip}
-\lstset{belowskip=\baselineskip}
-\lstset{frame=leftline}
-\lstset{showspaces=false}
-\lstset{showtabs=false}
-\lstset{framerule=0.5pt}
-\lstset{framexleftmargin=0.2cm}
-\lstset{linewidth=\textwidth}
-\lstset{numbers=none}
-\lstnewenvironment{Code}
-{\lstset{print=true}}
-{}
-\lstnewenvironment{jastadd}
-{\lstset{language={jastadd},aboveskip=10pt,belowskip=10pt}} {}
-
-
-% Java classes in text
-\newcommand{\Class}[1]{\textbf{\texttt{\footnotesize{#1}}}}
-\newcommand{\Attr}[1]{\textbf{\texttt{\footnotesize{#1}}}}
-\newcommand{\Method}[1]{\textsf{\footnotesize{#1}}}
-\newcommand{\Keyword}[1]{\textbf{\texttt{\footnotesize{#1}}}}
-\newcommand{\Set}[1]{\textsc{#1}}
-
-% References
-\newcommand{\Chapter}[1]{Chapter~\ref{#1}}
-
-%Page size
-\newcommand{\myGeometry}{
-  \usepackage[paperwidth=164mm, paperheight=232mm,
-    width=115mm,  height=190mm, twoside, hmarginratio=3:2]{geometry}
-  \usepackage[frame, a4, dvips, mount2=1]{crop}
-  \setlength{\topmargin}{-35mm}
-}
-
-\newcommand{\myPage}{
- \setlength{\voffset}{3pt}
- \setlength{\hoffset}{-1in}
- \setlength{\textheight}{520pt}%{525pt}
- \setlength{\textwidth}{327pt}
- \setlength{\oddsidemargin}{93pt}        % 0
- \setlength{\evensidemargin}{195pt}     % 288
-\setlength{\marginparsep}{0pt}
-}
-\myPage
-
-\usepackage{layouts}
-\setlayoutscale{0.33}
-\currentpage
-
-\newcommand{\testLayout}{%
- \pagedesign%
- \newpage%
- \currentpage%
- \pagedesign%
- \cleardoublepage%
-}
-\renewcommand{\testLayout}{}
-
-\include{macros}
-
-\hyphenation{JastAdd}
-\hyphenation{IntelliJ}
-\hyphenation{xSemantics}
-\hyphenation{JModelica}
-
-% set default (body) font
-%\renewcommand{\familydefault}{pnc}
-%\renewcommand{\familydefault}{msa}
-% Make all sections sanserif
-\allsectionsfont{\sffamily}
-
-%Make fancy header and no footer
-\pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
-\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
-\fancyhf{}
-\fancyhead[LE, RO]{\bfseries\thepage}
-\fancyhead[LO]{\itshape \rightmark}
-\fancyhead[RE]{\truncate{.95\headwidth}{\itshape \leftmark}}
-\renewcommand{\headrulewidth}{0.5pt}
-\renewcommand{\footrulewidth}{0pt}%
-\setlength{\headheight}{75pt}
-\fancypagestyle{plain}{
-  \fancyfoot[LE, RO]{\chapterFoot}
-  \fancyhead{}
-  \renewcommand{\headrulewidth}{0pt}
-}
-
-\newcommand{\chapterFoot}{}
-\newcommand{\markmargin}{}
-\newlength{\spiff}
-
-% ------------------ Change chapter title row layout
-\makeatletter
-\def\thickhrulefill{\leavevmode \leaders \hrule height 1ex \hfill \kern \z@}
-\def\@makechapterhead#1{%
-  \markmargin%
-  \addtolength{\spiff}{3cm}%
-  \vspace*{10\p@}%
-  {\parindent \z@ \raggedleft \reset@font
-            \sffamily \bfseries \scshape %\@chapapp{} \thechapter%
-        \par\nobreak%
-        \interlinepenalty\@M%
-    \Huge #1\par\nobreak
-    \hrulefill
-    \par\nobreak
-    \vskip 80\p@
-  }}
-\def\@makeschapterhead#1{%
-  \vspace*{10\p@}%
-  {\parindent \z@ \raggedleft \reset@font
-            \sffamily \bfseries \scshape \vphantom{\@chapapp{} \thechapter}
-        \par\nobreak
-        \interlinepenalty\@M
-    \Huge  #1\par\nobreak
-    \hrulefill
-    \par\nobreak
-    \vskip 80\p@
-  }}
-
-%------------------------ part page layout
-%% from book.cls:
-\renewcommand\part{%
-   \if@openright
-      \cleardoublepage
-   \else
-      \clearpage
-   \fi
-   \thispagestyle{plain}%
-  \if@twocolumn
-    \onecolumn
-    \@tempswatrue
-  \else
-    \@tempswafalse
-  \fi
-  \null\vfil
-  \secdef\@part\@spart}
-
-\def\@part[#1]#2{%
-    \ifnum \c@secnumdepth >-2\relax
-      \refstepcounter{part}%
-      \addcontentsline{toc}{part}{#1}%
-    \else
-      \addcontentsline{toc}{part}{#1}%
-    \fi
-    \markboth{}{}%
-    {\centering
-     \interlinepenalty \@M
-     \normalfont
-     \Huge \reset@font \hrulefill \\ \raggedleft \vspace{5mm} \sffamily%
-            \bfseries \scshape {#2} \hspace{15mm}\ \\ \hrulefill \par}%
-    \@endpart}
-\def\@spart#1{%
-    {\centering
-     \interlinepenalty \@M
-     \normalfont
-     \Huge \sffamily \bfseries scshape #1\par}%
-    \@endpart}
-\def\@endpart{\vfil    %% \newpage -- HWL: no pagebreak with part env
-              \if@twoside
-                \null
-                \thispagestyle{empty}%
-                %%\newpage
-              \fi
-              \if@tempswa
-                \twocolumn
-              \fi}
-%-----------------------------------------------
-\makeatother
-% \usepackage{fontspec}
-\usepackage{mdframed} % Add easy frames to paragraphs
-\usepackage{xparse} % Add support for \NewDocumentEnvironment
-
-\newmdenv[ % Define mdframe settings and store as leftrule
-  linecolor=black,
-  topline=false,
-  bottomline=false,
-  rightline=false,
-  skipabove=\topsep,
-  skipbelow=\topsep
-]{leftrule}
-
-\NewDocumentEnvironment{example}{O{\textbf{Example}}} % Define example environment
-{\begin{leftrule}\noindent\textcolor{black}{#1}\par}
-{\end{leftrule}}
 
 
 \begin{document}
@@ -335,7 +72,7 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 
 
 
-\newcommand{\Matlab}{\textsc{MatLab}\xspace}
+
 
 
 %------------------------------------
@@ -345,12 +82,8 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 \include{kappa/abstract}
 \include{kappa/contribution}
 
-\setcounter{tocdepth}{1}
+\setcounter{tocdepth}{2} 
 \tableofcontents
-
-%\include{kappa/preface}
-
-%\include{kappa/sammanfattning}
 
 \mainmatter
 \renewcommand{\thesection}{\arabic{section}}
@@ -382,10 +115,7 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 	\marginpar{\raggedright \rule{5mm}{0mm}\begin{tikzpicture}
 \node[rectangle, fill=black, minimum width=6cm, minimum height=2cm, inner sep=0pt,draw=black](rec){}; \node[left of = rec,node distance=2.7cm,text width=2cm,text centered, font=\sffamily\bfseries\small,rotate=90]{\color{white}{\textsc{Paper \thechapter}}};\end{tikzpicture}\rule{1pt}{\apa}}%
 }
-%	\marginpar{\raggedright \rule{13mm}{0mm}\rule{5cm}{2cm}\rule{1pt}{\apa}}%
 
-
-%\renewcommand{\chapterFoot}{\hrulefill \flushleft \small \paperRemark}
 \newfloat{paperfoot}{b}{paper}
 \newcommand{\paperRemark}[1]{
   \begin{paperfoot}%
@@ -399,20 +129,6 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 \renewcommand{\chaptername}{Paper}
 
 \part{Included Papers}
-\addtolength{\apa}{2cm}
-% \input{papers/intrajpaper/IntraJ}
-%\addtolength{\apa}{2cm}
-%\include{paper-scp}
-%\addtolength{\apa}{2cm}
-%\include{paper-sle10}
-%\addtolength{\apa}{2cm}
-%\include{report-incremental}
-%\addtolength{\apa}{2cm}
-%\include{paper-sle12}
-%\addtolength{\apa}{2cm}
-%\include{paper-sle08}
-%\addtolength{\apa}{2cm}
-%\include{paper-toplas}
 
 
 \printbibliography

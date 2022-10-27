@@ -1,5 +1,6 @@
-\chapter{Attribute Grammars}
+\section{Background}
 \label{chap:attr-grammars}
+\subsection{Attribute Grammars}
 Attribute Grammars were first introduced in 1968 by Donald Knuth and are a formalism for the specification
 of the semantics of programming languages. Attributes are used to decorate nodes of the AST
 and are defeined by a pure function, i.e., side-effect free, that can access other attributes of the same node or of its children.
@@ -88,7 +89,7 @@ each child of type \astnode{C}. The value of \Ainh{C}{y} is computed by solving 
 resulting in \Ainh{C}{y} = 8. Figure~\ref{fig:ragsExample} depicts the described example.
 
 
-\section{Reference Attribute Grammars}
+\subsection{Reference Attribute Grammars}
 \label{sec:rag}
 Reference Attribute Grammars (RAGs) where introduced in~\cite{DBLP:journals/informaticaSI/Hedin00}
 and are an extension of Attribute Grammars to Object-Oriented languages. While attributes in Attribute Grammars
