@@ -1,20 +1,27 @@
 %% SECTION INTRODUCTION
+\begin{center}
 \begin{figure}
-\hspace{-1.1cm}
-\scalebox{0.865}{
+\scalebox{1}{
   \input{papers/intraj/img/StrategyExample.tex}
  }
-\caption{In the \ParentFirst\  CFG (left) a parent always precedes its children, resulting in redundant and misplaced nodes.
+\caption{In the \ParentFirst\  CFG (left) a parent always precedes its children,
+resulting in redundant and misplaced nodes.
 The \ASTUnrestricted\ CFG (right) is correct and minimal.}
   \label{fig:semanticsvssyntax}
 \end{figure}
+\end{center}
 %
 %\subsection{Reference Attribute Grammars}
-Attribute grammars, originally introduced by Knuth~\cite{knuth1968semantics}, are declarative specifications that decorate AST nodes with attributes.
+Attribute grammars, originally introduced by Knuth~\cite{knuth1968semantics}, 
+are declarative specifications that decorate AST nodes with attributes.
 Each AST node type can declare attributes and define their values through equations.
-There are two main kinds of attributes: \textbf{\emph{synthesised attributes}}, defined in the same node, and \textbf{\emph{inherited attributes}}, defined in a parent or an ancestor node.
-Synthesised attributes are useful for propagating information upwards in an AST, e.g.\@ for basic type analysis of expressions.
-Inherited attributes are useful for propagating information downwards, e.g., for environment information.
+There are two main kinds of attributes: \textbf{\emph{synthesised attributes}}, 
+defined in the same node, and \textbf{\emph{inherited attributes}}, defined in
+a parent or an ancestor node.
+Synthesised attributes are useful for propagating information upwards in an AST,
+e.g.\@ for basic type analysis of expressions.
+Inherited attributes are useful for propagating information downwards,
+e.g., for environment information.
 
 Reference Attribute Grammars (RAGs) \cite{hedin2000rags} extend Knuth's
 attribute grammars with \textbf{\emph{reference attributes}}, whose values are references to other AST nodes.
@@ -78,6 +85,7 @@ The \astnode{CFGNode} interface marks nodes in the {\CFG}, and each node has ref
 The \astnode{CFGSupport} interface marks AST nodes in a location that may contain \astnode{CFGNode}s.
 All \astnode{CFGNode}s are \astnode{CFGSupport} nodes, but \astnode{CFGSupport} nodes that are not \astnode{CFGNode}s can help steer the construction of the {\CFG}.
 
+
 \input{papers/intraj/img/intracfguml.tex}
 
 Figure~\ref{fig:intracfgframework} also shows the AST node types' attributes and their types (middle boxes), as well the defining equations (bottom boxes).
@@ -140,8 +148,13 @@ The \Ainh{nextNodes} attribute contains the \astnode{CFGNode}s that are \emph{ou
 By default, the \Asyn{succ} attribute is defined as equal to \Ainh{nextNodes}.
 
 \begin{figure*}
+  \begin{lstlisting}[language=JastAdd]
+    void foo(int p1, int p2, boolean b1){
+      if (p1==p2 && b1) p1 = 0;
+    }
+    \end{lstlisting}
 \centering
-\scalebox{0.59}{
+\scalebox{0.7}{
 	\input{papers/intraj/img/RunningExample.tex}
 }
 \caption{Visualization of the attributes \Asyn{firstNodes}, \Ainh{nextNodes} and \Asyn{succ}. For boolean expressions (\astnode{AndOp} and \astnode{EQOp}), the subsets \Ainh{nextNodesTT} and \Ainh{nextNodesFF} are shown instead of \Ainh{nextNodes}, marked by True and False, respectively.}
@@ -182,60 +195,3 @@ The left-hand-side variable of the assignment \code{p1 = 0} (i.e., $\texttt{p}_1
 To support both forward and backward analyses, we provide a predecessor attribute that captures the inverse of the successor attribute \Asyn{succ}.
 However, \Asyn{succ} is also defined for \astnode{CFGNode}s that are not reachable from \astnode{Entry} by following \Asyn{succ} (i.e., that are ``dead code'').
 Our framework therefore computes predecessor edges \Asyn{pred} by not only inverting \Asyn{succ} into a collection attribute \Acoll{succInv}, but also by filtering out such ``dead'' nodes from \Acoll{succInv} with a boolean circular attribute \Acirc{reachable} (Figure~\ref{fig:intracfgframework}).
-
-%
-%\begin{lstlisting}[language=JastAdd, caption=SB module specification., label=listing:SBModule, captionpos=b,float=t]
-%MethodDecl implements CFGRoot;
-%ExprStmt, IfStmt, AndOp, Block, AssignStmt implements CFGSupport;
-%VarAccess, EQOp, IntegerLiteral  implements CFGNode;
-%
-%eq ExprStmt.firstNodes() = getExpr().firstNodes();
-%
-%eq EQOp.firstNodes() = getRight().firstNodes();
-%eq EQOp.getRight().nextNodes() = getLeft().firstNodes();
-%eq EQOp.getLeft().nextNodes() = Collections.singleton(this);
-%
-%eq AssignExpr.firstNodes() =  getDest().firstNodes();
-%eq AssignExpr.getDest().nextNodes() = getSource().firstNodes();
-%eq AssignExpr.getSource().nextNodes() = Collections.singleton(this);
-%eq AssignExpr.getChild().nextNodesTT() = Collections.singleton(this);
-%eq AssignExpr.getChild().nextNodesFF() = Collections.singleton(this);
-%
-%eq MethodDecl.Entry().nextNodes() =
-% (hasBlock() ? getBlock().firstNodes() : Collections.singleton(Exit()));
-%eq MethodDecl.getBlock().nextNodes() = Collections.singleton(Exit());
-%
-%eq Block.firstNodes() =
-%   (getNumStmt() == 0) ? nextNodes() : getStmt(0).firstNodes();
-%eq Block.getStmt(int index).nextNodes() =
-%    (getNumStmt() - 1 == index) ? nextNodes() : getStmt(index + 1).firstNodes();
-%
-%eq AndOp.firstNodes() = getLeftOperand().firstNodes();
-%eq AndOp.getLeftOperand().nextNodesTT() = getRightOperand().firstNodes();
-%eq AndOp.getLeftOperand().nextNodesFF() = nextNodesFF();
-%eq AndOp.getChild().nextNodes(){
-%  Set<CFGNode> result = new HashSet<>(getLeftOperand().nextNodesTT();
-%  result.addAll(getLeftOperand().nextNodesFF());
-%  return result;}
-%
-%eq IfStmt.firstNodes() = getCondition().firstNodes();
-%eq IfStmt.getCondition().nextNodesTT() = getThen().firstNodes();
-%eq IfStmt.getCondition().nextNodesFF() =
-%  hasElse() ? getElse().firstNodes() : nextNodes();
-%eq IfStmt.getCondition().nextNodes() {
-%  Set<CFGNode> result = new HashSet<>(getCondition().nextNodesTT());
-%  result.addAll(getCondition().nextNodesFF());
-%  return result;}
-%
-%eq PostUnaryDec.getOperand().nextNodes() = Collections.singleton(this);
-%eq PostUnaryDec.firstNodes() = getOperand().firstNodes();
-%\end{lstlisting}
-%
-%
-%
-
-
-
-
-
-

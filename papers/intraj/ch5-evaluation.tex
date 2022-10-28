@@ -22,30 +22,30 @@ reduces the number of nodes and edges by more than 30\%.
 & LOC & \textsc{Qty} &\textsc{ \intraj}   & \textsc{JJI} & \%  \\
 \bottomrule
 \multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\project{ANTLR}\\{v. 2.7.2}\end{tabular}} & \multirow{3}{*}{$33^\cdot737$}
- & \textsc{Roots}      & $2^\cdot667$   & $2^\cdot329$             & +14.5   \\
+ & \textsc{Roots}& $2^\cdot667$   & $2^\cdot329$& +14.5   \\
 \cline{3-6}
-                          &  & \textsc{Nodes}      & $76^\cdot925$  & $116^\cdot523$           & -39.9  \\
+&  & \textsc{Nodes}& $76^\cdot925$  & $116^\cdot523$ & -39.9  \\
 \cline{3-6}
-                         &   & \textsc{Edges}      & $85^\cdot028$  & $136^\cdot528$           & -37.7   \\
+  &   & \textsc{Edges}& $85^\cdot028$  & $136^\cdot528$ & -37.7   \\
 \midrule
 \multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\project{PMD}\\{v. 4.2}\end{tabular}}   &\multirow{3}{*}{$49^\cdot610$}
-     & \textsc{Roots}      & $6^\cdot215$   & $5^\cdot960$             & +4.26   \\
+     & \textsc{Roots}& $6^\cdot215$   & $5^\cdot960$& +4.26   \\
 \cline{3-6}
-                        &    & \textsc{Nodes}      & $103^\cdot739$ & $182^\cdot864$           & -43.2   \\
+ &    & \textsc{Nodes}& $103^\cdot739$ & $182^\cdot864$ & -43.2   \\
 \cline{3-6}
-                        &    & \textsc{Edges}      & $108^\cdot639$ & $202^\cdot842$           & -46.4  \\
+ &    & \textsc{Edges}& $108^\cdot639$ & $202^\cdot842$ & -46.4  \\
 \midrule
-\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\project{JFC}\\{v 1.0.0}\end{tabular}}  &  \multirow{3}{*}{$95^\cdot664$}  &  \textsc{Roots}       & $9^\cdot271$   & $7^\cdot889$             &  +17.5   \\
+\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\project{JFC}\\{v 1.0.0}\end{tabular}}  &  \multirow{3}{*}{$95^\cdot664$}  &  \textsc{Roots} & $9^\cdot271$   & $7^\cdot889$&  +17.5   \\
 \cline{3-6}
-                         &   & \textsc{Nodes}      & $219^\cdot419$ & $331^\cdot368$           &   -33.7 \\
+  &   & \textsc{Nodes}& $219^\cdot419$ & $331^\cdot368$ &   -33.7 \\
 \cline{3-6}
-                         &   & \textsc{Edges}      & $220^\cdot256$ & $363^\cdot642$           & -39.4   \\
+  &   & \textsc{Edges}& $220^\cdot256$ & $363^\cdot642$ & -39.4   \\
 \midrule
-\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\project{FOP}\\{v 0.95}\end{tabular}}       & \multirow{3}{*}{$97^\cdot288$}  &  \textsc{Roots}       & $11^\cdot327$  & $8^\cdot921$             & +26.9   \\
+\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\project{FOP}\\{v 0.95}\end{tabular}} & \multirow{3}{*}{$97^\cdot288$}  &  \textsc{Roots} & $11^\cdot327$  & $8^\cdot921$& +26.9   \\
 \cline{3-6}
-                        &    &  \textsc{Nodes}       & $239^\cdot096$ & $347^\cdot125$           & -31.1   \\
+ &    &  \textsc{Nodes} & $239^\cdot096$ & $347^\cdot125$ & -31.1   \\
 \cline{3-6}
-                       &     & \textsc{Edges}      & $240^\cdot068$ & $379^\cdot269$           & -36.6   \\
+&     & \textsc{Edges}& $240^\cdot068$ & $379^\cdot269$ & -36.6   \\
 \bottomrule
 \end{tabular}
 \caption{Benchmark size metrics, \textsc{LOC} from \texttt{cloc}. The rest are {\CFG} sizes. \textsc{Roots} is the number of intraprocedural {\CFG}s.  For {\intraj}, this includes static and instance initialisers.}
@@ -79,11 +79,12 @@ Meanwhile, \tool{JJI} reports 9~false positives in \project{PMD} while handling 
 {\intraj} reports two false positives, due to missing two exceptional flow edges for unchecked exceptions (Section~\ref{sec:exceptions}).
 These do not affect \tool{JJI} (and possibly \tool{SQ}), since JJI conservatively merges exceptional and regular control flow.
 
-\begin{figure}
-  \begin{center}
+\begin{figure}[H]
+  \centering
+  % \scalebox{0.8}{
     \input{papers/intraj/fig-reports-overlap.tex}
     \input{papers/intraj/img/fig-reports-overlapps-NPA}
-  \end{center}
+  % }
   \caption{Venn diagram: number of reports shared across checkers, and percentage of true positives (unless 100\%).}
 \label{fig:sets}
 \end{figure}
@@ -100,8 +101,8 @@ The code here checks if \code{rs} is \code{null} and, if so, calls \code{panic()
 \tool{IntraJ} and \tool{SQ} treat \code{panic()} as a regular method call and infer that \code{rs} may be \code{null} when dereferenced.
 
 \noindent
-\begin{minipage}{0.23\textwidth}
-\begin{lstlisting}[caption={Simplified false positive reported by {\intraj} }, language=Java, captionpos=b, label=listing:npaTruePositiveIntraJ]
+\begin{minipage}{0.45\textwidth}
+\begin{lstlisting}[caption={Simplified false positive reported by {\intraj} }, language=JastAdd, captionpos=b, label=listing:npaTruePositiveIntraJ]
 void bar(boolean flag){
   Object o = null;
   if (flag)
@@ -112,8 +113,8 @@ void bar(boolean flag){
 \end{lstlisting}
 \end{minipage}%
 \hfill
-\begin{minipage}{0.23\textwidth}
-\begin{lstlisting}[caption={False positive due to intraprocedural limitations}, language=Java, captionpos=b, label=listing:npaTruePositiveSQ]
+\begin{minipage}{0.45\textwidth}
+\begin{lstlisting}[caption={False positive due to intraprocedural limitations}, language=JastAdd, captionpos=b, label=listing:npaTruePositiveSQ]
 void foo(){
   Object rs = getRS();
   if(rs==null)
@@ -173,28 +174,30 @@ and we expect this benefit to grow for analyses on taller lattices (e.g., interv
 \centering
 \caption{Benchmark mean execution time and 95\% confidence intervals over 50 data points per reported number.}
 \label{tbl:startup}
+\begin{adjustbox}{angle=90}
 \begin{tabular}{|l|rrr|crrrrr|rrr|}
 \hline
 \multirow{2}{*}{Benchmark} &  \multicolumn{9}{c}{Start-up} & \multicolumn{3}{|c|}{Steady state}\\
 \cline{2-13}
-          & \multicolumn{3}{c}{Baseline(s)} & An.sys & \Tcenter{\tool{IntraJ}(s)}  & \Tcenter{\tool{JJI}(s)}   & \Tcenter{\tool{SQ}(s)}  & \Tcenter{\%$_{\text{\tool{JJI}}}$} & \TcenterR{\%$_{\text{SQ}}$} & \Tcenter{\tool{IntraJ}(s)} & \Tcenter{\tool{JJI}(s)}   &  \TcenterR{\%$_{\text{JJI}}$}    \\
+& \multicolumn{3}{c}{Baseline(s)} & An.sys & \Tcenter{\tool{IntraJ}(s)}  & \Tcenter{\tool{JJI}(s)}   & \Tcenter{\tool{SQ}(s)}  & \Tcenter{\%$_{\text{\tool{JJI}}}$} & \TcenterR{\%$_{\text{SQ}}$} & \Tcenter{\tool{IntraJ}(s)} & \Tcenter{\tool{JJI}(s)}   &  \TcenterR{\%$_{\text{JJI}}$}    \\
 \hline
-\multirow{3}{*}{ANTLR} & \Tcenter{\tool{\intraj}}     											  & \Tcenter{JJI}         					&	\TcenterR{\tool{SonarQube}}						 & CFG      & 0.29$\mCi{0.01}$& 0.16$\mCi{0.00}$&\NAmark&181 &\NAmarkR  & 0.05$\mCi{0.00}$  & 0.04$\mCi{0.00}$ & 125  \\
-                                              & \multirow{2}{*}{2.14$\mCi{0.01}$} &  \multirow{2}{*}{1.34$\mCi{0.01}$}&  \multirow{2}{*}{4.91$\mCi{0.05}$}   & DAA      & 0.53$\mCi{0.01}$& 0.43$\mCi{0.01}$&   0.24$\mCi{0.05}$ &123  & 220 & 0.12$\mCi{0.00}$  & 0.13$\mCi{0.00}$ & 92  \\
-                      						  & 															  &																	 & &NPA      & 0.90$\mCi{0.00}$ & \NAmark       			    &12.35$\mCi{0.10}$ & \NAmark &7  &  0.27$\mCi{0.01}$ & \NAmark & \NAmarkR  \\
+\multirow{3}{*}{ANTLR} & \Tcenter{\tool{\intraj}} & \Tcenter{JJI}   &	\TcenterR{\tool{SonarQube}} & CFG& 0.29$\mCi{0.01}$& 0.16$\mCi{0.00}$&\NAmark&181 &\NAmarkR  & 0.05$\mCi{0.00}$  & 0.04$\mCi{0.00}$ & 125  \\
+ & \multirow{2}{*}{2.14$\mCi{0.01}$} &  \multirow{2}{*}{1.34$\mCi{0.01}$}&  \multirow{2}{*}{4.91$\mCi{0.05}$}   & DAA& 0.53$\mCi{0.01}$& 0.43$\mCi{0.01}$&   0.24$\mCi{0.05}$ &123  & 220 & 0.12$\mCi{0.00}$  & 0.13$\mCi{0.00}$ & 92  \\
+ & 		  &				 & &NPA& 0.90$\mCi{0.00}$ & \NAmark 			    &12.35$\mCi{0.10}$ & \NAmark &7  &  0.27$\mCi{0.01}$ & \NAmark & \NAmarkR  \\
 \hline
-\multirow{3}{*}{PMD}    & \Tcenter{\intraj}   												     & \Tcenter{JJI}         							&	\TcenterR{\tool{SonarQube}}	 &CFG      & 0.28$\mCi{0.02}$  & 0.11$\mCi{0.02}$  &\NAmark & 120 & \NAmarkR&0.07$\mCi{0.00}$  & 0.06$\mCi{0.00}$& 116  \\
-                      						 &  \multirow{2}{*}{3.56$\mCi{0.01}$}   &  \multirow{2}{*}{2.34$\mCi{0.02}$}  &  \multirow{2}{*}{10.76$\mCi{0.09}$} & DAA      & 0.47$\mCi{0.02}$  & 0.39$\mCi{0.00}$ &0.18$\mCi{0.08}$& 120 &261 & 0.12$\mCi{0.00}$  & 0.16$\mCi{0.00}$&  75\\
-                   					         &           													  &           														  && NPA      & 0.80$\mCi{0.00}$& \NAmark       	&12.40$\mCi{0.13}$		       & \NAmark &6&  0.26$\mCi{0.00}$ & \NAmark & \NAmarkR   \\
+\multirow{3}{*}{PMD}    & \Tcenter{\intraj}  & \Tcenter{JJI}   	&	\TcenterR{\tool{SonarQube}}	 &CFG& 0.28$\mCi{0.02}$  & 0.11$\mCi{0.02}$  &\NAmark & 120 & \NAmarkR&0.07$\mCi{0.00}$  & 0.06$\mCi{0.00}$& 116  \\
+&  \multirow{2}{*}{3.56$\mCi{0.01}$}   &  \multirow{2}{*}{2.34$\mCi{0.02}$}  &  \multirow{2}{*}{10.76$\mCi{0.09}$} & DAA& 0.47$\mCi{0.02}$  & 0.39$\mCi{0.00}$ &0.18$\mCi{0.08}$& 120 &261 & 0.12$\mCi{0.00}$  & 0.16$\mCi{0.00}$&  75\\
+  &&&& NPA& 0.80$\mCi{0.00}$& \NAmark 	&12.40$\mCi{0.13}$		 & \NAmark &6&  0.26$\mCi{0.00}$ & \NAmark & \NAmarkR   \\
 \hline
-\multirow{3}{*}{JFC}   & \Tcenter{\intraj}    												    & \Tcenter{JJI}       							&	\TcenterR{\tool{SonarQube}}	& CFG      & 0.45$\mCi{0.01}$ & 0.45$\mCi{0.04}$&\NAmark  & 100 &\NAmarkR&  0.12$\mCi{0.00}$ &  0.12$\mCi{0.00}$&100   \\
-                     					  &  \multirow{2}{*}{4.29$\mCi{0.01}$} &  \multirow{2}{*}{3.14$\mCi{0.02}$}  &  \multirow{2}{*}{10.81$\mCi{0.11}$}  & DAA      & 0.75$\mCi{0.01}$& 1.07$\mCi{0.03}$&0.24$\mCi{0.11}$ & 70   &312&0.25$\mCi{0.00}$& 0.34$\mCi{0.00}$&  73 \\
-                       					  &     													        &        													       && NPA      & 1.62$\mCi{0.01}$& \NAmark     				  &10.71$\mCi{0.12}$  & \NAmark  &13 &  0.60$\mCi{0.01}$ & \NAmark & \NAmarkR   \\
+\multirow{3}{*}{JFC}   & \Tcenter{\intraj}  & \Tcenter{JJI} 	&	\TcenterR{\tool{SonarQube}}	& CFG& 0.45$\mCi{0.01}$ & 0.45$\mCi{0.04}$&\NAmark  & 100 &\NAmarkR&  0.12$\mCi{0.00}$ &  0.12$\mCi{0.00}$&100   \\
+&  \multirow{2}{*}{4.29$\mCi{0.01}$} &  \multirow{2}{*}{3.14$\mCi{0.02}$}  &  \multirow{2}{*}{10.81$\mCi{0.11}$}  & DAA& 0.75$\mCi{0.01}$& 1.07$\mCi{0.03}$&0.24$\mCi{0.11}$ & 70   &312&0.25$\mCi{0.00}$& 0.34$\mCi{0.00}$&  73 \\
+  &&  && NPA& 1.62$\mCi{0.01}$& \NAmark     				  &10.71$\mCi{0.12}$  & \NAmark  &13 &  0.60$\mCi{0.01}$ & \NAmark & \NAmarkR   \\
 \hline
-\multirow{3}{*}{FOP}   & \Tcenter{\intraj}    												     & \Tcenter{JJI}    										&	\TcenterR{\tool{SonarQube}}	& CFG     & 0.36$\mCi{0.01}$ & 0.33$\mCi{0.01}$&\NAmark & 109  &\NAmarkR  & 0.14$\mCi{0.00}$  & 0.17$\mCi{0.00}$ & 82  \\
-                      					   &  \multirow{2}{*}{4.42$\mCi{0.00}$}  &  \multirow{2}{*}{3.32$\mCi{0.00}$}  &  \multirow{2}{*}{17.20$\mCi{0.12}$}    & DAA     & 0.67$\mCi{0.01}$ & 0.74$\mCi{0.01}$ & 0.34$\mCi{0.12}$& 90  &197  & 0.26$\mCi{0.00}$  & 0.39$\mCi{0.00}$ & 66 \\
-                     					  &          														  &          														  & & NPA      & 1.42$\mCi{0.00}$ & \NAmark      					&19.25$\mCi{0.14}$ & \NAmark  &7 &  0.67$\mCi{0.01}$& \NAmark & \NAmarkR   \\
+\multirow{3}{*}{FOP}   & \Tcenter{\intraj}   & \Tcenter{JJI}    				&	\TcenterR{\tool{SonarQube}}	& CFG     & 0.36$\mCi{0.01}$ & 0.33$\mCi{0.01}$&\NAmark & 109  &\NAmarkR  & 0.14$\mCi{0.00}$  & 0.17$\mCi{0.00}$ & 82  \\
+  &  \multirow{2}{*}{4.42$\mCi{0.00}$}  &  \multirow{2}{*}{3.32$\mCi{0.00}$}  &  \multirow{2}{*}{17.20$\mCi{0.12}$}    & DAA     & 0.67$\mCi{0.01}$ & 0.74$\mCi{0.01}$ & 0.34$\mCi{0.12}$& 90  &197  & 0.26$\mCi{0.00}$  & 0.39$\mCi{0.00}$ & 66 \\
+&	  &	  & & NPA& 1.42$\mCi{0.00}$ & \NAmark&19.25$\mCi{0.14}$ & \NAmark  &7 &  0.67$\mCi{0.01}$& \NAmark & \NAmarkR   \\
 
 \hline
 \end{tabular}
+\end{adjustbox}
 \end{table*}

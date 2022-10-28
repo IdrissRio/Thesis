@@ -1,7 +1,6 @@
 
 
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt
-
 \tikzset{
 pattern size/.store in=\mcSize,
 pattern size = 5pt,
@@ -153,12 +152,12 @@ pattern radius = 1pt}
 \draw (191.76,304.27) node [anchor=north west][inner sep=0.75pt]  [font=\footnotesize]  {$< \mathtt{x}  >$};
 % Text Node
 \draw (279.19,5.14) node [anchor=north west][inner sep=0.75pt] [scale=1.6]  {
-		   \begin{lstlisting}[language=java,frame=none]
+\begin{lstlisting}[language=JastAdd,frame=none]
 void foo() {
   f.m().x = 0;
 }
 \end{lstlisting}};
-\draw (279,90.14) node [anchor=north west][inner sep=0.75pt]   [align=left,font=\Large] {We represent the write to\\ $\mathtt{x}$ by the \astnode{AssignExpr}\\ node in the CFG.};
+\draw (279,90.14) node [anchor=north west][inner sep=0.75pt]   [align=left,] {We represent the write to\\ $\mathtt{x}$ by the \astnode{AssignExpr}\\ node in the CFG.};
 
 	% Text Node				   \begin{lstlisting}[language=java,frame=none]
 \draw (323.16,191.86) node [anchor=north west][inner sep=0.75pt]   [align=left] {\Asyn{succ}};		void foo() {
@@ -166,7 +165,6 @@ void foo() {
 \draw (312,233.23) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{CFGRoot}$};		}
 % Text Node		\end{lstlisting}};
 \draw (312,254.07) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{CFGNode}$};
-\draw (279,90.14) node [anchor=north west][inner sep=0.75pt]   [align=left,font=\Large] {We represent the write to\\ $\mathtt{x}$ by the \astnode{AssignExpr}\\ node in the CFG.};
 % Text Node
 \draw (312,276.08) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{CFGSupport}$};
 % Text Node

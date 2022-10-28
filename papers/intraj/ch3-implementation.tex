@@ -49,8 +49,9 @@ We argue that this gives a simpler client interface, since the same AST node typ
 %regardless of if they represent a read or a write operation.
 % \todo{I removed mentioning of package. It is not in the example, and should probably not be a CFG node anyway. /GH}
 
-\begin{figure}
-   \scalebox{0.60}{
+\begin{figure}[H]
+  \centering
+   \scalebox{0.85}{
      \input{papers/intraj/img/AssignExpr.tex}
      }
      \caption{An assignment with a complex left-hand side.
@@ -125,9 +126,9 @@ Figure~\ref{fig:ForStmt} shows how the $\Asyn{firstNodes}$ attribute then uses \
 %Nevertheless, the Java Language Specification
 %allows to omit all the components in the \astnode{ForStmt} and having a statement of the type
 %\code{`for ( ; ; ) \{\}'}.
-\begin{figure}
+\begin{figure}[H]
 \hspace{-0.5cm}
- \scalebox{0.55}{
+ \scalebox{0.7}{
  	\input{papers/intraj/img/ForStmtExample.tex}
  }
 \caption{CFG for method with empty \emph{ForStmt}. The HOA \Ahoa{implC} reifies the implicit \emph{true} condition.
@@ -187,9 +188,9 @@ The equations give that $\astnode{Entry}.\Asyn{succ} = \astnode{Exit}$ since %\\
 %  \end{array}
 %\]
 
-  \begin{figure}
-\hspace{-0.42cm}
- \scalebox{0.6}{
+  \begin{figure}[H]
+\centering
+ \scalebox{0.8}{
  \input{papers/intraj/img/EmtpyStmtExample.tex}
  }
 \caption{The CFG can entirely skip AST nodes.}
@@ -197,11 +198,12 @@ The equations give that $\astnode{Entry}.\Asyn{succ} = \astnode{Exit}$ since %\\
 \end{figure}
 
 \subsection{Static and Instance Initialisers}
-\begin{figure}
- \scalebox{0.55}{
+\begin{figure}[H]
+  \centering
+ \scalebox{0.75}{
  \input{papers/intraj/img/InstanceAndStaticExample.tex}
  }
-\begin{lstlisting}[language=java]
+\begin{lstlisting}[language=JastAdd]
 public class A {
   int foo = 1; //instance field
   static int bar = 0;  //static field
@@ -261,6 +263,7 @@ This design allows us to avoid conservative overapproximation, and enables clien
 Consider the following example with two nested \code{try} blocks:
 
 \begin{figure}[h]
+  \centering
 \begin{tikzpicture}[
   lb/.style={rectangle, thin, draw, rounded corners, fill=white},
   succ/.style={succarrow, thick, -{Stealth[scale=1.1, inset=0pt, angle'=45]}}
@@ -342,8 +345,9 @@ We incorporate the HOAs that represent each cloned
 block into our {\CFG}.  In our example, this yields the CFG from
 Figure~\ref{fig:exn-flow-example-precise}, and leaves \auxlabelbox{CAlt} as
 dead code.
-%
-\begin{wrapfigure}{r}{0.2\textwidth}
+
+
+\begin{wrapfigure}{r}{0.3\textwidth}
 \begin{tikzpicture}[
   lb/.style={rectangle, thin, draw, rounded corners, fill=white},
   succ/.style={succarrow, thick, -{Stealth[scale=1.1, inset=0pt, angle'=45]}}
