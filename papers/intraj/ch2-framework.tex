@@ -1,0 +1,241 @@
+%% SECTION INTRODUCTION
+\begin{figure}
+\hspace{-1.1cm}
+\scalebox{0.865}{
+  \input{papers/intraj/img/StrategyExample.tex}
+ }
+\caption{In the \ParentFirst\  CFG (left) a parent always precedes its children, resulting in redundant and misplaced nodes.
+The \ASTUnrestricted\ CFG (right) is correct and minimal.}
+  \label{fig:semanticsvssyntax}
+\end{figure}
+%
+%\subsection{Reference Attribute Grammars}
+Attribute grammars, originally introduced by Knuth~\cite{knuth1968semantics}, are declarative specifications that decorate AST nodes with attributes.
+Each AST node type can declare attributes and define their values through equations.
+There are two main kinds of attributes: \textbf{\emph{synthesised attributes}}, defined in the same node, and \textbf{\emph{inherited attributes}}, defined in a parent or an ancestor node.
+Synthesised attributes are useful for propagating information upwards in an AST, e.g.\@ for basic type analysis of expressions.
+Inherited attributes are useful for propagating information downwards, e.g., for environment information.
+
+Reference Attribute Grammars (RAGs) \cite{hedin2000rags} extend Knuth's
+attribute grammars with \textbf{\emph{reference attributes}}, whose values are references to other AST nodes.
+Attributes that compute references to AST nodes can declaratively construct graphs that are superimposed on the AST, e.g., {\CFG}s, so that RAGs can propagate information directly along these graph references.
+
+For our implementation, we have used the JastAdd metacompilation system~\cite{hedin2003jastadd}, which supports RAGs as well as the following attribute grammar extensions that we use here:
+
+\begin{description}
+\item[Higher-order attributes] (HOAs)~\cite{vogt1989higher} have a value that is a fresh AST subtree, which can itself have attributes.
+  HOAs are useful for reifying implicit structures not available in the AST constructed by the parser.
+  We use HOAs to reify, for example, control flow for unchecked exceptions and implicit \code{null} assignments.
+\item[Circular attributes] are attributes whose equations may transitively depend on their own values~\cite{magnusson2007circular}.
+  They support declarative fixpoint computations and can e.g.\@ express {data flow} properties on top of a \CFG.
+\item[Collection attributes] are attributes that aggregate any number of \emph{contributions} from anywhere in the AST, or from a bounded AST region~\cite{magnusson2007extending}.
+  They simplify e.g.\@ error reporting and the computation of the predecessor relation from the successor relation in a \CFG.
+\item[Node type interfaces] are similar to Java interfaces and can be mixed into AST node types.
+  They declare e.g.\@ attributes and equations,
+  and enable language-independent plugin components in attribute grammars~\cite{fors2020patterns}.
+\item[Attribution aspects] are modules that use inter-type declarations to declare a set of attributes, equations, collection contributions, etc.\@ for specific node types~\cite{hedin2003jastadd},
+  and mix in interfaces to existing node types.
+  They provide a modular extension mechanism for RAGs.
+\item[On-demand evaluation,] where attributes are evaluated only if they are used, and with optional caching that prevents reevaluation of attributes used more than once~\cite{jourdan84}.
+JastAdd exclusively uses this evaluation strategy.
+\end{description}
+
+\subsection{RAG frameworks for control flow}
+
+% What is new in comparison to earlier work
+Our work is the second to construct {\CFG}s in a RAG framework, following the earlier {\jastaddjintraflow}~\cite{10.1016/j.scico.2012.02.002}.
+{\jastaddjintraflow} constructs \emph{\ParentFirst} CFGs, in the sense that all AST nodes involved in the {\CFG} computation are also part of the {\CFG} and impose their nesting structure, so that the {\CFG} must always pass through all of a node's ancestors before it can reach the node itself.
+By contrast, our \intracfg{} framework is \emph{\ASTUnrestricted}, in that the resulting CFG need not follow the syntactic nesting structure.
+
+Figure~\ref{fig:semanticsvssyntax} illustrates this difference between the two approaches for a \code{while} loop in Java.
+The left (\ParentFirst) {\CFG} from {\jastaddjintraflow} first flows through the \astnode{While} node to reach the loop condition.
+However, the {\CFG} already encodes the flow properties of \astnode{While}, so this flow is unnecessary for data flow analysis.
+The same holds for \astnode{ExprStmt}.
+We therefore consider these nodes \emph{redundant} for the {\CFG}.
+By contrast, our system's {\ASTUnrestricted} {\CFG} on the right skips these two nodes entirely.
+
+
+The second, more severe concern is that the control flow
+in the left {\CFG} in Figure~\ref{fig:semanticsvssyntax} cannot follow Java's evaluation order due to the {\ParentFirst} constraint:
+flow passes through the \astnode{PostUnaryInc} node, which represents an update, before passing through the node's subexpression \code{p1}.
+This flow would represent an inversion of the actual order of evaluation: the nodes are \emph{misplaced} in the {\CFG}.
+Typical client analyses on such a flawed {\CFG} must add additional checks to compensate or otherwise sacrifice soundness or precision in programs where \code{p1} also has a side effect.
+By contrast, our {\ASTUnrestricted} {\CFG} on the right addresses this limitation and accurately reflects Java's control flow.
+
+We note that recent work on program analysis~\cite{szaboincrementalizing,helm2020modular} has asserted that attribute grammars restrict computations to be tightly bound to the AST structure.
+Our work demonstrates that this generalization does not hold, and that RAGs are an effective framework for efficiently deriving precise {\CFG}s that deviate from the AST structure and for expressing client analyses directly in terms of such derived structures.
+
+
+\subsection{The {\intracfg} framework}
+%%JASTADD
+{\intracfg} is our new RAG framework for constructing intraprocedural {\ASTUnrestricted} CFGs, superimposing the graph on the AST.
+Figure~\ref{fig:intracfgframework} shows the framework as a UML class diagram.
+{\intracfg} is language-independent, and includes interfaces that AST types in an abstract grammar can mix in and specialise to compute the {\CFG} for a particular language.
+The figure shows five types:
+the \astnode{CFGRoot} interface is intended for subroutines, e.g., methods and constructors, to represent a local {\CFG} with a unique entry and exit node.
+  We represent the latter as synthetic AST node types \astnode{Entry} and \astnode{Exit}.
+The \astnode{CFGNode} interface marks nodes in the {\CFG}, and each node has reference attributes \Abase{succ} and \Abase{pred} to represent the successor and predecessor edges.
+The \astnode{CFGSupport} interface marks AST nodes in a location that may contain \astnode{CFGNode}s.
+All \astnode{CFGNode}s are \astnode{CFGSupport} nodes, but \astnode{CFGSupport} nodes that are not \astnode{CFGNode}s can help steer the construction of the {\CFG}.
+
+\input{papers/intraj/img/intracfguml.tex}
+
+Figure~\ref{fig:intracfgframework} also shows the AST node types' attributes and their types (middle boxes), as well the defining equations (bottom boxes).
+%We use a concise pseudo notation for attributes and equations, where $\mSyn$ indicates a synthesised attribute, $\mInh$ an inherited attribute, $\mHOA$ a higher-order attribute (HOA), $\mColl$ a collection attribute, and $\mCirc$ a circular attribute.
+Here, we write $\mathcal{P}(\astnode{CFGNode})$ for the type of sets over \astnode{CFGNode}s.
+We optionally prefix attribute names with
+\textcolor{ATGsym}{\mSyn},
+\textcolor{ATGsym}{\mInh},
+\textcolor{ATGsym}{\mHOA},
+\textcolor{ATGsym}{\mColl}, or
+\textcolor{ATGsym}{\mCirc} to highlight the AST traversal underlying their computation.
+For the different kinds of attributes, we use the following equations, for attributes \Abase{x} and expressions $e$:
+\begin{description}
+\item[Synthesised attributes:]
+  $\Asyn{x} = e$ defines attribute $\Asyn{x}$ for the local AST node (which we call \code{this}).
+%  If $e$ constructs a fresh AST fragment, $\Ahoa{x}$ is a \textbf{HOA}.
+\item[Inherited attributes:] $c.\Ainh{x} = e$
+  gives AST child node $c$ and its descendants access to $e$ through \Ainh{x}, where $e$ is evaluated in the context of the \code{this} node ($c$'s parent).
+  We use the wildcard $*$ for $c$ to broadcast to all children, $*.\Ainh{x} = e$.
+\item[Higher-order attributes:] $\Ahoa{x} = e$ where $e$ must construct a fresh AST subtree.
+\item[Circular attributes:]
+  $\Acirc{x} = e$, where $e$ computes a fixpoint.
+  In this paper, boolean circular attributes start at \emph{false} and monotonically grow with $\lor$,
+  while set-typed circular attributes start at $\emptyset$ and monotonically grow with $\cup$.
+\item[Collection attributes] have no equations, but \emph{contributions}.
+  We write $P \implies e \in n.\Acoll{x}$ to contribute the value of expression $e$ to collection attribute \Acoll{x} in node $n$ if $P$ holds.
+  In this paper, all collection attributes are sets.
+\end{description}
+
+This pseudocode translates straightforwardly to more verbose JastAdd code that uses Java for the right-hand sides in our equations. {\intracfg} is 45 LOC of JastAdd code.%
+\footnote{%
+\url{https://github.com/lu-cs-sde/IntraJSCAM2021/}%
+
+}
+
+The equations in the framework define some of the attributes, and provide default definitions for others.
+To specialise the framework to a particular language, the default equations can be overridden for specific AST node types to capture the control flow of the language.
+
+Client analyses can then use attributes marked as  {\dfapi} in Figure~\ref{fig:intracfgframework}, such as, \Asyn{succ} and \Asyn{pred}, to analyze the {\CFG}.
+Since {\CFG} nodes are also AST nodes, it is easy for these analyses to also access syntactic information and attributes from, e.g., type analysis,
+as we illustrate in Section~\ref{sec:analysis}.
+
+\input{papers/intraj/img/exampleuml.tex}
+\begin{lstlisting}[language=JastAdd, caption=JastAdd translation of \astnode{EQOp} in Figure~\ref{fig:exampleuml}., label=listing:jastadd-eqop, captionpos=b,float=t]
+EQOp ::= Left:Expr Right:Expr;   // Abstract grammar
+EQOp implements CFGNode;
+eq EQOp.firstNodes() = getLeft().firstNodes();
+eq EQOp.getLeft().nextNodes() = getRight().firstNodes();
+eq EQOp.getRight().nextNodes() = SmallSet<CFGNode>.singleton(this);
+\end{lstlisting}
+
+\subsection{Computing the successor attributes}
+
+To compute the \Asyn{succ} attributes, we use the helper attributes \Asyn{firstNodes} and \Ainh{nextNodes}.
+Given an AST subtree $t$, its \Asyn{firstNodes} contain the first \astnode{CFGNode} \emph{within or after} $t$ that should be executed, if such a node exists.
+If not, \Asyn{firstNodes} is empty.
+The framework in Figure~\ref{fig:intracfgframework} shows the default definitions for this attribute: the empty set for a \astnode{CFGSupport} node, and the node itself for a \astnode{CFGNode}.
+
+The \Ainh{nextNodes} attribute contains the \astnode{CFGNode}s that are \emph{outside} $t$, and that would immediately follow the last executed \astnode{CFGNode} within $t$, disregarding abrupt execution flow like returns and exceptions.
+By default, the \Asyn{succ} attribute is defined as equal to \Ainh{nextNodes}.
+
+\begin{figure*}
+\centering
+\scalebox{0.59}{
+	\input{papers/intraj/img/RunningExample.tex}
+}
+\caption{Visualization of the attributes \Asyn{firstNodes}, \Ainh{nextNodes} and \Asyn{succ}. For boolean expressions (\astnode{AndOp} and \astnode{EQOp}), the subsets \Ainh{nextNodesTT} and \Ainh{nextNodesFF} are shown instead of \Ainh{nextNodes}, marked by True and False, respectively.}
+\label{fig:RunningExample}
+\end{figure*}
+
+
+Figure~\ref{fig:exampleuml} shows how the framework can be specialised to some example AST node types to define the desired \CFG.
+JastAdd expresses these additions in a modular attribution aspect.
+For illustration, we again encode the JastAdd specification into UML and include the abstract syntax of each node type.
+Listing~\ref{listing:jastadd-eqop} also illustrates how the pseudocode can be translated to JastAdd code.
+
+Here, \astnode{MethodDecl} exemplifies a \astnode{CFGRoot}.
+It defines the flow between its \Ahoa{entry} and \Ahoa{exit} HOAs and its children.
+\astnode{EQOp} exemplifies a \astnode{CFGNode}.
+It defines a pre-order flow: \code{left}, then \code{right}, then the node itself.
+Each type defines its own synthesised attributes as well as the inherited attributes of its children and HOAs.
+
+All \astnode{CFGNode}s have immediate access to the \astnode{Entry} and \astnode{Exit} nodes of the \CFG, through
+the inherited \Ainh{entry} and \Ainh{exit} attributes declared in \astnode{CFGNode} and defined by the nearest \astnode{CFGRoot} ancestor (Figure~\ref{fig:intracfgframework}).
+This allows e.g., the \astnode{ReturnStmt} to point its \Asyn{succ} edge directly to the \astnode{Exit} node.
+
+For boolean expressions that affect control-flow, {\intracfg} supports path-sensitive analysis, splitting the successor set into two disjoint sets for the \emph{true} and \emph{false} branches.
+We provide attributes \Ainh{nextNodesTT} and \Ainh{nextNodesFF}, respectively, to capture these branches.
+The \astnode{AndOp} type illustrates how these attributes can capture short-circuit evaluation on the left child.
+These attributes are relevant only for boolean branches, and must ensure the following property:\\
+\code{$\;\;\;\;\;\;\;\Ainh{nextNodesTT} \: \cup \Ainh{nextNodesFF} \;=\; \Ainh{nextNodes}$}
+
+Figure~\ref{fig:RunningExample} illustrates these attributes on a small program in a language with methods, statements, and expressions.
+Here, \astnode{MethodDecl} is a \astnode{CFGRoot} and thus automatically has fresh \astnode{Entry} and \astnode{Exit} nodes.
+Nodes in the control flow, e.g., identifiers and the equality-check operator, \astnode{EQOp}, are \astnode{CFGNode}s, and thus have the \Asyn{succ} attribute.
+Nodes that do not belong to the control-flow but live in AST locations below a \astnode{CFGRoot} that may contribute to control flow are \astnode{CFGSupport} nodes.
+The left-hand-side variable of the assignment \code{p1 = 0} (i.e., $\texttt{p}_1$) is not part of the flow (cf.\@ Section~\ref{sec:stmtexp}).
+%For instance, \code{AndOp} is extended with \code{CFGSupport} in order to define the \code{nextNodes}, \code{nextNodesTT}, \code{nextNodesFF} attributes of its children, which are in turn used for defining the successor attribute.
+
+\subsection{Computing predecessors}
+
+To support both forward and backward analyses, we provide a predecessor attribute that captures the inverse of the successor attribute \Asyn{succ}.
+However, \Asyn{succ} is also defined for \astnode{CFGNode}s that are not reachable from \astnode{Entry} by following \Asyn{succ} (i.e., that are ``dead code'').
+Our framework therefore computes predecessor edges \Asyn{pred} by not only inverting \Asyn{succ} into a collection attribute \Acoll{succInv}, but also by filtering out such ``dead'' nodes from \Acoll{succInv} with a boolean circular attribute \Acirc{reachable} (Figure~\ref{fig:intracfgframework}).
+
+%
+%\begin{lstlisting}[language=JastAdd, caption=SB module specification., label=listing:SBModule, captionpos=b,float=t]
+%MethodDecl implements CFGRoot;
+%ExprStmt, IfStmt, AndOp, Block, AssignStmt implements CFGSupport;
+%VarAccess, EQOp, IntegerLiteral  implements CFGNode;
+%
+%eq ExprStmt.firstNodes() = getExpr().firstNodes();
+%
+%eq EQOp.firstNodes() = getRight().firstNodes();
+%eq EQOp.getRight().nextNodes() = getLeft().firstNodes();
+%eq EQOp.getLeft().nextNodes() = Collections.singleton(this);
+%
+%eq AssignExpr.firstNodes() =  getDest().firstNodes();
+%eq AssignExpr.getDest().nextNodes() = getSource().firstNodes();
+%eq AssignExpr.getSource().nextNodes() = Collections.singleton(this);
+%eq AssignExpr.getChild().nextNodesTT() = Collections.singleton(this);
+%eq AssignExpr.getChild().nextNodesFF() = Collections.singleton(this);
+%
+%eq MethodDecl.Entry().nextNodes() =
+% (hasBlock() ? getBlock().firstNodes() : Collections.singleton(Exit()));
+%eq MethodDecl.getBlock().nextNodes() = Collections.singleton(Exit());
+%
+%eq Block.firstNodes() =
+%   (getNumStmt() == 0) ? nextNodes() : getStmt(0).firstNodes();
+%eq Block.getStmt(int index).nextNodes() =
+%    (getNumStmt() - 1 == index) ? nextNodes() : getStmt(index + 1).firstNodes();
+%
+%eq AndOp.firstNodes() = getLeftOperand().firstNodes();
+%eq AndOp.getLeftOperand().nextNodesTT() = getRightOperand().firstNodes();
+%eq AndOp.getLeftOperand().nextNodesFF() = nextNodesFF();
+%eq AndOp.getChild().nextNodes(){
+%  Set<CFGNode> result = new HashSet<>(getLeftOperand().nextNodesTT();
+%  result.addAll(getLeftOperand().nextNodesFF());
+%  return result;}
+%
+%eq IfStmt.firstNodes() = getCondition().firstNodes();
+%eq IfStmt.getCondition().nextNodesTT() = getThen().firstNodes();
+%eq IfStmt.getCondition().nextNodesFF() =
+%  hasElse() ? getElse().firstNodes() : nextNodes();
+%eq IfStmt.getCondition().nextNodes() {
+%  Set<CFGNode> result = new HashSet<>(getCondition().nextNodesTT());
+%  result.addAll(getCondition().nextNodesFF());
+%  return result;}
+%
+%eq PostUnaryDec.getOperand().nextNodes() = Collections.singleton(this);
+%eq PostUnaryDec.firstNodes() = getOperand().firstNodes();
+%\end{lstlisting}
+%
+%
+%
+
+
+
+
+
+

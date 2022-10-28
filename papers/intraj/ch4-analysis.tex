@@ -1,0 +1,393 @@
+%%SECTION INTRODUCTION
+We demonstrate our framework with two representative data flow analyses:
+\emph{Null Pointer Exception} Analysis (NPA), a forward analysis, and \emph{Live Variable} Analysis (LVA), a backward analysis that helps detect useless (`dead') assignments.
+These analyses are significant for bug checking and therefore benefit from a close connection to the AST.
+%% which exploits the \code{pred} attribute. Conversely, LVA is a \emph{backward} analysis,
+%% which uses the \code{succ} attribute. As an application of LVA, we show how we implemented
+%% \emph{Dead Assignment} Analysis (DAA), which detects unnecessary assignments.
+% \begin{figure}
+
+We first recall the essence of these algorithms on a minimal language that corresponds to the relevant subset of Java: % (Figure~\ref{fig:miniJ}).
+\[
+\begin{array}{r@{\ }c@{\ }lcll}
+  % \vmetavar{s}& \in &
+  % \nta{S}	& \Prod	& \vterminal{var}\ \terminal{id}\ \vterminal{=}\ \nt{E}	& \hspace*{-0.5cm}\Gcomment{Declaration} \\
+%  &&		& \VB	& \terminal{id}\ \vterminal{=}\ \nt{E}			& \hspace*{-0.5cm}\Gcomment{Assignment} \\
+  \vmetavar{e}& \in &
+  \nta{E}	& \Prod	& \vterminal{new()}
+  			  \VB{}
+        		  \vterminal{null}
+			  \VB{}
+        		  \terminal{id}
+			  \VB{}
+        		  \terminal{id} \vterminal{.f}
+                          \VB{}
+                          \terminal{id}\ \vterminal{=}\ \nta{E}
+			  % \VB{}
+    			  % \terminal{id}\ \vterminal{++}
+                           \\
+  \vmetavar{v}& \in &
+  \terminal{id}	& \Prod	& \vterminal{x}, \ldots
+\end{array}
+\]
+% \caption{Syntax of a simplified subset of Java.}\label{fig:miniJ}
+% \end{figure}
+%
+An expression $e$ can be a \code{new()} object,
+\code{null}, the contents of another variable, the result of a field dereference (\code{x.f}), or an assignment \code{x = e}. %, or a post-increment \code{x++}.
+The values in our language are an unbounded set of objects $O$ and the distinct \code{null}.  Expressions have the usual Java semantics.
+% For simplicity, we assume that the post-increment operator works on all non-null objects; in practice, the ExtendJ type checker catches violations.
+Since {\intraj} already captures control flow (on top of {\intracfg}) and name analysis (via ExtendJ), we can ignore
+statements and declarations, and safely assume that each \terminal{id} is globally unique.
+
+%Environment defined in the macro file.
+%% \begin{align*}
+%% &M ::=\ T\ m([T\ x]^*)\{ S \} &\text{Method Declaration}\\
+%% &E::=\ Int \mid null \mid id \mid id.f \mid m(E^*) \mid true \mid false \mid E + E \mid \text{++}id \mid id \text{+=} E&\text{Expressions}\\
+%% &S::=\ T\ id = E \mid id = E \mid if(E)\ S\ [S] \mid while(E)\ S \mid S;S \mid \{ S\} &\text{Statements}\\
+%% &Int ::=\ ... \mid -1 \mid 0 \mid 1 \mid ...&\text{Integer constants}
+%% \end{align*}
+
+% ----------------------------------------
+\subsection{Null Pointer Exception Analysis}
+In our simplified language, a field access \code{x.f}
+fails (in Java: throws a Null Pointer Exception) if
+\code{x} is \code{null}.
+Null Pointer Exception Analysis (NPA) detects whether a given field
+dereference \emph{may} fail (e.g.\@ in the SonarQube NPA variant)
+or \emph{must} fail (e.g.\@ in the Eclipse JDT NPA variant) and can
+alert programmers to inspect and correct this (likely) bug.
+
+In our framework, writing \emph{may} and \emph{must} analyses requires
+the same effort;  we here opt for a \emph{may} analysis
+over a binary lattice $\mathcal{L}_2$
+in which $\top = \textbf{nully}$ signifies \emph{value may be \code{null}} and
+$\bot = \textbf{nonnull}$ signifies \emph{value cannot be \code{null}}.
+
+More precisely, we use a product lattice over $\mathcal{L}_2$ that maps each
+\emph{access path} $a \in \mathcal{A}$ (e.g. \code{x}; \code{x.f}; \code{x.f.f}; \ldots)
+to an element of $\mathcal{L}_2$.  Our analysis then
+follows the usual approach for a join data flow
+analysis~\cite{cousot1977ai}. Our monotonic
+transfer function
+$f_{\textit{NPA}} : (\mathcal{A} \to \mathcal{L}_2) \times \nta{E} \to (\mathcal{A} \to \mathcal{L}_2)$ is straightforward:
+
+\[
+\begin{array}{llcl}
+\multicolumn{2}{r}{f_{\textit{NPA}}(\Gamma, \vterminal{\vmetavar{v} = \vmetavar{e}})}	&=& \Gamma[\vmetavar{v} \mapsto \semNPA{\vmetavar{e}}^\Gamma] \\
+% f(\Gamma, \vterminal{\vmetavar{v} = \vmetavar{e}})	&=& \Gamma[\vmetavar{v} \mapsto \semNPA{\vmetavar{e}}^\Gamma] \\
+% \\
+\textrm{where}&\semNPA{\vterminal{new()}}^\Gamma			&=& \textbf{nonnull}\\
+&\semNPA{\vterminal{null}}^\Gamma			&=& \textbf{nully}\\
+&\semNPA{\vmetavar{v}}^\Gamma				&=& \Gamma(\vmetavar{v})\\
+&\semNPA{\vterminal{\vmetavar{v}.f}}^\Gamma		&=& \Gamma(\vmetavar{v}\vterminal{.f})\\
+&\semNPA{\vterminal{\vmetavar{v} = \vmetavar{e}}}^\Gamma	&=& \semNPA{\vmetavar{e}}^\Gamma\\
+\end{array}
+\]
+
+We do not need to write a recursive transfer function for assignments
+nested in other assignments (e.g., \code{x = y = z}), since the
+{\CFG} already visits these in evaluation order.
+
+% NPA is a forward analysis, meaning that we starts at the \emph{Entry} node of each function and follow the CFG \code{succ} edges.
+% Initially, we map all variables to $\bot$ (``no information'').
+% After computing the fixpoint, our NPA conservatively flags
+% each \vterminal{\vmetavar{v}.f} for which locally
+% $\Gamma(\vmetavar{v}) = \textbf{null}$.
+
+% ----------------------------------------
+% figure: NPA UML
+\begin{figure}
+  \begin{tikzpicture}\scriptsize
+
+    \begin{interface2}[text width=4.1cm]{CFGNode}{\astnode{CFGNode}}{-2.15, 0}
+      \attribute{\Asyn{trFun} : $\umlcode{EnvNPA} \to \umlcode{EnvNPA}$}
+      \attribute{\Acirc{$\textrm{in}_\textit{NPA}$} : $\umlcode{EnvNPA}$}
+      \attribute{\Acirc{$\textrm{out}_\textit{NPA}$} : $\umlcode{EnvNPA}$}
+      \operation{\hl{{\mbox{\Asyn{trFun($\Gamma$)} = $\Gamma$}}}}
+      \operation{\Acirc{$\textrm{in}_\textit{NPA}$} = $\{ \begin{array}[t]{@{}l} a \mapsto \bigsqcup{n.\Acirc{$\textrm{out}_\textit{NPA}$}(a)} \\ |\  a \in \mathcal{A}, n \in \Asyn{pred}\} \end{array} $}
+      \operation{\Acirc{$\textrm{out}_\textit{NPA}$} = \Asyn{trFun}(\Acirc{$\textrm{in}_\textit{NPA}$})}
+    \end{interface2}
+
+    \begin{class2}[text width=4.1cm]{VarAccess}{\astnode{VarAccess}}{-2.15, -3.1}
+      \attribute{extends \astnode{Expr}. implements \astnode{CFGNode}}
+      \attribute{\Ainh{isDeref} : boolean}
+      \attribute{\Asyn{canFail} : boolean}
+      \attribute{\Ainh{cu} : \astnode{CompilationUnit} \hfill \textbf{[name-api]}}
+      \operation{\Asyn{mayBeNull} = (\Acirc{$\textrm{in}_\textit{NPA}$}(\Asyn{decl}) = \textbf{nully})}
+      \operation{\Asyn{canFail} = \Asyn{mayBeNull} $\wedge$ \Ainh{isDeref}}
+      \operation{$\Asyn{canFail} \Longrightarrow \umlcode{this} \in \Ainh{cu}.\Acoll{NPA}$}
+    \end{class2}
+
+    \begin{class2}[text width=3.8cm]{Expr}{\astnode{Expr}}{2.2, 0}
+      \attribute{\Asyn{mayBeNull} : boolean}
+      \attribute{\Asyn{decl} : $\mathcal{A}$\hfill\nameapi}
+      \operation{\hl{{\mbox{\Asyn{mayBeNull} = false}}}}
+    \end{class2}
+
+    \begin{class2}[text width=3.8cm]{AssignExpr}{\astnode{AssignExpr} ::= lhs:\astnode{Expr} rhs:\astnode{Expr}}{2.2, -2}
+      \attribute{extends \astnode{Expr}. implements \astnode{CFGNode}}
+      \operation{\Asyn{trFun($\Gamma$)} = if rhs.\Asyn{mayBeNull}
+         $\begin{array}{@{\hspace{0.4cm}}l@{\ }l}
+            \umlcode{then} &\Gamma[\umlcode{lhs.\Asyn{decl}} \mapsto \textbf{nully}]\\
+            \umlcode{else} &\Gamma[\umlcode{lhs.\Asyn{decl}} \mapsto \textbf{nonnull}]
+          \end{array}$}
+      \operation{\Asyn{mayBeNull} = rhs.\Asyn{mayBeNull}}
+    \end{class2}
+
+    \begin{class2}[text width=3.8cm]{NullExpr}{\astnode{NullExpr}}{2.2, -4.45}
+      \attribute{extends \astnode{Expr}. implements \astnode{CFGNode}}
+      \operation{\Asyn{mayBeNull} = true}
+    \end{class2}
+
+%     \begin{class}[text width=4cm]{TryStmt ::= Block CatchClause* \ldots}{-2.2, -1.65}  % [Finally:Block] /ExceptionHandler:Block/
+% %      \attribute{AndOp ::= left:Expr right:Expr}
+%       \operation{block.$\mInh$enclosingTry = this
+%       \operation{...}
+% %      \operation{left.$\mInh$nextNodes = left.$\mInh$nextNodesTT $\union$ left.$\mInh$nextNodesTT}
+% %      \operation{right.$\mInh$nextNodesTT = $\mInh$nextNodesTT}
+% %      \operation{right.$\mInh$nextNodesFF = $\mInh$nextNodesFF}
+% %      \operation{right.$\mInh$nextNodes = right.$\mInh$nextNodesTT $\union$ right.$\mInh$nextNodesTT}
+%     \end{class}
+
+  \end{tikzpicture}
+  \caption{Partial implementation of our NPA.  We obtain \Asyn{decl} and \Ainh{cu} from
+    ExtendJ's name analysis API.}
+  \label{fig:NPAuml}
+\end{figure}
+
+
+% ----------------------------------------
+% Details and Limitations for the NPA implementation
+
+Our implementation
+is field-sensitive
+% (i.e., tracks $\Gamma(\vmetavar{v \vterminal{.f}})$ for each field)%
+ and control-sensitive
+(i.e., it understands that \code{if (x \!= null)\{x.f=1;\}} is safe)%
+, but
+  array index-insensitive and alias-insensitive.
+% (i.e., \code{a=b; b.f=null;} will not impact $\Gamma(\vmetavar{\vterminal{a.f}})$))%
+%
+Field sensitivity is reached by considering the entire access path chain, while control sensitivity is given by defining new HOAs representing implicit facts, e.g., \code{x \!= null}.
+
+Figure~\ref{fig:NPAuml} shows how we compute
+environments $\Gamma \in \umlcode{EnvNPA} = \mathcal{A} \to \mathcal{L}_2$
+that capture access paths that may be \code{null} at runtime.
+We extend \astnode{CFGNode} with
+\Acirc{$\textrm{in}_\textit{NPA}$}, which merges all
+evidence that flows in from control flow predecessors, and \Acirc{$\textrm{out}_\textit{NPA}$}, which applies the local transfer function \Asyn{trFun} to
+\Acirc{$\textrm{in}_\textit{NPA}$}.  While NPA is a forward analysis, JastAdd's on-demand semantics mean that we
+query \emph{backwards}, following \Asyn{pred} edges, when we compute \Acirc{$\textrm{in}_\textit{NPA}$} on demand.
+\Acirc{$\textrm{in}_\textit{NPA}$} and \Acirc{$\textrm{out}_\textit{NPA}$} are circular, i.e., can depend on their own output
+and compute a fixpoint.
+
+The attributes for \astnode{VarAccess} show how we use this information.
+Each \astnode{VarAccess} contributes to \Ainh{cu}.\Acoll{NPA}, the
+compilation unit-wide collection attribute of likely \code{null} pointer
+dereferences, whenever \Asyn{mayBeNull} holds and when the \astnode{VarAccess} is also a proper prefix
+of an access path and must therefore be dereferenced (\Ainh{isDeref},
+not shown here).
+
+Our full Java~7 implementation takes up 142 lines of JastAdd code,
+excluding data structures but
+including control sensitive analysis handling and reporting.
+
+% % ----------------------------------------
+% % figure: NPA fragment code
+% \begin{lstlisting}[language=JastAdd,caption={{\intraj} specification for NPA (fragment).}, captionpos=b, label=lst:NPAfragment,float=b]
+% syn Gamma CFGNode.trFun(Gamma gamma) {return gamma;}
+% eq Assign.trFun(Gamma gamma) {
+%   Variable decl = getDeclaration();
+%   if (mayBeNull()) gamma.put(decl, AbsDomain.NULL);
+%   else gamma.put(decl, AbsDomain.NOTNULL);
+%   return gamma;
+% }
+% \end{lstlisting}
+
+
+\subsection{Live Variable Analysis}\label{sec:lva}
+Given a \astnode{CFGNode} $\node$, a variable is \emph{live} iff there exists at least one path from $\node$ to \astnode{Exit} on which $\node$ is read without first being redefined.
+An assignment to a variable that is not live (i.e., \emph{dead}) wastes time and complicates the source code, which generally means that it is a bug~\cite{reichenbach2021ticks}.
+We can detect this bug with
+\emph{Live Variable}/\emph{Liveness} analysis (LVA), a data flow analysis that computes the live variables for each CFG node.
+
+We express LVA as a Gen/Kill analysis, on the powerset lattice
+over the set of \emph{live} (local) variables.
+Each transfer function adds variables to the set (marks them \emph{live}) or removes them (marks them \emph{dead}).
+LVA is a \emph{backward} analysis, starting at the \emph{Exit} node with the assumption that all variables are dead (i.e., with the set of live variables $L = \emptyset$).
+The transfer function thus maps from node exit to entry
+% $f_{\textit{LVA}}$
+ and has the form:
+\[
+f_{\textit{LVA}}(L, \vterminal{\vmetavar{e}}) =  (L \setminus \textit{def}(\vmetavar{e}))\ \cup\ \textit{use}(\vmetavar{e})
+\]
+where
+\textit{def}(\vmetavar{e}) is the set of variables that \vmetavar{e} assigns to, and
+\textit{use}(\vmetavar{e}) is the set of variables that \vmetavar{e} reads.
+
+We encode the $f_{\textit{LVA}}$ using RAGs in a similar way as done in~\cite{10.1016/j.scico.2012.02.002}:
+Figure~\ref{fig:LVAuml} shows
+%how we directly encode $f_{\textit{LVA}}$ in
+our
+computation
+where circular attributes \Acirc{$\textrm{in}_\textit{LVA}$} and \Acirc{$\textrm{out}_\textit{LVA}$} represent variables live before/after a \astnode{CFGNode}.
+%represents variables live \emph{before} a CFG node, and \Acirc{$\textrm{out}_\textit{LVA}$} represents variables live \emph{after} the node.
+%Both attributes are defined as circular, since their equations are interdependent.
+Here, \Acirc{$\textrm{out}_\textit{LVA}$} reads
+from \Asyn{succ} nodes, since we are implementing an on-demand
+backward analysis.  \astnode{VarAccess} and \astnode{AssignExpr} override
+\Asyn{use} and \Asyn{def}, respectively.  Since the CFG traverses
+through the right-hand side of each assignment, this specification
+suffices to capture the analysis of our Java language fragment.
+Our full implementation for Java~7 takes up 38 lines of code.
+
+% For our simplified language, the transfer function $f$ then becomes:
+% \[
+% \begin{array}{r}
+% f(L, \vterminal{\vmetavar{e}})	= (L \setminus \textit{def}(\vmetavar{e}))\ \cup\ \textit{use}(\vmetavar{e}), \textrm{ where \phantom{fantomenzzzzz}}\\
+% \begin{array}{ll|rr}
+
+
+%  					&& \textit{def}(\vmetavar{e}) =	& \textit{use}(\vmetavar{e}) = \\
+% \hline
+%   \vmetavar{e} = \vterminal{\vmetavar{v} = \vmetavar{e'}}	&
+%                                                                 	&\{ \vmetavar{v} \}	& \textit{use}(\vmetavar{e'}) \\
+%   \vmetavar{e} = \vterminal{new()} & \textrm{or } \vmetavar{e} = \vterminal{null}
+%                                                                         & \emptyset		& \emptyset \\
+%   \vmetavar{e} = \vterminal{\vmetavar{v}} & \textrm{or }
+%   \vmetavar{e} = \vterminal{\vmetavar{v}.f}
+%                                                                         & \emptyset		& \{ \vmetavar{v} \}
+% \end{array}
+% \end{array}
+% \]
+
+
+% Listing~\ref{listing:lva} shows the Jastadd specification of LVA.
+% In the implementation,  the sets \code{Use} and \code{Def} are represented by the synthesized attributes \code{LVA\_use} and \code{LVA\_def}, respectively.
+% The attributes \code{LVA\_use} and \code{LVA\_def} are sets of variable declarations as it is a simple way to  uniquely identify a variable in the program.
+
+% The circular attributes \code{LVA\_in} and \code{LVA\_out} are used to encode the mutual dependent environment expressed by  Equation~\ref{eq:LVA_IN} and Equation~\ref{eq:LVA_OUT}, respectively.
+% The least-fix point is always guaranteed to exists since the analysis operates on the finite lattice of variable declarations  and all the used operations are monotone.
+% \begin{lstlisting}[language=JastAdd, caption={\jastadd\ specification of LVA}, captionpos=b, label=listing:lva]
+% interface Assignments {}
+% AssignBitwiseExpr, AssignShiftExpr,AssignMultiplicativeExpr, AssignAdditiveExpr implements Assignments;
+
+% syn BitSet CFGNode.LVA_def()  = emptyBitSet();
+% eq VariableDeclarator.LVA_def() =
+%   emptyBitSet().mutable().union(singletonValue());
+% eq AssignExpr.LVA_def() = getVarDeclSet();
+% eq UnaryIncDec.LVA_def() = getVarDeclSet();
+% eq ImplicitAssignment.LVA_def() = emptyBitSet();
+
+% syn BitSet CFGNode.LVA_use()  = emptyBitSet();
+% eq VarAccess.LVA_use() = getVarDeclSet();
+% eq UnaryIncDec.LVA_use() = getVarDeclSet();
+% eq Assignments.LVA_use() = getVarDeclSet();
+
+
+% syn BitSet CFGNode.LVA_out() {
+%  BitSet res = emptyBitSet().mutable();
+%  for (CFGNode e : succ()) {
+%    res.add(e.LVA_in());
+%  }
+%  return res;
+% }
+
+% syn BitSet CFGNode.LVA_in() circular[emptyBitSet()] {
+%  return LVA_use().union(LVA_out().compl(LVA_def()));
+% }
+% \end{lstlisting}
+
+\subsection{Dead Assignment Analysis}\label{sec:daa}
+We use dead assignment analysis (DAA) as a straightforward client analysis for LVA.
+% Listing~\ref{listing:FOPDeadAssignement} shows one of the dead assignments
+% that we detect in the FOP\footnote{src/java/org/apache/fop/fo/properties/CommonHyphenation.java:215} benchmark.
+% An example of dead assignment is shown in
+% The code has been taken and simplified from the
+% It is not immediate to see that the assignment in line 6 is a dead assignment since all the assignments are related to the variable in line 4.
+% \CR{simplified by whom?  How large was it?  Does your analysis detect this one?}
+% The example shown is clearly a bug, and as a result of this bug, the \code{hashCode} function always returns 0.
+% \CR{The readers will know what a dead assignment is, so you can keep the reminder short.}
+% \begin{lstlisting}[language=JastAdd, caption={Example of dead assignment.}, captionpos=b, label=listing:FOPDeadAssignement]
+% private int hash = 0;
+% public int hashCode() {
+%     if (hash == 0) {
+%         int hash = 17;
+%         hash = 37 * hash /* + complex operation */;
+%     }
+%     return hash;
+% }
+% \end{lstlisting}
+% Once having the LVA analysis ready, implementing the DAA is straightforward.
+% In fact, given an assignment represented by the \code{CFGNode} $\node$ is dead iff $\Pi_{\Out}[\node] \cap \Def(\node) = \emptyset$.
+% Listing~\ref{listing:DAA} shows  the \jastadd\ specification of the DAA.
+% The attribute \code{isDeadAssign}, is used to reduce the number of false positive.
+Our implementation of DAA refines the results of LVA with a number of heuristics that we have
+adopted from the SonarQube checker.  Specifically, these heuristics suppress warnings in code like the following:
+\begin{lstlisting}[language=java]
+  String status = ""; // WARNING: unused assignment
+  if (...) status = "enabled";
+  else     status = "disabled";
+\end{lstlisting}
+Here, the initial assignment to \code{status} reflects a defensive coding pattern
+that ensures that all variables are initialised to some safe default.
+We (optionally) suppress warnings like the above under two conditions:
+(1) the assignment must be in a variable initialisation, and (2)
+the initialiser must be a \emph{common default value}, i.e., one of
+$\{ \code{null}, \code{1}, \code{0}, \code{-1}, \code{""}, \code{true}, \code{false} \}$.
+Our DAA implementation takes up 62 lines of code.
+
+% \begin{lstlisting}[language=JastAdd, caption={Dead Assignment Analsysis specification.
+% The analysis depends on the result of LVA.}, captionpos=b, label=listing:DAA]
+% syn boolean CFGNode.isDead() = !LVA_def().compl(LVA_out()).isEmpty();
+
+% syn Boolean CFGNode.isDeadAssign() = false;
+% eq VariableDeclarator.LVA_isDeadAssign() = isDead() && getDest().isLocalVar() && ...;
+
+% eq AssignExpr.isDeadAssign() = isDead() && getDest().isLocalVar() && ...;
+
+% \end{lstlisting}
+
+% ----------------------------------------
+% figure: LVA UML
+\begin{figure}
+  \begin{tikzpicture}\scriptsize
+
+    \begin{interface2}[text width=4cm]{CFGNode}{\astnode{CFGNode}}{-2.2, 0}
+      \attribute{\Acirc{$\textrm{in}_\textit{LVA}$} : $\mathcal{P}(\mathcal{A})$}
+      \attribute{\Acirc{$\textrm{out}_\textit{LVA}$} : $\mathcal{P}(\mathcal{A})$}
+      \attribute{\Asyn{def} : $\mathcal{P}(\mathcal{A})$}
+      \attribute{\Asyn{use} : $\mathcal{P}(\mathcal{A})$}
+      \operation{\Acirc{$\textrm{in}_\textit{LVA}$} = $(\Acirc{$\textrm{out}_\textit{LVA}$} \setminus \Asyn{def}) \cup \Asyn{use}$}
+      \operation{\Acirc{$\textrm{out}_\textit{LVA}$} = $\bigcup \{ n\umlcode{.\Acirc{$\textrm{in}_\textit{LVA}$}} | n \in \Asyn{succ}\}$}
+      \operation{\hl{{\mbox{\Asyn{def} = $\emptyset$}}}}
+      \operation{\hl{{\mbox{\Asyn{use} = $\emptyset$}}}}
+    \end{interface2}
+
+    \begin{class2}[text width=3.8cm]{VarAccess}{\astnode{VarAccess}}{2.2, 0}
+      \attribute{implements \astnode{CFGNode}}
+      \operation{\Asyn{use} = \{ \Asyn{decl} \}}
+    \end{class2}
+
+    \begin{class2}[text width=3.8cm]{AssignExpr}{\astnode{AssignExpr} ::= lhs:\astnode{Expr} rhs:\astnode{Expr}}{2.2, -2}
+      \attribute{implements \astnode{CFGNode}}
+      \operation{\Asyn{def} = \{ lhs.\Asyn{decl} \}}
+    \end{class2}
+
+%     \begin{class}[text width=4cm]{TryStmt ::= Block CatchClause* \ldots}{-2.2, -1.65}  % [Finally:Block] /ExceptionHandler:Block/
+% %      \attribute{AndOp ::= left:Expr right:Expr}
+%       \operation{block.$\mInh$enclosingTry = this
+%       \operation{...}
+% %      \operation{left.$\mInh$nextNodes = left.$\mInh$nextNodesTT $\union$ left.$\mInh$nextNodesTT}
+% %      \operation{right.$\mInh$nextNodesTT = $\mInh$nextNodesTT}
+% %      \operation{right.$\mInh$nextNodesFF = $\mInh$nextNodesFF}
+% %      \operation{right.$\mInh$nextNodes = right.$\mInh$nextNodesTT $\union$ right.$\mInh$nextNodesTT}
+%     \end{class}
+
+  \end{tikzpicture}
+  \caption{Partial implementation of our LVA.}
+  \label{fig:LVAuml}
+\end{figure}
+
+

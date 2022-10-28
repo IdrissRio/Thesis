@@ -1,0 +1,94 @@
+% ----------------------------------------
+% Attribute grammars + dataflow
+
+Our work is most similar to \jastaddjintraflow~\cite{10.1016/j.scico.2012.02.002}, the earlier RAG-based control- and data flow framework.
+As demonstrated, our \CFG\ framework is more general, leading to more concise {\CFG}s, avoiding misplaced nodes, and handling control flow that does not follow the AST structure, like initialisation code.
+Furthermore, our framework is formulated as a complete language-independent framework (Fig~\ref{fig:intracfgframework}) with interfaces and default equations for all nodes involved in the \CFG\ computation, and it has a more precise predecessor relation, excluding unreachable nodes.
+Our application of the framework to Java is more precise than the earlier work, making use of HOAs for reifying implicit structure, e.g., in connection to \texttt{finally} blocks.
+Additionally, we implemented the analyses for Java 7, including complex flow for \texttt{try-with-resources}, whereas \cite{10.1016/j.scico.2012.02.002} only supported Java 5.
+
+Earlier work on adding control flow to attribute grammars includes a language extension to the Silver attribute grammar system~\cite{vanwyk2007flow,vanwyk2010silver} which supports that AST nodes are marked as CFG nodes, and successors are defined using an inherited attribute.
+Data flow is implemented by exporting data flow properties as temporal logic formulas, and using model checking to implement the analysis.
+The approach is demonstrated on a small subset of C.
+No performance results are reported, and scalability issues are left for future work.
+
+% ----------------------------------------
+% Declarative analysis frameworks + dataflow
+
+Other declarative frameworks for program analysis have also
+demonstrated flow-sensitive analysis support.
+%
+SOUL~\cite{deroover2011soulsummary} exposes data flow information for
+Java 1.5 from Eclipse through a SmallTalk dialect combined
+with Prolog, though we were unable to obtain performance numbers for
+bug checkers or related analyses based on SOUL.
+Like our system, SOUL uses on-demand evaluation.
+%
+DeepWeaver~\cite{falconer2007deepweaver} supports data flow
+analysis and program transformation on byte code.
+%
+Meanwhile, Flix~\cite{madsen2020fixpoints} combines Datalog-style
+fixpoint computations and functional programming for declarative
+data flow analysis, and can scale IFDS/IDE-style
+interprocedural data flow analysis to nontrivial
+software~\cite{madsen2016datalog}.  To the best of our understanding,
+Flix does not connect to any compiler frontend, and
+we assume that Flix users rely on Datalog-style
+fact extractors to bridge this gap.
+MetaDL~\cite{dura2019metadl} illustrates how to synthesise
+fact extractors from a JastAdd-based language, and
+we expect that it can directly expose {\intraj} edges.
+%% relies on an external ``fact extractor'' to analyze source code, as in
+%% other Datalog-based analyzers~\cite{bravenboer09doop}.
+
+FlowSpec~\cite{smits2020flowspec} is a DSL for data flow analysis
+based on term rewriting.  To the best of our knowledge, FlowSpec has
+only been demonstrated on educational and domain-specific
+languages.
+%
+Rhodium~\cite{lerner2005automated} uses logical declarative
+specifications for data flow analysis and transformation, to
+optimise C code and to prove the correctness of the
+transformations.
+
+% ----------------------------------------
+% Declarative analysis frameworks (without?) dataflow
+Other declarative systems  that do not handle data flow include
+logic
+programming based techniques~\cite{bravenboer09doop}, term
+rewriting systems~\cite{visser04stratego}, and XPath
+processors~\cite{copeland2005pmd}.
+
+%----------------------------------------
+% Dataflow
+Our work has focused on intraprocedural data flow
+analyses~\cite{kildall1973dataflow,kam1977monotone,cousot1977ai}.
+However, existing (IR-based)
+program analysis tools like Soot~\cite{vallee-rai10soot},
+Wala~\cite{fink2012wala}, or
+Opal~\cite{helm2020modular} include provisions for interprocedural
+analysis, too.  We currently see no fundamental challenge towards
+scaling our techniques to interprocedural analysis and expect
+only minor changes to the {\intracfg} interfaces, for
+context-sensitivity.  Such an effort would require additional
+analyses (call graph, points-to).  We hypothesise that our
+implicit handling of recursive dependencies can eliminate the need for
+pre-analyses or complex worklist schemes~\cite{lhotak03scaling},
+analogously to Datalog-based analyses~\cite{smaragdakis2010using}.
+%
+While we expect that it is possible to integrate highly
+scalable data flow algorithms like IFDS,
+IDE~\cite{reps1995ifds,sagiv1996ide}, or
+ SPPD~\cite{spaeth2019pda} into RAG
+interfaces, such interfaces may require a different
+design than {\intracfg} and {\intraj} to e.g.\@ accommodate procedure
+summaries and to better enforce and exploit the invariants
+of these more specialised algorithms.
+
+%% Overall, the scalability of state-of-the-art analysis tools like Flix,
+%% Soot, or Doop is orthogonal to the strenghts of {\intracfg}, which lie
+%% in the combination of declarative on-demand analysis and precise
+%% source-level reporting, which includes column information and
+%% knowledge about the exact source language construct responsible for a
+%% flow edge, information that is not visible in e.g.\@ Java bytecode.
+

@@ -1,0 +1,200 @@
+We demonstrate the utility of {\intracfg} and {\intraj}\footnote{Based on ExtendJ commit \texttt{a56a2c2} and JastAdd commit \texttt{faf36d2}} by evaluating the client analyses that we describe in Section~\ref{sec:analysis} against similar source-level analyses
+from the {\ParentFirst} framework {\jastaddjintraflow}\footnote{
+  Using JastAdd2 release~\texttt{2.1.4-36-g18008bb} and JastAddJ-intraflow commit~\texttt{b0b7c00}, restored with the original authors' generous help
+} (\tool{JJI}) and the commercial static analyser \tool{SonarQube}, version 8.9.0.43852 (\tool{SQ}).
+
+Our evaluation targets DaCapo benchmarks \project{ANTLR}, \project{FOP}, and \project{PMD}~\cite{DaCapo:paper}, as well as
+JFreeChart (\project{JFC}), which is a superset of the \project{Chart} benchmark.
+These benchmarks mostly subsume the ones used by JJI~\cite{10.1016/j.scico.2012.02.002},
+except for replacing  \project{Bloat} by the more readily available and larger \project{PMD}.
+%
+Table~\ref{tbl:projectsMetrics} summarise key metrics for the benchmarks and compares {\CFG}s against JJI.
+Here, {\intraj}'s AST-unrestricted strategy for building {\CFG}s
+reduces the number of nodes and edges by more than 30\%.
+
+% Moreover, SQ performs an interprocedural analysis. Therefore, we filtered-out from the comparison all the reports involving more than one methods.
+% We selected all the projects
+
+
+\begin{table}
+\centering
+\begin{tabular}{llrrrr}
+& LOC & \textsc{Qty} &\textsc{ \intraj}   & \textsc{JJI} & \%  \\
+\bottomrule
+\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\project{ANTLR}\\{v. 2.7.2}\end{tabular}} & \multirow{3}{*}{$33^\cdot737$}
+ & \textsc{Roots}      & $2^\cdot667$   & $2^\cdot329$             & +14.5   \\
+\cline{3-6}
+                          &  & \textsc{Nodes}      & $76^\cdot925$  & $116^\cdot523$           & -39.9  \\
+\cline{3-6}
+                         &   & \textsc{Edges}      & $85^\cdot028$  & $136^\cdot528$           & -37.7   \\
+\midrule
+\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\project{PMD}\\{v. 4.2}\end{tabular}}   &\multirow{3}{*}{$49^\cdot610$}
+     & \textsc{Roots}      & $6^\cdot215$   & $5^\cdot960$             & +4.26   \\
+\cline{3-6}
+                        &    & \textsc{Nodes}      & $103^\cdot739$ & $182^\cdot864$           & -43.2   \\
+\cline{3-6}
+                        &    & \textsc{Edges}      & $108^\cdot639$ & $202^\cdot842$           & -46.4  \\
+\midrule
+\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\project{JFC}\\{v 1.0.0}\end{tabular}}  &  \multirow{3}{*}{$95^\cdot664$}  &  \textsc{Roots}       & $9^\cdot271$   & $7^\cdot889$             &  +17.5   \\
+\cline{3-6}
+                         &   & \textsc{Nodes}      & $219^\cdot419$ & $331^\cdot368$           &   -33.7 \\
+\cline{3-6}
+                         &   & \textsc{Edges}      & $220^\cdot256$ & $363^\cdot642$           & -39.4   \\
+\midrule
+\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\project{FOP}\\{v 0.95}\end{tabular}}       & \multirow{3}{*}{$97^\cdot288$}  &  \textsc{Roots}       & $11^\cdot327$  & $8^\cdot921$             & +26.9   \\
+\cline{3-6}
+                        &    &  \textsc{Nodes}       & $239^\cdot096$ & $347^\cdot125$           & -31.1   \\
+\cline{3-6}
+                       &     & \textsc{Edges}      & $240^\cdot068$ & $379^\cdot269$           & -36.6   \\
+\bottomrule
+\end{tabular}
+\caption{Benchmark size metrics, \textsc{LOC} from \texttt{cloc}. The rest are {\CFG} sizes. \textsc{Roots} is the number of intraprocedural {\CFG}s.  For {\intraj}, this includes static and instance initialisers.}
+\label{tbl:projectsMetrics}\end{table}
+
+
+\subsection{Precision}
+To ensure that our analyses yield useful results, we compared them against the results that \tool{JJI} and \tool{SQ} report.
+
+\paragraph{Dead Assignment Analysis}
+\tool{JJI} and \tool{SQ} provide subtly different DAA variants.
+\tool{JJI}'s DAA corresponds largely to our LVA (Section~\ref{sec:lva}) with minimal filtering, while
+\tool{SQ} additionally applies the default value filtering heuristic from Section~\ref{sec:daa}.
+We therefore ran two variants of our DAA, the \tool{JJI}-style \tool{IntraJ-NH} (\emph{non-heuristic}), and
+the \tool{SQ}-style \tool{IntraJ-H} (\emph{heuristic}).
+For \tool{SQ}'s reports, we filtered reports that involved multiple methods (FOP: 24; JFC: 5; PMD: 8), since \tool{SQ} can use interprocedural analysis within one file.
+
+
+The Venn diagrams in the upper part of Figure~\ref{fig:sets} show the number of DAA reports for each project, categorised by their overlap among the different checkers.
+For each category with 20 or fewer reports, we manually inspected all reports.
+For other categories, we sampled and manually inspected at least 20 reports or 20\% of the reports (whichever was higher).
+
+The Venn diagrams are dominated by two bug report categories:
+reports from the intersection of \tool{IntraJ-NH} and \tool{JJI}, which are initialisations of variables with default values,
+and reports from the intersection of all tools.
+For these two categories, we found all inspected reports to be true positives, modulo the DAA heuristic (Section~\ref{sec:daa}).
+The remaining cases are often false positives:
+\project{SQ} reports 8~and 44~false positives in \project{PMD} and \project{FOP}
+that seem to largely stem from  imprecision in handling \code{try}-\code{catch} blocks.
+Meanwhile, \tool{JJI} reports 9~false positives in \project{PMD} while handling \code{break} statements.
+{\intraj} reports two false positives, due to missing two exceptional flow edges for unchecked exceptions (Section~\ref{sec:exceptions}).
+These do not affect \tool{JJI} (and possibly \tool{SQ}), since JJI conservatively merges exceptional and regular control flow.
+
+\begin{figure}
+  \begin{center}
+    \input{papers/intraj/fig-reports-overlap.tex}
+    \input{papers/intraj/img/fig-reports-overlapps-NPA}
+  \end{center}
+  \caption{Venn diagram: number of reports shared across checkers, and percentage of true positives (unless 100\%).}
+\label{fig:sets}
+\end{figure}
+
+\paragraph{Null Pointer Analysis}
+For NPA (lower part of Figure~\ref{fig:sets}), \tool{IntraJ} detects at least as many reports as \tool{SQ}, except for PMD,
+where \tool{SQ} is able to exploit path sensitivity to identify three additional true positives.
+Similarly, the false positives reported only by \tool{IntraJ} are mostly due to the lack of path-sensitivity.
+Listing~\ref{listing:npaTruePositiveIntraJ} shows a simplified example.
+
+We found that most of the false positives in the intersection of \tool{IntraJ} and \tool{SQ} are due to the lack of interprocedural knowledge.
+Listing~\ref{listing:npaTruePositiveSQ} gives a simplified example.
+The code here checks if \code{rs} is \code{null} and, if so, calls \code{panic()} to halt execution.
+\tool{IntraJ} and \tool{SQ} treat \code{panic()} as a regular method call and infer that \code{rs} may be \code{null} when dereferenced.
+
+\noindent
+\begin{minipage}{0.23\textwidth}
+\begin{lstlisting}[caption={Simplified false positive reported by {\intraj} }, language=Java, captionpos=b, label=listing:npaTruePositiveIntraJ]
+void bar(boolean flag){
+  Object o = null;
+  if (flag)
+    o = new Object();
+  if (flag)
+    println(o.toString());
+}
+\end{lstlisting}
+\end{minipage}%
+\hfill
+\begin{minipage}{0.23\textwidth}
+\begin{lstlisting}[caption={False positive due to intraprocedural limitations}, language=Java, captionpos=b, label=listing:npaTruePositiveSQ]
+void foo(){
+  Object rs = getRS();
+  if(rs==null)
+     // rs can be null
+     panic(); //exit(1)
+  println(rs.toString());
+}
+\end{lstlisting}
+\end{minipage}%
+
+\subsection{Performance}
+We evaluated {\intraj}'s runtime performance with the above benchmarks
+on an octa-core Intel i7-11700K 3.6 GHz CPU with 128 GiB DDR4-3200 RAM, running Ubuntu 20.04.2 with Linux 5.8.0-55-generic
+and the OpenJDK Runtime Environment Zulu 7.44.0.11-CA-linux build 1.7.0\_292-b07.
+
+We separately measured both \emph{start-up} performance on a cold JVM (restarting the JVM for each run)
+and \emph{steady-state} performance (for a single measurement after 49 warmup runs).
+We measured each for 50 iterations (i.e., 2500 analysis runs for steady-state) and report median and 95\% confidence intervals
+for {\intraj}, JJI, and \tool{SQ}, where applicable.
+
+Table~\ref{tbl:startup} summarises our results.
+The Baseline column gives the times for each tool to load each benchmark, without data flow analyses.
+For \tool{SQ}, we report the command line tool run time, with checkers disabled.
+For {\intraj} and JJI, this time includes parsing, name, and type analysis.
+As JJI uses old versions of JastAdd and ExtendJ (formerly JastAddJ) from 2013, it reports different baselines.
+We speculate that the delta is due to bug fixes and other changes to JastAdd and ExtendJ.
+
+We measured DAA and NPA, as well as {\CFG} construction time, on separate runs (column An.sys).
+Table~\ref{tbl:startup} has some missing values since \tool{JJI} does not provide an implementation for NPA analysis, and since for \tool{SQ}, we were unable to trigger the construction of the \CFG{} only.
+Further, we could~not measure steady state for \tool{SQ}, since we ran it out of the box.
+
+For start-up measurements, we then subtracted the baseline timings.
+DAA and NPA timings include on-demand {\CFG} construction time.
+For the {\CFG} measurements, we iterated over the entire AST and computed the \Asyn{succ} attribute.
+
+The \%$_{\text{\tool{JJI}}}$ and \%$_{\text{SQ}}$ columns summarise {\intraj}'s performance against JJI and \tool{SQ}
+as slowdown (in percent), i.e.\@ {\intraj} was faster whenever we report less than $100$.
+
+We see that {\intraj} is often slower than JJI for small benchmarks, but outperforms it as the benchmarks grow in size, especially in steady-state.
+% The trend becomes more visible when we consider the executions in a pre-heated VM. In some circumstances, IntraJ demands 36\% less time to perform DAA compared to JJI.
+% This trend is justified by the fact that IntraJ puts more effort into creating smaller but more accurate graphs (w.r.t. JJI).
+This trend mirrors the additional overhead that {\intraj} expends on computing smaller, more accurate CFGs:
+the difference between the {\CFG} and DAA timings is consistently smaller for {\intraj} than it is for {JJI}, and becomes more significant for larger benchmarks.
+
+For the industrial-strength \tool{SQ}, we observe that its baseline is longer than {\intraj}'s, and an explanation might be that it includes computations that for {\intraj} would be attributed to the analyses.
+A strict comparison to \tool{SQ} is therefore difficult, but we observe that {\intraj} is considerably faster including the baseline, at most 3.12 times slower for DAA only, and considerably faster for NPA only, though the latter is likely due to \tool{SQ}'s more expensive interprocedural analysis.
+
+%\subsection{Summary}
+Overall, our results support that {\intraj} enables practical data flow analyses, with run-times and precision similar to state-of-the-art tools.
+Moreover, the results support that the overhead that {\intraj} invests in refining {\CFG} construction over {\jastaddjintraflow}
+pays off: client analyses can amortise this cost,
+and we expect this benefit to grow for analyses on taller lattices (e.g., interval or typestate analyses).
+
+
+\begin{table*}
+\setlength{\tabcolsep}{3.6pt}
+\centering
+\caption{Benchmark mean execution time and 95\% confidence intervals over 50 data points per reported number.}
+\label{tbl:startup}
+\begin{tabular}{|l|rrr|crrrrr|rrr|}
+\hline
+\multirow{2}{*}{Benchmark} &  \multicolumn{9}{c}{Start-up} & \multicolumn{3}{|c|}{Steady state}\\
+\cline{2-13}
+          & \multicolumn{3}{c}{Baseline(s)} & An.sys & \Tcenter{\tool{IntraJ}(s)}  & \Tcenter{\tool{JJI}(s)}   & \Tcenter{\tool{SQ}(s)}  & \Tcenter{\%$_{\text{\tool{JJI}}}$} & \TcenterR{\%$_{\text{SQ}}$} & \Tcenter{\tool{IntraJ}(s)} & \Tcenter{\tool{JJI}(s)}   &  \TcenterR{\%$_{\text{JJI}}$}    \\
+\hline
+\multirow{3}{*}{ANTLR} & \Tcenter{\tool{\intraj}}     											  & \Tcenter{JJI}         					&	\TcenterR{\tool{SonarQube}}						 & CFG      & 0.29$\mCi{0.01}$& 0.16$\mCi{0.00}$&\NAmark&181 &\NAmarkR  & 0.05$\mCi{0.00}$  & 0.04$\mCi{0.00}$ & 125  \\
+                                              & \multirow{2}{*}{2.14$\mCi{0.01}$} &  \multirow{2}{*}{1.34$\mCi{0.01}$}&  \multirow{2}{*}{4.91$\mCi{0.05}$}   & DAA      & 0.53$\mCi{0.01}$& 0.43$\mCi{0.01}$&   0.24$\mCi{0.05}$ &123  & 220 & 0.12$\mCi{0.00}$  & 0.13$\mCi{0.00}$ & 92  \\
+                      						  & 															  &																	 & &NPA      & 0.90$\mCi{0.00}$ & \NAmark       			    &12.35$\mCi{0.10}$ & \NAmark &7  &  0.27$\mCi{0.01}$ & \NAmark & \NAmarkR  \\
+\hline
+\multirow{3}{*}{PMD}    & \Tcenter{\intraj}   												     & \Tcenter{JJI}         							&	\TcenterR{\tool{SonarQube}}	 &CFG      & 0.28$\mCi{0.02}$  & 0.11$\mCi{0.02}$  &\NAmark & 120 & \NAmarkR&0.07$\mCi{0.00}$  & 0.06$\mCi{0.00}$& 116  \\
+                      						 &  \multirow{2}{*}{3.56$\mCi{0.01}$}   &  \multirow{2}{*}{2.34$\mCi{0.02}$}  &  \multirow{2}{*}{10.76$\mCi{0.09}$} & DAA      & 0.47$\mCi{0.02}$  & 0.39$\mCi{0.00}$ &0.18$\mCi{0.08}$& 120 &261 & 0.12$\mCi{0.00}$  & 0.16$\mCi{0.00}$&  75\\
+                   					         &           													  &           														  && NPA      & 0.80$\mCi{0.00}$& \NAmark       	&12.40$\mCi{0.13}$		       & \NAmark &6&  0.26$\mCi{0.00}$ & \NAmark & \NAmarkR   \\
+\hline
+\multirow{3}{*}{JFC}   & \Tcenter{\intraj}    												    & \Tcenter{JJI}       							&	\TcenterR{\tool{SonarQube}}	& CFG      & 0.45$\mCi{0.01}$ & 0.45$\mCi{0.04}$&\NAmark  & 100 &\NAmarkR&  0.12$\mCi{0.00}$ &  0.12$\mCi{0.00}$&100   \\
+                     					  &  \multirow{2}{*}{4.29$\mCi{0.01}$} &  \multirow{2}{*}{3.14$\mCi{0.02}$}  &  \multirow{2}{*}{10.81$\mCi{0.11}$}  & DAA      & 0.75$\mCi{0.01}$& 1.07$\mCi{0.03}$&0.24$\mCi{0.11}$ & 70   &312&0.25$\mCi{0.00}$& 0.34$\mCi{0.00}$&  73 \\
+                       					  &     													        &        													       && NPA      & 1.62$\mCi{0.01}$& \NAmark     				  &10.71$\mCi{0.12}$  & \NAmark  &13 &  0.60$\mCi{0.01}$ & \NAmark & \NAmarkR   \\
+\hline
+\multirow{3}{*}{FOP}   & \Tcenter{\intraj}    												     & \Tcenter{JJI}    										&	\TcenterR{\tool{SonarQube}}	& CFG     & 0.36$\mCi{0.01}$ & 0.33$\mCi{0.01}$&\NAmark & 109  &\NAmarkR  & 0.14$\mCi{0.00}$  & 0.17$\mCi{0.00}$ & 82  \\
+                      					   &  \multirow{2}{*}{4.42$\mCi{0.00}$}  &  \multirow{2}{*}{3.32$\mCi{0.00}$}  &  \multirow{2}{*}{17.20$\mCi{0.12}$}    & DAA     & 0.67$\mCi{0.01}$ & 0.74$\mCi{0.01}$ & 0.34$\mCi{0.12}$& 90  &197  & 0.26$\mCi{0.00}$  & 0.39$\mCi{0.00}$ & 66 \\
+                     					  &          														  &          														  & & NPA      & 1.42$\mCi{0.00}$ & \NAmark      					&19.25$\mCi{0.14}$ & \NAmark  &7 &  0.67$\mCi{0.01}$& \NAmark & \NAmarkR   \\
+
+\hline
+\end{tabular}
+\end{table*}

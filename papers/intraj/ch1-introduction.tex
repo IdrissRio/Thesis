@@ -1,0 +1,68 @@
+%Overall context: Static program analysis in development tools.
+%And why it is important: Detecting bugs and security vulnerabilities.
+Static program analysis plays an important role in software
+development, and may help developers
+detect subtle bugs such as null pointer exceptions~\cite{hovemeyer2005evaluating}
+or security vulnerabilities~\cite{smith2015questions}.
+
+%Zoom in on what this paper is about: Intraprocedural controlflow.
+% And the particular challenges involved for development tools
+% - want precise analysis results in terms of source code
+% - want generic reusable components
+% - want high-level code, and possibility to deal with complex flow, like object initialization and exception handling
+Many client analyses make use of intraprocedural control-flow analysis, and are dependent on its precision and efficiency for useful results.
+Bug checkers and other clients that report to the user must be able to link their results to the source code, so the control-flow analysis itself must also connect to a representation close to the source code, such as an abstract syntax tree (AST).
+Current mainstream program analysis tools and IDEs, like SonarQube, ErrorProne, and Eclipse JDT, take this exact approach.
+
+However, building analyses at the AST level typically ties the analysis closely to a particular language and thereby reduces opportunities for reuse.
+Furthermore, language semantics can require highly intricate control flow, e.g.\@ for object initialisation and exception handling.
+
+% What this paper does, and what is new
+In this paper, we present an approach for developing control-flow analyses and client analyses at the AST level that is based on reference attribute grammars (RAGs) \cite{hedin2000rags} and addresses these challenges.
+We build on an earlier approach that also used RAGs~\cite{10.1016/j.scico.2012.02.002} and remove its two main limitations: imprecision and bloat, both caused by limited flexibility in the shape of control-flow graphs ({\CFG}s) that could be built.
+Our approach introduces a new generalised framework, \intracfg, that is unrestricted in the shape of the {\CFG}s that it can build.
+This improves precision as well as conciseness, in that {\intracfg} connects only AST nodes of interest in the \CFG.
+As a case study, we applied {\intracfg} to the Java language, implementing \intraj, a \CFG{} constructor for Java, as an extension of the Java compiler \extendj~\cite{ekman2007jastadd}.
+To evaluate the precision and performance of \intraj, we implemented two client {data flow} analyses, one forward and one backward, namely
+\emph{Null Pointer Exception} analysis and \emph{Dead Assignment} analysis, respectively.
+
+% Contributions
+More precisely, our contributions are as follows:
+\begin{itemize}
+\item We present \intracfg, a modular and precise language-independent framework
+  for intraprocedural \CFG{} construction, implemented using RAGs.
+\item We present \intraj, an application of the framework to construct concise and precise CFGs for Java 7.
+  We discuss design decisions for what facts to include, and how to reify implicit facts that the AST does not expose directly.
+%\item We provide a systematic benchmark test suite of 151 tests for the Java \CFG{}
+%  (126 tests for Java 4; 5 for Java 5;  20 for Java 7) with execution time results.
+%  To the best of our knowledge, there is no previous work that provides microbenchmarks for Java {\CFG}s.
+\item We provide two different client analyses to validate and evaluate
+  the framework: \emph{Dead Assignment} analysis, which detects unnecessary assignments,
+  and \emph{Null Pointer Exception} analysis, which detects if there exists a path
+  in which a \code{NullPointerException} can be thrown.
+\item We provide an evaluation of performance and precision for a number of Java subject applications, and compare performance and precision both to the earlier RAGs-based approach and to SonarQube, a current mainstream program analysis tool.
+\end{itemize}
+
+% Roadmap
+% The rest of this paper is organised as follows: Section~\ref{sec:framework} reviews the basic
+% notions related to RAGs and introduces the \intracfg\ framework.
+% Section~\ref{sec:implementation} presents \intraj, the application of \intracfg\ for Java, including design decisions and some implementation details.
+% We present our client analyses in Section~\ref{sec:analysis} and discuss the results from our evaluation in
+% Section~\ref{sec:evaluation_results}.
+% Section~\ref{sec:related_works} covers related work, and Section~\ref{sec:conclusions} concludes.
+
+
+
+In the rest of this paper, we review RAGs and introduce {\intracfg} (Section~\ref{sec:framework}) and
+{\intraj}, along with underlying design decisions and implementation details (Section~\ref{sec:implementation}), present our client analyses (Section~\ref{sec:analysis})
+and evaluation (Section~\ref{sec:evaluation_results}), discuss related work
+(Section~\ref{sec:related_works}) and conclude (Section~\ref{sec:conclusions}).
+
+
+
+
+
+
+
+
+

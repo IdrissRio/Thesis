@@ -1,0 +1,65 @@
+\begin{figure}
+  \begin{tikzpicture}\scriptsize
+    \begin{interface2}[text width=5cm]{CFGSupport}{\astnode{CFGSupport}}{2.3, 0}
+      \attribute{\Asyn{firstNodes} : $\mathcal{P}({\astnode{CFGNode}})$}
+      \attribute{\Ainh{nextNodes} : $\mathcal{P}({\astnode{CFGNode}})$}
+      \attribute{\Ainh{nextNodesTT} : $\mathcal{P}({\astnode{CFGNode}})$ \hfill\dfapi}
+      \attribute{\Ainh{nextNodesFF} : $\mathcal{P}({\astnode{CFGNode}})$ \hfill\dfapi}
+      \operation{\hl{{\mbox{\Asyn{firstNodes} = $\emptyset$}}}}
+    \end{interface2}
+    \begin{interface2}[text width=2.7cm]{CFGRoot}{\astnode{CFGRoot}}{-2.3 , 0}
+%      \inherit{\astnode{CFGSupport}}
+      \attribute{\Ahoa{entry} : \astnode{Entry} \hfill\dfapi}
+      \attribute{\Ahoa{exit} : \astnode{Exit} \hfill\dfapi}
+      \operation{\Ahoa{entry} = new \astnode{Entry}}
+      \operation{\Ahoa{exit} = new \astnode{Exit}}
+      \operation{*.\Ainh{entry} = \Ahoa{entry}}
+      \operation{*.\Ainh{exit} = \Ahoa{exit}}
+      \operation{\hl{{\mbox{*.\Ainh{nextNodes} = $\emptyset$}}}}
+      \operation{\hl{{\mbox{*.\Ainh{nextNodesTT} = $\emptyset$}}}}
+      \operation{\hl{{\mbox{*.\Ainh{nextNodesFF} = $\emptyset$}}}}
+    \end{interface2}
+    \begin{interface2}[text width=5.8cm]{CFGNode}{\astnode{CFGNode}}{2.3, -2.8}
+      \inherit{CFGSupport}
+      \attribute{\Asyn{succ} : $\mathcal{P}(\texttt{\astnode{CFGNode}})$ \hfill\dfapi}
+      \attribute{\Asyn{pred} : $\mathcal{P}(\texttt{\astnode{CFGNode}})$ \hfill\dfapi}
+      \attribute{\Ainh{entry} : \astnode{Entry}}
+      \attribute{\Ainh{exit} : \astnode{Exit}}
+      \attribute{\Acoll{succInv} : $\mathcal{P}(\texttt{\astnode{CFGNode}})$}
+      \attribute{\Acirc{reachable} : boolean}
+      \operation{\hl{{\mbox{\Asyn{firstNodes} = $\{$this$\}$}}}}
+      \operation{\hl{{\mbox{\Asyn{succ} = \Ainh{nextNodes}}}}}
+      \operation{$s \in \Asyn{succ} \implies $this$ \: \in s.\Acoll{succInv}$}
+      \operation{\Acirc{reachable} = }
+      \operation{\phantom{nn}\Ainh{entry}$ \in \Acoll{succInv}  \: \lor \: \exists p \in \Acoll{succInv}: p.\Acirc{reachable}$}
+      \operation{\Asyn{pred} = $\{ p \mid p \in \Acoll{succInv} \land \: p.\Acirc{reachable}\}$}
+%      \operation{$\mSyn\texttt{pred} = \{ p \mid p \in \mColl\texttt{succInv} \and p.\mCirc\texttt{isReachable}\}$}
+    \end{interface2}
+    \begin{class2}[text width=1.7cm]{Entry}{\texttt{\astnode{Entry}}}{-2.3, -3.55}%{1, -6.1}
+      \inherit{CFGNode}
+      %\attribute{implements \astnode{CFGNode}}
+      %\attribute{Entry ::= $\epsilon$}
+    \end{class2}
+    \begin{class2}[text width=1.7cm]{Exit}{\astnode{Exit}}{-2.3, -4.1}%{3.6, -6.1}
+      \inherit{CFGNode}
+      %\attribute{implements \astnode{CFGNode}}
+      %\attribute{Exit ::= $\epsilon$}
+    \end{class2}
+
+    \node[draw] at (-2.3, -5.85) {
+      \begin{tabular}{@{}r@{\ }p{1.5cm}@{}}
+        \multicolumn{2}{@{}l}{\textbf{Attribute markers}}\\
+        \hline
+        \textcolor{ATGsym}{\mSyn{}} & synthesized \\
+        \textcolor{ATGsym}{\mInh{}} & inherited \\
+        \textcolor{ATGsym}{\mHOA{}} & higher-order \\
+        \textcolor{ATGsym}{\mColl{}} & collection \\
+        \textcolor{ATGsym}{\mCirc{}} & circular \\
+        % \hl{{\mbox{\phantom{foo}}}} & default equations \\
+        \hfill\dfapi & for client data flow analyses \\
+      \end{tabular}
+    };
+  \end{tikzpicture}
+  \caption{The {\intracfg} framework with interfaces \mbox{\astnode{CFGRoot},} \astnode{CFGSupport},  {\astnode{CFGNode}}, and synthetic AST types \astnode{Entry}, \mbox{\astnode{Exit}.} \hl{Highlighted} attribute equations are default equations, intended for overriding.}
+  \label{fig:intracfgframework}
+\end{figure}

@@ -3,6 +3,8 @@
 \newcommand{\code}[1]{\texttt{\lstinline[basicstyle=\normalsize\ttfamily,identifierstyle={\normalsize},commentstyle={\normalsize\itshape},keywordstyle={\normalsize\bfseries},ndkeywordstyle={\normalsize},stringstyle={\normalsize\ttfamily},numberstyle={\normalsize}]!#1!}}
 \newcommand{\CFG}{CFG}
 \newcommand{\intraj}{\textsc{Intra}J}
+\newcommand{\jastadd}{\textsc{JastAdd}}
+\newcommand{\extendj}{\textsc{ExtendJ}}
 \newcommand{\jastaddjintraflow}{\textsc{jastaddj-intraflow}}
 \newcommand{\jji}{\code{JJI}}
 \newcommand{\cG}{\mathcal{G}}
@@ -337,3 +339,55 @@ pp. 236--241s}. Limassol, Cyprus, 2022.
 
 \newtheorem{definition}{Definition}
 \newcommand{\Chapter}[1]{Chapter~\ref{#1}}
+
+
+\newfloat{paperfoot}{b}{paper}
+\newcommand{\paperRemark}[1]{
+  \begin{paperfoot}%
+  \hrulefill \flushleft \footnotesize #1 \end{paperfoot}
+}
+
+
+% patch for uml
+% Patch UML package pgf-umlcd to be able to write abstract grammar as class name.
+\ExplSyntaxOn
+\NewDocumentCommand{\defineclassname}{m}
+ {
+  \tl_set:Nn \umlcdClassName { #1 }
+  \tl_set_eq:NN \umlcdClassNameString \umlcdClassName
+  \tl_replace_all:Nfn \umlcdClassName { \char_generate:nn { `_ } { 8 } } { \_\kern1pt }
+ }
+\cs_generate_variant:Nn \tl_replace_all:Nnn { Nf }
+\ExplSyntaxOff
+\xpatchcmd{\classAndInterfaceCommon}
+ {\def\umlcdClassName}
+ {\defineclassname}
+ {}{}
+\xpatchcmd{\endclass}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endinterface}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endabstractclass}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endobject}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endclassAndInterfaceCommon}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endclassAndInterfaceCommon}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endclassAndInterfaceCommon}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}

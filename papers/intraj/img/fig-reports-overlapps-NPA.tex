@@ -1,0 +1,120 @@
+\newcommand{\venncellB}[3][100]{%
+  \ifnum#1=100\relax%
+  \node[venncellstyle] at ($(#2) + (0.5, -0.5)$) {\textcolor{green!50!black}{#3}};%
+  \else%
+  \node[venncellstyle] at ($(#2) + (0.5, -0.5)$) {%
+    \small #3 \\[-0.6em] \footnotesize %
+    \ifnum#1=0\relax%
+      \textcolor{red!50!black}{#1\%}%\\%
+    \else%
+      \textcolor{white!40!black}{#1\%}%\\%
+    \fi%
+  };%
+  \fi%
+}
+%% \newcommand{\Xclear}[3]{\fill[vennfill, fill=white, opacity=100] #1}
+%% \newcommand{\Xfill}[3]{\fill[vennfill, fill=#2] #1}
+%% \newcommand{\Xdraw}[3]{\draw[venndraw] #1}
+%% \newcommand{\Xdash}[3]{\draw[venndraw, #3, color=#2!80!black] #1}
+%% \newcommand{\Xfilldraw}[3]{\Xfill{#1}{#2}{#3};\Xdraw{#1}{#2}{#3};}
+
+
+\begin{tikzpicture}[xscale=0.66, yscale=0.58,
+    venncellstyle/.style={fill=white, inner sep=1.2pt, rounded corners=1, minimum width=0.5cm, minimum height=0.4cm},
+    venncellstylebg/.style={fill=white, opacity=0.5, inner sep=1.2pt, rounded corners=1, minimum width=0.6cm, minimum height=0.45cm},
+      benchlabel/.style={fill=white, draw, inner sep=1pt},
+      vennfill/.style={rounded corners=4, opacity=0.5},
+      venndraw/.style={rounded corners=4, black, thick, opacity=0.8},
+      legend/.style={draw, rounded corners=0, minimum height=0.35cm, minimum width=1.8cm, inner sep=0},
+      every text node part/.style={align=center}
+  ]
+
+  % Draw the background for the legend connectors
+  \begin{scope}[xshift=0cm, yshift=0.3cm]
+    \draw[line width=0.08cm, -, black]
+    	(0.8, 0.1) -- ++(0, -0.6);
+    \draw[line width=0.08cm, -, black]
+        (12.4, 0.1) -- ++(0, -0.6);
+  \end{scope}
+
+  % For each benchmark
+  \foreach \benchname/\x/\y/\results in { % individual venn intersection numbers are {x/y/count/percentage}
+		ANTLR/0/0/{    0/0/11/57, 1/0/4/100},
+		PMD/3.4/0/{    0/0/6/100, 1/0/7/100,  2/0/3/100},
+		JFC/6.8/0/{    0/0/17/82,1/0/188/92},
+		FOP/10.2/0/{   0/0/29/55, 1/0/24/91}}
+  {
+    % shift figure to the right coordinates
+    \begin{scope}[xshift=\x cm, yshift=\y cm]
+
+    \fill[black, opacity=0.1] (-0.1,0.1) rectangle (3.1,-1.1);
+
+    % First draw transparent fill, then draw hard boundaries w/o transparency
+    \foreach \styledraw in {\Xclear, \Xfilldraw}{ % , \Xdash
+      % % SonarQube
+      \styledraw{(1, 0.1) rectangle (3, -1)}{SQ}{dash pattern=on 0.5pt off 0.5pt};
+
+      % IntraJ-N
+      \styledraw{(0.0, 0) rectangle (2, -1.1)}{IJH}{dash pattern=on 0.4pt off 3pt};
+
+    }
+
+    % Draw the individual markers
+    \foreach \vennx/\venny/\count/\percent in \results {
+      \venncellB[\percent]{\vennx, \venny}{\count};
+    }
+
+    % Draw benchmark name
+    \node at (1.5, -1.4)
+          [minimum height=0.4cm, inner sep=1.5pt] {\textbf{\textsf{\benchname}}};
+    {}
+
+    \end{scope}
+  }
+
+  \fill[opacity=0.1] (-0.1,0.3) rectangle (13.3, 1.15);
+
+  % Draw the legend
+  \begin{scope}[xshift=0cm, yshift=0.3cm]
+
+    \node at (1.45, 0.4)
+          (IJH)
+          [legend, fill=white!50!IJH] {\textcolor{black!80!IJH}{{\small \tool{IntraJ}}}};
+
+    \node at (11.75, 0.4)
+          (SQ)
+          [legend, fill=white!50!SQ] {\textcolor{black!80!SQ}{{\small \tool{SonarQube}}}};
+
+    {}
+    % Manual coordinates to syncronise with the background color bit from before all else is drawn
+    \draw[ultra thick, -, white!50!IJH]
+    	(0.8, 0.15) -- ++(0, -0.5);
+    \draw[ultra thick, -, white!50!SQ]
+        (12.4, 0.15) -- ++(0, -0.5);
+
+    %% % Draw benchmark labels
+    %% %[3.39, 5.53, 7.67, 9.81]
+    %% \node at (3.39, 0.4)
+    %%       (ANTLR)
+    %%       [benchlabel] {\textbf{\textsf{ANTLR}}};
+    %% \node at (5.53, 0.4)
+    %%       (PMD)
+    %%       [benchlabel] {\textbf{\textsf{PMD}}};
+    %% \node at (7.67, 0.4)
+    %%       (JFC)
+    %%       [benchlabel] {\textbf{\textsf{JFC}}};
+    %% \node at (9.81, 0.4)
+    %%       (FOP)
+    %%       [benchlabel] {\textbf{\textsf{FOP}}};
+  \end{scope}
+
+  % top label
+  %% \node[draw, minimum width=13.4cm, inner sep=0]
+  \node[fill=black!70!white,  minimum width=8.85cm, inner sep=1pt]
+        at (6.6, 1.5)
+        {\textcolor{white}{Null Pointer Analysis}};
+
+  %% bounding box
+  \draw (current bounding box.north east) -- (current bounding box.north west) -- (current bounding box.south west) -- (current bounding box.south east) -- cycle;
+
+\end{tikzpicture}

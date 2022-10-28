@@ -1,0 +1,187 @@
+
+
+% Pattern Info
+
+\tikzset{
+pattern size/.store in=\mcSize,
+pattern size = 5pt,
+pattern thickness/.store in=\mcThickness,
+pattern thickness = 0.3pt,
+pattern radius/.store in=\mcRadius,
+pattern radius = 1pt}
+\makeatletter
+\pgfutil@ifundefined{pgf@pattern@name@_tvnte2zyq}{
+\pgfdeclarepatternformonly[\mcThickness,\mcSize]{_tvnte2zyq}
+{\pgfqpoint{0pt}{-\mcThickness}}
+{\pgfpoint{\mcSize}{\mcSize}}
+{\pgfpoint{\mcSize}{\mcSize}}
+{
+\pgfsetcolor{\tikz@pattern@color}
+\pgfsetlinewidth{\mcThickness}
+\pgfpathmoveto{\pgfqpoint{0pt}{\mcSize}}
+\pgfpathlineto{\pgfpoint{\mcSize+\mcThickness}{-\mcThickness}}
+\pgfusepath{stroke}
+}}
+\makeatother
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt
+\newsavebox\forbox
+\begin{lrbox}{\forbox}
+\begin{tikzpicture}
+    \begin{class2}[text width=7.3cm]{ForStmt}{\astnode{ForStmt} ::= init:\astnode{Stmt}$^*$ c:\astnode{Expr} ... b:\astnode{Block}}{0, 0}
+      \attribute{implements \astnode{CFGSupport}}
+      \attribute{\Ahoa{implC} : \astnode{BooleanLiteral}}
+      \operation{\Ahoa{implC} = new \astnode{BooleanLiteral}(true)}
+      \operation{\Asyn{firstNodes} = if $\lnot$init.empty then init$_0$.\Asyn{firstNodes}}
+      \operation{\hspace*{2em}elif $\lnot$c.empty then c.\Asyn{firstNodes}}
+      \operation{\hspace*{2em}else \Ahoa{implC}.\Asyn{firstNodes}}
+    \end{class2}
+\end{tikzpicture}
+\end{lrbox}
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,1137); %set diagram left start at 0, and has height of 1137
+
+%Rounded Rect [id:dp5100032256137063]
+\draw  [fill={rgb, 255:red, 119; green, 119; blue, 119 }  ,fill opacity=1 ] (59.42,13.35) .. controls (59.42,9.84) and (62.27,7) .. (65.78,7) -- (171.95,7) .. controls (175.45,7) and (178.3,9.84) .. (178.3,13.35) -- (178.3,32.41) .. controls (178.3,35.92) and (175.45,38.77) .. (171.95,38.77) -- (65.78,38.77) .. controls (62.27,38.77) and (59.42,35.92) .. (59.42,32.41) -- cycle ;
+%Rounded Rect [id:dp8990507974388595]
+\draw  [dash pattern={on 4.5pt off 4.5pt}] (-0.51,75.88) .. controls (-0.51,72.37) and (2.33,69.52) .. (5.84,69.52) -- (57.03,69.52) .. controls (60.54,69.52) and (63.39,72.37) .. (63.39,75.88) -- (63.39,94.94) .. controls (63.39,98.44) and (60.54,101.29) .. (57.03,101.29) -- (5.84,101.29) .. controls (2.33,101.29) and (-0.51,98.44) .. (-0.51,94.94) -- cycle ;
+%Rounded Rect [id:dp5847303802782542]
+\draw  [dash pattern={on 4.5pt off 4.5pt}] (177.8,74.87) .. controls (177.8,71.36) and (180.65,68.51) .. (184.16,68.51) -- (235.35,68.51) .. controls (238.86,68.51) and (241.7,71.36) .. (241.7,74.87) -- (241.7,93.93) .. controls (241.7,97.44) and (238.86,100.28) .. (235.35,100.28) -- (184.16,100.28) .. controls (180.65,100.28) and (177.8,97.44) .. (177.8,93.93) -- cycle ;
+%Straight Lines [id:da7901136535206377]
+\draw  [dash pattern={on 0.84pt off 2.51pt}]  (115.89,39.27) -- (115.94,50.38) -- (67.22,69.79) ;
+\draw [shift={(65.37,70.53)}, rotate = 338.27] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (12,-3) -- (0,0) -- (12,3) -- cycle    ;
+%Straight Lines [id:da1592958150755811]
+\draw  [dash pattern={on 0.84pt off 2.51pt}]  (115.89,39.27) -- (115.94,50.38) -- (170.78,68.23) ;
+\draw [shift={(172.69,68.85)}, rotate = 198.03] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (12,-3) -- (0,0) -- (12,3) -- cycle    ;
+%Rounded Rect [id:dp15255617186816406]
+\draw  [fill={rgb, 255:red, 224; green, 219; blue, 219 }  ,fill opacity=1 ] (68.92,107.14) .. controls (68.92,103.63) and (71.76,100.78) .. (75.27,100.78) -- (158.02,100.78) .. controls (161.53,100.78) and (164.38,103.63) .. (164.38,107.14) -- (164.38,126.2) .. controls (164.38,129.71) and (161.53,132.55) .. (158.02,132.55) -- (75.27,132.55) .. controls (71.76,132.55) and (68.92,129.71) .. (68.92,126.2) -- cycle ;
+%Straight Lines [id:da4530260362500649]
+\draw  [dash pattern={on 0.84pt off 2.51pt}]  (115.89,133.05) -- (116.83,171.39) ;
+\draw [shift={(116.88,173.39)}, rotate = 268.59000000000003] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (12,-3) -- (0,0) -- (12,3) -- cycle    ;
+%Straight Lines [id:da008572923107979857]
+\draw  [dash pattern={on 0.84pt off 2.51pt}]  (115.89,39.27) -- (115.89,95.76) ;
+\draw [shift={(115.89,97.76)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (12,-3) -- (0,0) -- (12,3) -- cycle    ;
+%Straight Lines [id:da48612698188167747]
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]    (47.21,280.9) -- (27.43,280.9) -- (27.43,103.42) ;
+\draw [shift={(51.21,280.9)}, rotate = 180] [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (11.61,-5.58) -- (0,0) -- (11.61,5.58) -- cycle    ;
+%Rounded Rect [id:dp33150746930836394]
+\draw  [fill={rgb, 255:red, 224; green, 219; blue, 219 }  ,fill opacity=1 ] (70.9,183.78) .. controls (70.9,180.27) and (73.74,177.43) .. (77.25,177.43) -- (160,177.43) .. controls (163.51,177.43) and (166.36,180.27) .. (166.36,183.78) -- (166.36,202.84) .. controls (166.36,206.35) and (163.51,209.19) .. (160,209.19) -- (77.25,209.19) .. controls (73.74,209.19) and (70.9,206.35) .. (70.9,202.84) -- cycle ;
+%Rounded Rect [id:dp034528485502401174]
+\draw  [dash pattern={on 4.5pt off 4.5pt}] (55.46,267.38) .. controls (55.46,261.7) and (60.07,257.09) .. (65.75,257.09) -- (174.95,257.09) .. controls (180.63,257.09) and (185.23,261.7) .. (185.23,267.38) -- (185.23,298.24) .. controls (185.23,303.92) and (180.63,308.52) .. (174.95,308.52) -- (65.75,308.52) .. controls (60.07,308.52) and (55.46,303.92) .. (55.46,298.24) -- cycle ;
+%Straight Lines [id:da25032488377016593]
+\draw  [dash pattern={on 0.84pt off 2.51pt}]  (116.88,211.71) -- (116.88,248.03) ;
+\draw [shift={(116.88,250.03)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (12,-3) -- (0,0) -- (12,3) -- cycle    ;
+%Curve Lines [id:da9247423588036267]
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]    (83.2,312.56) .. controls (54.07,362.96) and (135.31,362.03) .. (105.01,316.41) ;
+\draw [shift={(103.01,313.57)}, rotate = 413.62] [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (11.61,-5.58) -- (0,0) -- (11.61,5.58) -- cycle    ;
+%Straight Lines [id:da48274161194562804]
+\draw  [dash pattern={on 0.84pt off 2.51pt}]  (117.15,220.76) -- (245.87,221.2) -- (245.87,247.3) ;
+\draw [shift={(245.87,249.3)}, rotate = 270] [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.08]  [draw opacity=0] (12,-3) -- (0,0) -- (12,3) -- cycle    ;
+%Rounded Rect [id:dp047161589513216584]
+\draw  [fill={rgb, 255:red, 224; green, 219; blue, 219 }  ,fill opacity=1 ] (214.68,258.4) .. controls (214.68,254.9) and (217.52,252.05) .. (221.03,252.05) -- (265.15,252.05) .. controls (268.66,252.05) and (271.5,254.9) .. (271.5,258.4) -- (271.5,277.46) .. controls (271.5,280.97) and (268.66,283.82) .. (265.15,283.82) -- (221.03,283.82) .. controls (217.52,283.82) and (214.68,280.97) .. (214.68,277.46) -- cycle ;
+%Straight Lines [id:da48225680942513005]
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]    (185.23,267.38) -- (205.62,267.39) -- (205.62,106.63) ;
+\draw [shift={(205.62,102.63)}, rotate = 450] [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (11.61,-5.58) -- (0,0) -- (11.61,5.58) -- cycle    ;
+%Curve Lines [id:da7422459460743117]
+\draw [color={rgb, 255:red, 126; green, 211; blue, 33 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 5.63pt off 4.5pt}]  (68.4,118.13) .. controls (27.02,164.89) and (30.44,221.32) .. (54.19,254.12) ;
+\draw [shift={(56.45,257.09)}, rotate = 231.4] [fill={rgb, 255:red, 126; green, 211; blue, 33 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (11.61,-5.58) -- (0,0) -- (11.61,5.58) -- cycle    ;
+%Curve Lines [id:da009130105523222576]
+\draw [color={rgb, 255:red, 126; green, 211; blue, 33 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 5.63pt off 4.5pt}]  (69.89,189.83) .. controls (44.54,210.7) and (30.69,224.82) .. (56.45,257.09) ;
+%Curve Lines [id:da18611103922131644]
+\draw [color={rgb, 255:red, 126; green, 211; blue, 33 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 5.63pt off 4.5pt}]  (133.72,312.56) .. controls (104.6,362.96) and (185.83,362.03) .. (155.53,316.41) ;
+\draw [shift={(153.53,313.57)}, rotate = 413.62] [fill={rgb, 255:red, 126; green, 211; blue, 33 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (11.61,-5.58) -- (0,0) -- (11.61,5.58) -- cycle    ;
+%Curve Lines [id:da7711201281153591]
+\draw [color={rgb, 255:red, 126; green, 211; blue, 33 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 5.63pt off 4.5pt}]  (239.19,285.88) .. controls (239.19,295.19) and (237.48,291.62) .. (191.65,291.88) ;
+\draw [shift={(188.03,291.91)}, rotate = 359.44] [fill={rgb, 255:red, 126; green, 211; blue, 33 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (11.61,-5.58) -- (0,0) -- (11.61,5.58) -- cycle    ;
+%Curve Lines [id:da05649695805427568]
+\draw [color={rgb, 255:red, 126; green, 211; blue, 33 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 5.63pt off 4.5pt}]  (5.73,101.29) .. controls (-21.4,135.17) and (36.26,130.97) .. (16.95,104.65) ;
+\draw [shift={(14.54,101.7)}, rotate = 408.02] [fill={rgb, 255:red, 126; green, 211; blue, 33 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (11.61,-5.58) -- (0,0) -- (11.61,5.58) -- cycle    ;
+%Curve Lines [id:da38645058437295565]
+\draw [color={rgb, 255:red, 126; green, 211; blue, 33 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 5.63pt off 4.5pt}]  (226.65,99.87) .. controls (199.52,133.75) and (257.18,129.55) .. (237.87,103.23) ;
+\draw [shift={(235.46,100.28)}, rotate = 408.02] [fill={rgb, 255:red, 126; green, 211; blue, 33 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (11.61,-5.58) -- (0,0) -- (11.61,5.58) -- cycle    ;
+%Shape: Rectangle [id:dp18462636620367567]
+\draw   (282,264.86) -- (509.5,264.86) -- (509.5,345.5) -- (282,345.5) -- cycle ;
+%Rounded Rect [id:dp21294641657728508]
+\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (398.93,271.56) .. controls (398.93,270.06) and (400.15,268.84) .. (401.66,268.84) -- (409.83,268.84) .. controls (411.34,268.84) and (412.56,270.06) .. (412.56,271.56) -- (412.56,282) .. controls (412.56,283.5) and (411.34,284.72) .. (409.83,284.72) -- (401.66,284.72) .. controls (400.15,284.72) and (398.93,283.5) .. (398.93,282) -- cycle ;
+%Rounded Rect [id:dp5648235410650739]
+\draw  [fill={rgb, 255:red, 119; green, 119; blue, 119 }  ,fill opacity=1 ] (288.53,291.22) .. controls (288.53,289.83) and (289.66,288.69) .. (291.06,288.69) -- (298.66,288.69) .. controls (300.05,288.69) and (301.19,289.83) .. (301.19,291.22) -- (301.19,301.05) .. controls (301.19,302.45) and (300.05,303.59) .. (298.66,303.59) -- (291.06,303.59) .. controls (289.66,303.59) and (288.53,302.45) .. (288.53,301.05) -- cycle ;
+%Rounded Rect [id:dp37060502353713864]
+\draw  [fill={rgb, 255:red, 224; green, 219; blue, 219 }  ,fill opacity=1 ] (398.93,292.41) .. controls (398.93,290.91) and (400.15,289.69) .. (401.66,289.69) -- (409.83,289.69) .. controls (411.34,289.69) and (412.56,290.91) .. (412.56,292.41) -- (412.56,302.85) .. controls (412.56,304.35) and (411.34,305.57) .. (409.83,305.57) -- (401.66,305.57) .. controls (400.15,305.57) and (398.93,304.35) .. (398.93,302.85) -- cycle ;
+%Rounded Rect [id:dp09724209068955114]
+\draw  [fill={rgb, 255:red, 224; green, 219; blue, 219 }  ,fill opacity=1 ] (294.95,269.07) .. controls (294.95,268.39) and (295.5,267.84) .. (296.18,267.84) -- (299.85,267.84) .. controls (300.53,267.84) and (301.08,268.39) .. (301.08,269.07) -- (301.08,273.65) .. controls (301.08,274.32) and (300.53,274.87) .. (299.85,274.87) -- (296.18,274.87) .. controls (295.5,274.87) and (294.95,274.32) .. (294.95,273.65) -- cycle ;
+%Rounded Rect [id:dp0017317963746376064]
+\draw  [pattern=_tvnte2zyq,pattern size=2.8499999999999996pt,pattern thickness=0.75pt,pattern radius=0pt, pattern color={rgb, 255:red, 0; green, 0; blue, 0}] (294.95,276.02) .. controls (294.95,275.34) and (295.5,274.79) .. (296.18,274.79) -- (299.85,274.79) .. controls (300.53,274.79) and (301.08,275.34) .. (301.08,276.02) -- (301.08,280.6) .. controls (301.08,281.27) and (300.53,281.82) .. (299.85,281.82) -- (296.18,281.82) .. controls (295.5,281.82) and (294.95,281.27) .. (294.95,280.6) -- cycle ;
+%Rounded Rect [id:dp12164830585442543]
+\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ][dash pattern={on 0.84pt off 2.51pt}] (288.62,310.55) .. controls (288.62,309.04) and (289.83,307.82) .. (291.34,307.82) -- (299.51,307.82) .. controls (301.02,307.82) and (302.24,309.04) .. (302.24,310.55) -- (302.24,320.98) .. controls (302.24,322.49) and (301.02,323.71) .. (299.51,323.71) -- (291.34,323.71) .. controls (289.83,323.71) and (288.62,322.49) .. (288.62,320.98) -- cycle ;
+%Straight Lines [id:da7218140703896597]
+\draw [color={rgb, 255:red, 126; green, 211; blue, 33 }  ,draw opacity=1 ][line width=1.5]  [dash pattern={on 5.63pt off 4.5pt}]  (285.02,337.51) -- (307.73,337.59) ;
+\draw [shift={(311.73,337.61)}, rotate = 180.21] [fill={rgb, 255:red, 126; green, 211; blue, 33 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (11.61,-5.58) -- (0,0) -- (11.61,5.58) -- cycle    ;
+%Rounded Rect [id:dp5560182938693506]
+\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ][dash pattern={on 0.84pt off 2.51pt}] (287.87,269.07) .. controls (287.87,268.39) and (288.42,267.84) .. (289.09,267.84) -- (292.77,267.84) .. controls (293.44,267.84) and (293.99,268.39) .. (293.99,269.07) -- (293.99,273.65) .. controls (293.99,274.32) and (293.44,274.87) .. (292.77,274.87) -- (289.09,274.87) .. controls (288.42,274.87) and (287.87,274.32) .. (287.87,273.65) -- cycle ;
+%Rounded Rect [id:dp6782076153242217]
+\draw  [fill={rgb, 255:red, 119; green, 119; blue, 119 }  ,fill opacity=1 ] (287.9,276.02) .. controls (287.9,275.34) and (288.44,274.79) .. (289.12,274.79) -- (292.79,274.79) .. controls (293.47,274.79) and (294.02,275.34) .. (294.02,276.02) -- (294.02,280.6) .. controls (294.02,281.27) and (293.47,281.82) .. (292.79,281.82) -- (289.12,281.82) .. controls (288.44,281.82) and (287.9,281.27) .. (287.9,280.6) -- cycle ;
+%Straight Lines [id:da5185875420103297]
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=1.5]    (398.59,319.67) -- (416.3,319.75) ;
+\draw [shift={(420.3,319.77)}, rotate = 180.26] [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ][line width=0.08]  [draw opacity=0] (11.61,-5.58) -- (0,0) -- (11.61,5.58) -- cycle    ;
+%Straight Lines [id:da5761225056777026]
+\draw    (275,8) -- (275.5,343.5) ;
+
+% Text Node
+\draw (75.2,15.54) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 255; green, 255; blue, 255 }  ,opacity=1 ]  {$\mathtt{MethodDecl}$};
+% Text Node
+\draw (10.02,78.06) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{Entry}$};
+% Text Node
+\draw (196.78,78.81) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{Exit}$};
+% Text Node
+\draw (97.21,109.32) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{Block}$};
+% Text Node
+\draw (91.5,186.6) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{ForStmt}$};
+% Text Node
+\draw (36.47,336.84) node [anchor=north west][inner sep=0.75pt]   [align=left] {\begin{minipage}[lt]{25.57pt}\setlength\topsep{0pt}
+\begin{center}
+{\fontfamily{pcr}\selectfont {\small True}}
+\end{center}
+
+\end{minipage}};
+% Text Node
+\draw (63.49,265.58) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{BooleanLiteral}$};
+% Text Node
+\draw (84.14,285.8) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{< true >}$};
+% Text Node
+\draw (222.17,260.59) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{Block}$};
+% Text Node
+\draw (190.3,203.54) node [anchor=north west][inner sep=0.75pt]  [rotate=-269.48] [align=left] {\begin{minipage}[lt]{31.29pt}\setlength\topsep{0pt}
+\begin{center}
+{\fontfamily{pcr}\selectfont {\small False}}
+\end{center}
+
+\end{minipage}};
+% Text Node
+\draw (310,289.37) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{CFGRoot}$};
+% Text Node
+\draw (420,269.51) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{CFGNode}$};
+% Text Node
+\draw (420,292) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{CFGSupport}$};
+% Text Node
+\draw (310,268.52) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{AST\ node}$};
+% Text Node
+\draw (285.22,247.93) node [anchor=north west][inner sep=0.75pt]   [align=left] {\textit{Legend}};
+% Text Node
+\draw (310,309.52) node [anchor=north west][inner sep=0.75pt]    {$\mathtt{HOA}$};
+% Text Node
+\draw (317.08,331.33) node [anchor=north west][inner sep=0.75pt]    {\Asyn{firstNodes}};
+% Text Node
+\draw (424.47,314.49) node [anchor=north west][inner sep=0.75pt]    {\Asyn{succ}};
+% Text Node
+\draw (276.85,11.29) node [anchor=north west][scale=1.7]    {		   \begin{lstlisting}[language=java,frame=none]
+void foo(){
+  for( ; ; ){  }
+}
+	       \end{lstlisting}
+};
+
+% Text Node
+\draw (275.00,90.0) node [anchor=north west][scale=1.15]    {
+\usebox\forbox};
+
+
+\end{tikzpicture}

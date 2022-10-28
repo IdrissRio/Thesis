@@ -1,0 +1,66 @@
+
+\input{papers/intraj/macros.tex}
+\chapter[A Precise Framework for Source-Level Control-Flow Analysis]{\texorpdfstring{%
+A Precise Framework for Source-Level Control-Flow Analysis}{%
+A Precise Framework for Source-Level Control-Flow Analysis}}
+
+\paperRemark{\paperIref}
+
+
+
+
+
+\section{abstract}
+This paper presents \intracfg, a declarative and language-independent framework for constructing precise intraprocedural control-flow graphs (CFGs) based on the reference attribute grammar system JastAdd. Unlike most other frameworks, which build CFGs on an Intermediate Representation level, e.g., bytecode,  our approach superimposes the CFGs on the Abstract Syntax Tree, enabling accurate client analysis.
+Moreover, \intracfg\ overcomes expressivity limitations of an earlier RAG-based framework, allowing the construction of AST-Unrestricted CFGs: CFGs whose shape is not confined to the AST structure.
+We evaluate the expressivity of {\intracfg} with {\intraj}, an application of {\intracfg} to Java~7,
+by comparing two data flow analyses built on top of {\intraj} against tools from academia and from the industry.
+The results demonstrate that {\intraj} is effective at building precise and efficient CFGs and enables analyses with competitive performance.
+
+
+% \begin{IEEEkeywords}
+% Control flow, Attributed Grammars, Static Analysis, Declarative, Dataflow.
+% \end{IEEEkeywords}
+
+
+\section{Introduction}
+\label{sec:introduction}
+\input{papers/intraj/ch1-introduction.tex}
+
+
+\section{RAGs and the \intracfg\ framework}
+\label{sec:framework}
+\input{papers/intraj/ch2-framework.tex}
+
+
+\section{\intraj: \intracfg\  implementation for Java 7}
+\label{sec:implementation}
+\input{papers/intraj/ch3-implementation.tex}
+
+\section{Client Analysis}
+\label{sec:analysis}
+\input{papers/intraj/ch4-analysis.tex}
+
+\section{Evaluation and Results}
+\label{sec:evaluation_results}
+\input{papers/intraj/ch5-evaluation.tex}
+
+\section{Related Work}
+\label{sec:related_works}
+\input{papers/intraj/ch6-relatedworks.tex}
+
+\section{Conclusions}
+\label{sec:conclusions}
+\input{papers/intraj/ch7-conclusions.tex}
+
+
+% \newpage
+% \bibliographystyle{abbrv}
+% \bibliography{bibliography}
+
+
+
+
+
+% \end{document}
+% \endinput

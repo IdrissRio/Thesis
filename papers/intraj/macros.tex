@@ -1,0 +1,104 @@
+
+
+\renewcommand{\mSyn}{\ensuremath{\uparrow}}
+\renewcommand{\mInh}{\ensuremath{\downarrow}}
+\renewcommand{\mHOA}{\ensuremath{\rightarrow}}
+\renewcommand{\mColl}{\ensuremath{\square}}
+\renewcommand{\mCirc}{\ensuremath{\circlearrowleft}}
+
+\renewcommand{\Abase}[1]{\textcolor{ATGsym}{\mbox{\umlcode{#1}}}}
+\renewcommand{\Asyn}[1]{\textcolor{ATGsym}{\mbox{\mSyn{}\umlcode{#1}}}}
+\renewcommand{\Ainh}[1]{\textcolor{ATGsym}{\mbox{\mInh{}\umlcode{#1}}}}
+\renewcommand{\Ahoa}[1]{\textcolor{ATGsym}{\mbox{\mHOA{}\umlcode{#1}}}}
+\renewcommand{\Acoll}[1]{\textcolor{ATGsym}{\mbox{\mColl{}\umlcode{#1}}}}
+\newcommand{\Acirc}[1]{\textcolor{ATGsym}{\mbox{\mCirc{}\umlcode{#1}}}}
+
+
+\colorlet{hlgreen}{green}
+\colorlet{hlorange}{orange}
+\colorlet{hlgreenhalf}{green!50!white}
+\colorlet{hlorangehalf}{orange!50!white}
+
+\DeclareRobustCommand{\hlgreen}[1]{{\sethlcolor{hlgreenhalf}\hl{#1}}}
+\DeclareRobustCommand{\hlorange}[1]{{\sethlcolor{hlorangehalf}\hl{#1}}}
+
+\definecolor{ATGsym}{HTML}{206010}
+
+\definecolor{SQ}{HTML}{0080ff}
+\definecolor{JJI}{HTML}{ff0080}
+\definecolor{IJnonH}{HTML}{004010}
+\definecolor{IJH}{HTML}{00ff20}
+
+\definecolor{succarrow}{HTML}{4e90e2}	% adapted from RunningExample.tex
+
+\definecolor{lightblue}{HTML}{006699}		%#006699
+\definecolor{lightgreen}{HTML}{669900}		%#669900
+\lstdefinelanguage{JastAdd}{
+  %keyword1&2&6
+  morekeywords = [1]{abstract, class, continue, default, enum, extends, false, final, finally, implements, import, instanceof, interface, native, new, null, package, private, protected, public, static, strictfp, throws, transient, true, void, volatile, length, assert, case, return, super, this, throw, catch, do, if, else, switch, synchronized, while, try, ?},
+  %keyword3
+  morekeywords = [2]{inh, syn, coll, with, eq, NTA, contributes, to, for, each, circular, with}, %JASTADD keywords
+  %keyword4
+  morekeywords = [3]{CFGNode, Assignments, Assign,AssignBitwiseExpr, TrueLiteral, Entry,ConstructorDecl,UnceckedException, TryWithResorucesStmt, NTAFinallyBlock,ClassDecl, CloseListNTA, BreakStmt,ThrowStmt,TryStmt,ReturnStmt, ContinueStmt, Exit, Expr, AssignShiftExpr, AssignMultiplicativeExpr, IntegerLiteral, AssignAdditiveExpr, UnaryIncDec,DoStmt,VariableDeclarator, NumericLiteral, ParameterDeclaration, FieldDeclarator, PostfixExpr, PreIncExpr, PreDecExpr, ReachedLVal, Variable,EQOp,CFGSupport, ForStmt, EmptyStmt, MethodDecl, ExprStmt, AssignStmt, IfStmt, AndOp, LessOp, WhileStmt, Block, AssignExpr, PostUnaryInc, PostUnaryDec, Entry, Exit, EQExpr, VarAccess, CFGRoot }, %ASTnode typess
+  %keyword5
+  morekeywords = [4]{Array, ArrayList, Boolean, Byte,  BitSet, BufferedReader,Collections, Character, Class, Double, Float, Gamma, AbsDomain, NULL, NOTNULL, TOP,Integer, HashMap, PrintWriter, String, StringBuffer, StringBuilder, Thread, boolean, byte, char, color, double, float, int, long, short, FloatDict, FloatList, IntDict, IntList, JSONArray, JSONObject, PFont, PGraphics, PImage, PShader, PShape, PVector, StringDict, StringList, Table, TableRow, XML, Set, HashSet},
+  %keywordstyle = [1]\color{lightblue},
+  %keywordstyle = [2]\color{lightgreen},
+  keywordstyle = [1]\bfseries,
+  keywordstyle = [2]\bfseries,
+  keywordstyle = [3]\astnodestyle,
+  keywordstyle = [4]\color{orange},
+  sensitive = true,
+  morecomment = [l]{//},
+  morecomment = [s]{/*}{*/},
+  morecomment = [s]{/**}{*/},
+  commentstyle = \color{gray},
+  morestring = [b]",
+  morestring = [b]',
+  stringstyle = \color{purple}
+}
+\lstset{
+  basicstyle=\listingsfontsize\ttfamily,
+  identifierstyle={\listingsfontsize},
+  commentstyle={\listingsfontsize\itshape},
+  keywordstyle={\listingsfontsize\bfseries},
+  ndkeywordstyle={\listingsfontsize},
+  stringstyle={\listingsfontsize\ttfamily},
+  frame={tb},
+  breaklines=true,
+  breakatwhitespace=true, %To avoid linebreaks between \code{} and comma.
+  columns=[l]{fullflexible},
+  numbers=none,
+  numberstyle={\listingsfontsize},
+  stepnumber=1,
+  mathescape
+%	escapeinside     = {@}{@}, %General escape does not seem to work in lstinline/GH.
+}
+
+\makeatletter
+\pgfdeclareshape{topbottombox}{
+  \inheritsavedanchors[from=rectangle]
+  \inheritanchorborder[from=rectangle]
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{base}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north west}
+  \backgroundpath{
+    %  store lower right in xa/ya and upper right in xb/yb
+    \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+ }
+}
+\makeatother
+
+

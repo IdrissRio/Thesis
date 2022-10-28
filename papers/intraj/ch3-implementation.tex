@@ -1,0 +1,454 @@
+%%Section introduction
+\intraj\ is our implementation of a precise intraprocedural \CFG\ for Java 7, extending the \intracfg\ framework and the \extendj\ Java compiler.
+\intraj\ exploits the \extendj\ front-end, which performs name-, type-, and compile-time error analysis.
+\extendj\ produces an attributed AST\footnote{The full abstract grammar for Java 7 can be found at \url{https://extendj.org}} on top of which \intraj\ superimposes the CFG.
+
+In this Section, we discuss the most important design
+decisions for \intraj, and in particular, how we used HOAs to improve the precision of the CFG.
+%%GOALs
+Our two main goals were:
+\begin{enumerate}
+%%MINIMALITY
+\item minimality: build a concise CFG by excluding AST nodes that do not correspond to any runtime action.
+This improves client analysis performance, in particular for fixpoint computations.
+%%HIGH-PRECISION
+\item high precision: the constructed CFGs should capture most program details.
+We exploit HOAs to reify implicit structures in the program, such as
+calls to static and instance initialisers and implicit conditions in \code{for} loops.
+\end{enumerate}
+We gave particular importance to exceptions, modelling them as accurately as
+possible and weighing the trade-off between precision and minimality.
+
+{\intraj} consists of a total of 989 LOC (598 for Java~4; 11 for Java~5; 380 for Java~7).
+We have constructed a systematic benchmark test suite for {\intraj}, consisting of 151 tests in total
+(126 for Java~4; 5 for Java 5; 20 for Java~7).
+The test suite reads source code as input and produces {\CFG}s as \texttt{dot} files as output.
+We validated the result of each test manually.
+
+\subsection{Statements and Expressions}
+\label{sec:stmtexp}
+When a language implementer specialises \intracfg{} for a given language,
+they must decide which AST nodes should be part of the \CFG, i.e., mix in (implement) the \astnode{CFGNode} interface.
+As a general design principle, we included AST nodes that correspond to a single action at runtime.
+This includes operations on values, like additions, comparisons,
+%\astnode{PlusExpr} and \astnode{LEExpr}
+and read operations on variables and fields.
+%, e.g, \astnode{VarAccess}.
+
+We also included nodes that are interesting points in the execution that a client analysis might want to use.
+This includes nodes that redirect flow outside of the CFG, like method calls, return statements, and throw statements.
+%\astnode{MethodAccess}, \astnode{ReturnStmt}, and \astnode{ThrowStmt}.
+
+For assignments, the choice of nodes to include in the \CFG\ was not obvious.
+The left-hand side of an assignment can be a chain of named accesses and method calls, e.g., \code{f.m().x}, with the rightmost named access, \code{x}, corresponding to the write.
+% (the l-value of the assignment).
+Here, we chose to not include \code{x} in the \CFG\, but instead use the assignment node itself
+%(\astnode{AssignExpr})
+to represent the write operation, see Figure~\ref{fig:AssigExpr}.
+We argue that this gives a simpler client interface, since the same AST node type, \astnode{VarAccess}, otherwise represents all named accesses on the left- and right-hand side of an assignment.
+%regardless of if they represent a read or a write operation.
+% \todo{I removed mentioning of package. It is not in the example, and should probably not be a CFG node anyway. /GH}
+
+\begin{figure}
+   \scalebox{0.60}{
+     \input{papers/intraj/img/AssignExpr.tex}
+     }
+     \caption{An assignment with a complex left-hand side.
+       %We represent the write to \code{x} by the \astnode{AssignExpr} node in the \CFG.
+}
+	\label{fig:AssigExpr}
+\end{figure}
+
+We do not include purely structural nodes, like \astnode{Block} or type information nodes, in the {\CFG}.
+We also exclude
+nodes that redirect internal flow, like \code{while} statements and conditionals.
+While these nodes do represent runtime actions, the {\CFG} already reflects their flow through successor edges.
+
+
+\astnode{MethodDecl} and the analogous \astnode{ConstructorDecl} for constructors mix in the \astnode{CFGRoot} interface, thus representing a local \CFG.
+A \astnode{CFGSupport} node defines the inherited attributes for its \astnode{CFGNodes} children, if any.
+For example, a \astnode{Block} defines the \Ainh{nextNodes} attribute for all its children.
+
+
+%%%EXAMPLE: DoStmt)
+%\toimprove{IR: Maybe we can discuss more example in the appendix}
+%As an example, let us consider the  \astnode{DoStmt} node represented in Figure~\ref{fig:DoWhileExample}.
+%To correctly represent the flow, the \astnode{DoStmt} overrides the equation of \Asyn{firstNodes}, asking the
+%child \astnode{Block} which is the first occurrence of a \astnode{CFGNode}, redirecting the control-flow to that
+%node.
+%  The edge that  allows representing the iteration within the loop is determined by \astnode{DoStmt},
+%which defines the \Ainh{nextNodes} attribute  for the body subtree as the first \astnode{CFGNode} of the
+%Condition.
+%
+%\begin{figure}[H]
+%	\begin{subfigure}[b]{0.6\textwidth}
+%	       \begin{lstlisting}[language=JastAdd,basicstyle = \ttfamily\footnotesize]
+%eq DoStmt.firstNodes() = getStmt().firstNodes();
+%eq DoStmt.getStmt().nextNodes() =
+%	getCondition().firstNodes();
+%eq DoStmt.getCondition().nextNodesTT() =
+%	 getStmt().firstNodes();
+%eq DoStmt.getCondition().nextNodesFF() = nextNodes();
+%eq DoStmt.getCondition().nextNodes() {
+%Set<CFGNode> res = new HashSet(getCondition().nextNodesTT());
+%res.addAll(getCondition().nextNodesFF());
+%return res;
+%}
+%	       \end{lstlisting}
+%	\end{subfigure}\right \dfrac{num}{den}
+%\hfill
+%	\begin{subfigure}[b]{0.39\textwidth}
+%    \centering
+%	        \scalebox{0.5}{
+%	        \input{img/DoWhileExample.tex}
+%	        }
+%	\end{subfigure}
+%\caption{Overridden equations by \astnode{DoStmt}.}
+%\label{fig:DoWhileExample}
+%\end{figure}
+
+%%EXAMPLE: ForStmt
+
+As an example of the flexibility of \intracfg, consider the Java \astnode{ForStmt}, which is composed of variable initialisation, termination condition, post-iteration instruction, and loop body.
+The {\CFG} should include a loop over these components.
+However, it is legal to omit all the components, i.e., to write: `\code{for ( ; ; ) \{\}}'.
+The condition is implicitly \code{true} in this case, resulting in an infinite loop.
+To construct a correct {\CFG}, we still need a node to loop over; we therefore opt to reify this implicit condition.
+We construct an instance of the boolean literal \code{true} as the HOA $\Ahoa{implC}$.
+Figure~\ref{fig:ForStmt} shows how the $\Asyn{firstNodes}$ attribute then uses \Ahoa{implC} only if both the initialisation statements and the condition are missing.
+
+%An example of flexibility of the framework is the implementation of the \astnode{ForStmt}.
+%A standard \astnode{ForStmt} is composed by variables initialisation, termination condition, and
+%the post-iteration instruction.
+%A CFG of a \astnode{ForStmt} should include the expressions
+%and statements in the order just indicated.
+%Nevertheless, the Java Language Specification
+%allows to omit all the components in the \astnode{ForStmt} and having a statement of the type
+%\code{`for ( ; ; ) \{\}'}.
+\begin{figure}
+\hspace{-0.5cm}
+ \scalebox{0.55}{
+ 	\input{papers/intraj/img/ForStmtExample.tex}
+ }
+\caption{CFG for method with empty \emph{ForStmt}. The HOA \Ahoa{implC} reifies the implicit \emph{true} condition.
+}
+\label{fig:ForStmt}
+\end{figure}
+%Because there are no action nodes, the resulting CFG would completely
+%exclude the AST rooted in  \astnode{ForStmt}, disallowing any analysis to detect the presence
+%of a trivial infinite-loop.
+%The problem occurs when the condition is omitted.
+%To overcome this problem, we defined the HOA \astnode{implicitCond}, which is an instance
+%of the boolean literal \code{true}.
+%This HOA is instantiated and included in the CFG only
+%when the termination condition is implicit.
+
+
+
+%%EXAMPLE: EmptyStmt
+Another interesting corner case is the  \astnode{EmptyStmt}.
+This node represents e.g. the semicolon in the trivial block \code{\{;\}}.
+The \astnode{EmptyStmt} is a \astnode{CFGSupport} node
+since it does not map to a runtime action.
+Since \astnode{EmptyStmt} has no children, its \Asyn{firstNodes} will be the following CFG node.
+We achieve this by defining $\Asyn{firstNodes}$ as equal to \mbox{$\Ainh{nextNodes}$}, overriding the default equation from \astnode{CFGSupport}.
+In this manner, the {\CFG} skips the \astnode{EmptyStmt},
+and if there are occurrences of multiple \astnode{EmptyStmt}s, we skip them transitively
+and link to the next concrete \astnode{CFGNode}.
+The example in Figure~\ref{fig:EmptyStmt}
+shows how we exclude two \astnode{EmptyStmt}s from the {\CFG} and obtain a {\CFG}
+with only a single edge from method \astnode{Entry} to \astnode{Exit}.
+Let us call the two \astnode{EmptyStmt}s $e_1$ and $e_2$, from left to right.
+The equations give that $\astnode{Entry}.\Asyn{succ} = \astnode{Exit}$ since %\\\\
+% $\astnode{Entry}.\Asyn{succ}  = \astnode{Entry}.\Ainh{nextNodes} = \astnode{Block}.\Asyn{firstNodes}$\\
+% \hspace*{2em}  $= e_1.\Asyn{firstNodes} = e_1.\Ainh{nextNodes}$ \\
+% \hspace*{2em}  $= e_2.\Asyn{firstNodes} = e_2.\Ainh{nextNodes}$ \\
+% \hspace*{2em}  $= \astnode{Block}.\Ainh{nextNodes} = \astnode{Exit}$
+\[\begin{array}{r@{\:}c@{\:}c@{\:}c@{\:}l}
+\astnode{Entry}.\Asyn{succ} &=& \astnode{Entry}.\Ainh{nextNodes} &=& \astnode{Block}.\Asyn{firstNodes} \\
+                            &=& e_1.\Asyn{firstNodes} &=& e_1.\Ainh{nextNodes} \\
+                            &=& e_2.\Asyn{firstNodes} &=& e_2.\Ainh{nextNodes} \\
+                            &=& \astnode{Block}.\Ainh{nextNodes} &=& \astnode{Exit}
+  \end{array}
+\]
+
+%The \astnode{Block} now lets $e_3$ inherit
+%$e_3.\Ainh{nextNodes} = \astnode{Exit}$, while $e_2$ inherits from $e_3$ via
+%$e_2.\Ainh{nextNodes} = e_3.\Asyn{firstNodes}$ and $e_1$ analogously,
+%$e_1.\Ainh{nextNodes} = e_2.\Asyn{firstNodes}$.
+%Since \astnode{EmptyStmt} defines $n.\Asyn{firstNodes} = n.\Ainh{nextNodes}$ for all nodes $n$ that are \astnode{EmptyStmt}, we
+%obtain
+%\[\begin{array}{lclcl}
+%    e_1.\Ainh{firstNodes} &=& e_1.\Ainh{nextNodes}\\
+%                           &=& e_2.\Ainh{firstNodes}\\
+%                           &=& e_2.\Ainh{nextNodes}\\
+%                           &=& e_3.\Ainh{firstNodes}\\
+%                           &=& e_3.\Ainh{nextNodes} &=& \astnode{Exit}
+%  \end{array}
+%\]
+
+  \begin{figure}
+\hspace{-0.42cm}
+ \scalebox{0.6}{
+ \input{papers/intraj/img/EmtpyStmtExample.tex}
+ }
+\caption{The CFG can entirely skip AST nodes.}
+\label{fig:EmptyStmt}
+\end{figure}
+
+\subsection{Static and Instance Initialisers}
+\begin{figure}
+ \scalebox{0.55}{
+ \input{papers/intraj/img/InstanceAndStaticExample.tex}
+ }
+\begin{lstlisting}[language=java]
+public class A {
+  int foo = 1; //instance field
+  static int bar = 0;  //static field
+  static boolean foobar = false;  //static  field
+  { println("Instance"); }  //instance initialiser
+}
+\end{lstlisting}
+	\caption{Example of class that interleaves static and instance initialisers. The $\Ahoa{instanceInit}$ and $\Ahoa{staticInit}$ HOAs represent the {\CFG}s for each kind of initialisers.
+%	At the beginning of the constructor, a HOA, $\Ahoa{@instanceInit}$, represents the implicit execution of the initialisers as a method call.
+	}
+	\label{fig:Initialisers}
+\end{figure}
+When a Java program accesses or instantiates classes, it executes static and instance initialisers.
+We will use the example in Figure~\ref{fig:Initialisers} to explain how we handle initialisers.
+As seen in the example, static and instance initialisers can be syntactically interleaved:
+The instance field  \code{foo} is followed by the static field \code{bar}, another static field \code{foobar}, and by an instance initialiser block printing the string \code{"Instance"}.
+
+The Java Language Specification specifies that when a class is instantiated, the static initialisers are executed first (unless already executed), then the instance initialisers, and finally the constructor.
+During the execution of the static initialisers, the ones in a superclass are executed before those in a subclass, and similarly for the instance initialisers.
+
+To handle this execution order, our solution is to use HOAs to construct two independent {\CFG}s for each \astnode{ClassDecl}: one for the static initialisations, $\Ahoa{staticInit}$, and one for the instance initialisations, $\Ahoa{instanceInit}$.
+The \mbox{$\Ahoa{staticInit}$} connects all the static field declarations and all static initialisers.
+$\Ahoa{instanceInit}$ analogously connects instance fields and initialisers.
+%
+%%Description of staticInitialisations and instanceInitaialisation with an example
+$\Ahoa{instanceInit}$ and $\Ahoa{staticInit}$ mix in the \astnode{CFGRoot} interface, and automatically get \astnode{Entry} and \astnode{Exit} nodes.
+The equations for $\Asyn{firstNodes}$ and $\Ainh{nextNodes}$ are overridden to include the initialisers in the same order as they appear in the source code.
+%
+%Description role of instanceInit
+To connect the initialisation {\CFG}s, we view them as implicit methods and use HOAs to insert implicit method calls to them.
+%For example, the \astnode{ConstructorDecl} contains a HOA that represents a call to the local implicit instance initialiser method.
+For example, if a class has a superclass, the implicit static/instance initialiser method will start by calling the corresponding initialiser in the superclass.
+%If the class has a superclass, the implicit static initialiser method in turn contains a HOA representing a call to the implicit static initialiser method in the superclass.
+%\todo{IR, Please check that the above is correct./GH.} IR: it is correct.
+
+\subsection{Exceptions Modelling}\label{sec:exceptions}
+%Brief introduction to exceptions
+Control flow for exceptions is complex to
+model and often requires non-trivial approximations~\cite{amighi2016provably,jo2004constructing,choi1999efficient}.
+In Java, there are two kinds of exceptions: \emph{checked} and \emph{unchecked}.
+If an expression can throw a checked exception, then Java's static semantics require that the method that contains this expression must surround the expression with an exception handler, or declare the exception in the method signature (using the \code{throws} keyword).
+If the exception is unchecked, it is optional for the method to handle or declare the exception.
+Some methods still declare unchecked exceptions, possibly to increase readability or to follow coding conventions.
+
+%IntraJ design decisions
+For the
+{\intraj} {\CFG}, we decided to explicitly represent all \emph{checked} exceptions, and, in addition,
+all \emph{unchecked} exceptions that are explicitly thrown in the method or declared in the
+method signature.
+For unchecked exceptions, we represent only those that may escape from a {\code{try}-\code{catch}} statement.
+Within the \code{try} block of such a statement, we introduce individual {\CFG}
+edges for each represented exception whenever it may be thrown,
+and separate edges for regular (non-exceptional) control flow.
+This design allows us to avoid conservative overapproximation, and enables client analyses to distinguish whether control reached a \code{finally} block through exceptional control flow or through regular control flow.
+
+%Complete abruptly statements )
+Consider the following example with two nested \code{try} blocks:
+
+\begin{figure}[h]
+\begin{tikzpicture}[
+  lb/.style={rectangle, thin, draw, rounded corners, fill=white},
+  succ/.style={succarrow, thick, -{Stealth[scale=1.1, inset=0pt, angle'=45]}}
+  ]
+  \node at (-2.2, -0.7) [topbottombox, anchor=north, draw, minimum width=0.22\textwidth] {
+    {\tt \scriptsize
+      \begin{tabular}{@{}l@{\hspace{-0.04cm}}l}
+        \Ckw{void} ex(Long x) \Ckw{throws} Exn \{\\ %\\ \ \ \ \ \ \ \ \
+\ \   \Ckw{try} \{ \\ \ \ \ \ \Ckw{try} \{\\
+\ \ \ \ \ \       \Ckw{if} (x < 10)  	          	& \auxlabel{NPE} \\
+\ \ \ \ \ \ \ \       array[x] = 0;         	       	& \auxlabel{OOB} \\
+\ \ \ \ \ \       \Ckw{else throw new} Exn();     	& \auxlabel{Exn} \\
+\ \ \ \ \ \       \Ckw{return};            	  	& \auxlabel{R} \\
+\ \ \ \     \} \Ckw{finally}\ \ \ \ \ \{ \ldots{} \}	& \auxlabel{F1} \\
+\ \   \} \Ckw{catch} (Exn e) \{ \ldots{} \}		& \auxlabel{CExn} \\
+\ \   \Ckw{catch} (Alt e) \ \ \{ \ldots{} \}		& \auxlabel{CAlt} \\
+\ \   \Ckw{finally} \ \ \ \ \ \ \ \ \{ \ldots{} \}	& \auxlabel{F2} \\
+\}\\
+      \end{tabular}}};
+
+  \foreach \mode in {0,1,2} {
+    % nodes
+    \node at (1.0, -1) [lb] (NPE) {\auxlabel{NPE}};
+    \node at (1.8, -1) [lb] (OOB) {\auxlabel{OOB}};
+    \node at (2.6, -1) [lb] (X) {\auxlabel{Exn}};
+    \node at (3.4, -1) [lb] (R) {\auxlabel{R}};
+    \node at (2.2, -2) [lb] (F1) {\auxlabel{F1}};
+    \node at (2.2, -3) [lb] (C1) {\auxlabel{CExn}};
+    \node at (3.2, -3) [lb] (C2) {\auxlabel{CAlt}};
+    \node at (2.2, -4) [lb] (F2) {\auxlabel{F2}};
+
+    % thick background flow
+    \ifnum \mode=0
+    \draw[line width=0.2cm, hlorange, opacity=0.5] (X.center) -- (F1.center) -- (C1.center) -- (F2.center);
+    \draw[line width=0.2cm, hlgreen, opacity=0.5, rounded corners] (R.center) -- (F1.center) -- ++(-1, -1)-- (F2.center);
+    \draw[line width=0.2cm, hlgreen, opacity=0.5] (NPE.center) -- (F1.center); % -- (F2);
+    \draw[line width=0.2cm, hlgreen, opacity=0.5] (OOB.center) -- (F1.center); % -- (F2);
+    \fi
+
+    % succ edges
+    \ifnum \mode=1
+    \draw[succ] (NPE.center) -- (F1);
+    \draw[succ] (R.center) -- (F1);
+    \draw[succ] (X.center) -- (F1);
+    \draw[succ] (OOB.center) -- (F1);
+    \draw[succ] (F1.center) -- (C1);
+
+    \draw[succ] (F1.center) -- (C2);
+    \draw[succ, rounded corners] (F1.center) -- ++(-1, -1) -- (F2);
+    \draw[succ] (C1.center) -- (F2);
+    \draw[succ] (C2.center) -- (F2);
+    \fi
+  }
+\end{tikzpicture}
+\caption{Complex exception flow in a conservative {\CFG}.  Only the flow paths in \hlgreen{green} and \hlorange{orange} are realisable.}
+\label{fig:exn-flow-example}
+\end{figure}
+
+Calling \code{ex(null)} from Figure~\ref{fig:exn-flow-example} triggers a null pointer exception at
+\auxlabel{NPE}.  Control then flows
+from the exception to the first and then to the second \code{finally} block,
+\auxlabelbox{NPE}\succarrow\auxlabelbox{F1}\succarrow\auxlabelbox{F2}.
+Calling \code{ex(-1)} similarly triggers an out-of-bounds exception at
+\auxlabel{OOB}, with analogous flow.
+The explicit exception at \auxlabel{Exn} takes the path
+\auxlabelbox{Exn}\succarrow\auxlabelbox{F1}\succarrow\auxlabelbox{CExn}\succarrow\auxlabelbox{F2},
+and no path can go through \auxlabelbox{CAlt} assuming that \auxlabel{F1} does not throw \code{Alt}.
+Note that \code{finally} also affects
+\code{break}, \code{continue}, and \code{return}, as we see in the path
+\auxlabelbox{R}\succarrow\auxlabelbox{F1}\succarrow\auxlabelbox{F2}.
+
+If we represent the {\CFG} as on the right in Figure~\ref{fig:exn-flow-example}, client analyses will process
+many unrealisable paths, such as
+\auxlabelbox{R}\succarrow\auxlabelbox{F1}\succarrow\auxlabelbox{CAlt}\succarrow\auxlabelbox{F2}.
+Instead, we exploit an existing feature in ExtendJ,
+originally intended for code generation~\cite{oqvist2018contributions},
+that clones \code{finally} blocks.
+We incorporate the HOAs that represent each cloned
+block into our {\CFG}.  In our example, this yields the CFG from
+Figure~\ref{fig:exn-flow-example-precise}, and leaves \auxlabelbox{CAlt} as
+dead code.
+%
+\begin{wrapfigure}{r}{0.2\textwidth}
+\begin{tikzpicture}[
+  lb/.style={rectangle, thin, draw, rounded corners, fill=white},
+  succ/.style={succarrow, thick, -{Stealth[scale=1.1, inset=0pt, angle'=45]}}
+  ]
+  \foreach \mode in {0,1} {
+    \node at (1.0, -1.6) [lb] (NPE) {\auxlabel{NPE}};
+    \node at (1.8, -1.6) [lb] (OOB) {\auxlabel{OOB}};
+    \node at (2.6, -1.6) [lb] (X) {\auxlabel{Exn}};
+    \node at (3.4, -1.6) [lb] (R) {\auxlabel{R}};
+
+    \node at (1.4, -2.4) [lb, dashed] (UE) {\auxlabel{UE}};
+
+    \node at (1.4, -3.2) [lb, dashed] (F11) {\auxlabeli{1}{F1}};
+    \node at (2.6, -2.6) [lb, dashed] (F12) {\auxlabeli{2}{F1}};
+    \node at (3.4, -2.6) [lb, dashed] (F13) {\auxlabeli{3}{F1}};
+
+    \node at (2.6, -3.4) [lb] (C1) {\auxlabel{CExn}};
+    %\node at (1.9, -3.4) [lb] (C2) {\auxlabel{CAlt}};
+
+    \node at (1.4, -4.2) [lb, dashed] (F21) {\auxlabeli{1}{F2}};
+    \node at (2.6, -4.2) [lb, dashed] (F22) {\auxlabeli{2}{F2}};
+    \node at (3.4, -4.2) [lb, dashed] (F23) {\auxlabeli{3}{F2}};
+
+    \ifnum \mode=0
+    \draw[succ] (NPE.center) -- (UE);
+    \draw[succ] (OOB.center) -- (UE);
+    \draw[succ] (UE.center) -- (F11);
+    \draw[succ] (UE.center) -- (F21);
+
+    \draw[succ] (R.center) -- (F13);
+    \draw[succ] (F13.center) -- (F23);
+
+    \draw[succ] (X.center) -- (F12);
+    \draw[succ] (F12.center) -- (C1);
+    \draw[succ] (C1.center) -- (F22);
+    \fi
+  }
+\end{tikzpicture}
+\caption{Path-sensitive variant of the {\CFG} from Figure~\ref{fig:exn-flow-example}, used in {\intraj}.}
+\label{fig:exn-flow-example-precise}
+\end{wrapfigure}
+%
+This path sensitivity heuristic gives us increased precision in exception handling
+and resource cleanup code, which in our experience is often more subtle and less well-tested
+than the surrounding code.
+For unchecked exception edges (\auxlabel{NPE}, \auxlabel{OOB}),
+we follow Choi et al.~\cite{choi1999efficient}, who observe
+that these edges are `\emph{quite frequent}'; we therefore
+funnel control flow for these exceptions through a single node \auxlabelboxhoa{UE}
+in the style of Choi et al.'s factorised exceptions.
+Each \code{try} block provides one such node through a HOA.
+Section~\ref{sec:evaluation_results} shows some of the practical strengths and weaknesses of our heuristic.
+
+We take an analogous approach for \code{try}-with-resources, which
+automatically releases resources (e.g., closes file handles) in the
+style of an implicit \code{finally} block.  Our treatment differs from
+that of \code{finally} only in that we synthesise the implicit
+code and suitably chain it into the {\CFG}.
+
+% %TWRS and CloseListnTA
+% The automatic management of resources within a \astnode{TryWithResourcesStmt}
+% (\astnode{TWRS}) was handled similarly.
+% All the resources allocated inside a \astnode{TWRS} are automatically
+% closed after executing the last instruction in the \astnode{TWRS}'s body.
+% Under the hood,
+% this is done by explicitly calling the \code{close} method for each resource in the reverse order they
+% are declared.
+% In the built CFG, the calls to \code{close} are represented explicitly, but, as in the
+% previous cases, if there are occurrences of \astnode{AbruptStmt}, there is no guarantee that
+% these methods will be invoked.
+% Similar to the \astnode{NTAFinallyBlock} and \astnode{UncheckedExceptions},
+% we have defined a new HOA called \astnode{CloseListNTA} for each \astnode{AbruptStmt},
+% representing the list of \code{close} methods to be called before the target node is reached.
+
+%\begin{figure*}[h]
+%	\begin{subfigure}[b]{1\textwidth}
+%	       \begin{lstlisting}[language=JastAdd]
+%void foo(boolean b) {
+%    try {
+%      if (b) return;
+%    } catch (Throwable t) { //CFGNode_catch }
+%      finally {//CFGNode_finally}
+%    //CFGNode_body
+%}
+%	       \end{lstlisting}
+%	\end{subfigure}
+%	\begin{subfigure}[b]{1\textwidth}
+%    \centering
+%	        \scalebox{0.5}{
+%	        \input{img/uncheckedException.tex}
+%	        }
+%	\end{subfigure}
+%\caption{Example of use of NTAs \astnode{UncheckedExceptions} and \astnode{NTAFinallyBlock}.}\label{fig:unchecked-exn}
+%\end{figure*}
+%\subsection{Possible improvements}
+%A further improvement, which is not implemented in \intraj, can be reifying
+%the implicit boxing and unboxing operations of the primitive types with their
+%respective wrappers, i.e., \code{Integer} and \code{int} or \code{Boolean} and
+%\code{boolean}.
+%\unsure{IR:If we decided to keep this subsection, then we can think of possible improvements.}
+%Modelling these operations can help detect occurrences of \code{NullPointerExceptions}
+%in case  a null wrapper is unboxed.
+%\unsure{IR:maybe here we can discuss the 'refine' of  equations.}
+%\CR{I couldn't find any references to Figure~\ref{fig:unchecked-exn}?}
+
+
+
+

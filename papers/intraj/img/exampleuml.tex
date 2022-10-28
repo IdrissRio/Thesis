@@ -1,0 +1,37 @@
+\begin{figure}
+  \begin{tikzpicture}\scriptsize
+    \begin{class2}[text width=4cm]{MethodDecl}{\astnode{MethodDecl} ::= ... b:\astnode{Block}}{-2.2, 0}
+      \attribute{implements \astnode{CFGRoot}}
+%      \attribute{MethodDecl ::= ... b:Block}
+      \operation{entry.\Ainh{nextNodes} = b.\Asyn{firstNodes}}
+      \operation{b.\Ainh{nextNodes} = $\{\Ainh{exit}\}$}
+    \end{class2}
+    \begin{class2}[text width=3.8cm]{EQOp}{\astnode{EQOp} ::= left:\astnode{Expr} right:\astnode{Expr}}{-2.2, -1.75}
+      \attribute{implements \astnode{CFGNode}}
+%      \attribute{EQOp ::= left:Expr right:Expr}
+      \operation{\Asyn{firstNodes} = left.\Asyn{firstNodes}}
+      \operation{left.\Ainh{nextNodes} = right.\Asyn{firstNodes}}
+      \operation{right.\Ainh{nextNodes} = $\{$this$\}$}
+    \end{class2}
+    \begin{class2}[text width=4cm]{AndOp}{\astnode{AndOp} ::= left:\astnode{Expr} right:\astnode{Expr}}{2.2, 0}
+      \attribute{implements \astnode{CFGSupport}}
+%      \attribute{AndOp ::= left:Expr right:Expr}
+      \operation{\Asyn{firstNodes} = left.\Asyn{firstNodes}}
+      \operation{left.\Ainh{nextNodesTT} = right.\Asyn{firstNodes}}
+      \operation{left.\Ainh{nextNodesFF} = \Ainh{nextNodesFF}}
+      \operation{...}
+%      \operation{left.\Ainh{nextNodes} = left.\Ainh{nextNodes}TT $\union$ left.\Ainh{nextNodes}TT}
+%      \operation{right.\Ainh{nextNodes}TT = \Ainh{nextNodes}TT}
+%      \operation{right.\Ainh{nextNodes}FF = \Ainh{nextNodes}FF}
+%      \operation{right.\Ainh{nextNodes} = right.\Ainh{nextNodes}TT $\union$ right.\Ainh{nextNodes}TT}
+    \end{class2}
+    \begin{class2}[text width=3.8cm]{ReturnStmt}{\astnode{ReturnStmt} ::= [e:\astnode{Expr}]}{2.2, -2.2}
+      \attribute{implements \astnode{CFGNode}}
+%      \attribute{ReturnStmt ::= [e:Expr]}
+      \operation{...}
+      \operation{\Asyn{succ} = $\{\Ainh{exit}\}$}
+    \end{class2}
+  \end{tikzpicture}
+  \caption{Example application of the {\intracfg} framework.}
+  \label{fig:exampleuml}
+\end{figure}

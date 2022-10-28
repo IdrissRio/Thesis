@@ -1,0 +1,14 @@
+We presented {\intracfg}, a RAG-based declarative language-independent framework for constructing intraprocedural CFGs.
+{\intracfg} superimposes CFGs on the AST, allowing client analyses to take advantage of other AST attributes, such as type information and precise source information.
+We validated our approach by implementing {\intraj}, an application of {\intracfg} to Java~7,
+and demonstrated how {\intracfg} overcomes the limitations of an earlier RAG-based framework, {\jastaddjintraflow} (JJI), by allowing the CFG to not be constrained by the AST structure.
+Compared to JJI, {\intraj} can faithfully capture execution order and improve {\CFG} conciseness and precision, removing  more than 30\% of the {\CFG} edges in our benchmarks.
+We evaluated \intraj{} by implementing two data flow analyses: Null Pointer Exception Analysis (NPA) and Dead Assignment Analysis (DAA), comparing both to JJI (for DAA), and to the highly tuned commercial tool SonarQube (SQ) (for DAA and NPA).
+Our results show that the {\intraj}-based analyses offer precision that is comparable to that of JJI and SQ.
+%For DDA, {\intraj}'s analyses are sometimes more accurate than the other tools.
+Compared to JJI, {\intraj} pays some overhead for computing more precise {\CFG} but can amortise this effort for larger programs by speeding up client analyses, outperforming JJI.
+Compared to SQ, {\intraj}'s NPA analysis is substantially faster, although this is likely due to SQ's more advanced interprocedural analysis.
+{\intraj}'s DAA analysis seems slower than SQ's, but SQ has a much larger baseline, which might include computations that we would attribute to the analysis for {\intraj}.
+Overall, we find that our results demonstrate that {\intraj}-based data flow analyses are practical, that {\intraj} enables precise data flow analyses on Java source code,
+and that {\intracfg} is effective for constructing {\CFG}s for Java-like languages.
+Moreover, we demonstrate for the first time how RAGs can build and exploit graph structures over an AST without being restricted by the AST's structure.

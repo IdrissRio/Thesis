@@ -8,13 +8,49 @@
 \usepackage{listings}
 \usepackage{float}
 \usepackage[fit]{truncate}
-\usepackage{amsmath}
+\usepackage{amsmath,amssymb,amsfonts}
 \usepackage{multirow}
 \usepackage{pdfpages}
 \usepackage{tikz}
 \usepackage[fancy,color=orange]{tikz-inet}
-\usepackage{amssymb}
 \usepackage{booktabs}
+
+% ---- START Packages used for IntraJ ----
+% \usepackage{cite} INCOMPATIBLE WITH BIBTEX
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}%TODONOTES
+\usepackage{xargs}%TODONOTES
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{hhline}
+%\usepackage{showframe}
+
+\usepackage{tikz}
+%\usetikzlibrary{patterns}
+\usetikzlibrary{patterns,arrows,decorations.pathmorphing,backgrounds,shadows,positioning,fit,shapes,matrix,calc,shapes.multipart,arrows.meta}
+\usepackage[simplified]{papers/intraj/pgf-umlcd}
+\usepackage{xpatch} % Needed for patching pgf-umlcd
+\usepackage{xparse} % Needed for patching pgf-umlcd
+\usepackage{color,soul} % for \hl
+\definecolor{dark-yellow}{RGB}{219, 212, 143}
+\definecolor{dark-green}{RGB}{36,84,36}
+\definecolor{my-gray}{gray}{0.85}
+\sethlcolor{dark-yellow}
+
+\usepackage{wrapfig}
+\usepackage{listings}
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{textcomp}
+\usepackage[inline]{enumitem}
+\renewcommand{\ttdefault}{txtt}
+% ---- END Packages used for IntraJ ----
+
 
 
 % Bibliography setting and style
@@ -82,7 +118,7 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 \include{kappa/abstract}
 \include{kappa/contribution}
 
-\setcounter{tocdepth}{2} 
+\setcounter{tocdepth}{2}
 \tableofcontents
 
 \mainmatter
@@ -92,9 +128,13 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 \renewcommand{\thechapter}{\Roman{chapter}}
 \renewcommand{\theequation}{\arabic{equation}}
 
+% --------------------------------
+% --------- KAPPA ----------------
+% --------------------------------
 
-%\part{Construction of Extensible Semantic Editors}
+% Introduction
 \include{kappa/introduction}
+% Background
 \include{kappa/rags}
 \include{kappa/controlflow}
 \include{kappa/dataflow}
@@ -115,12 +155,6 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 	\marginpar{\raggedright \rule{5mm}{0mm}\begin{tikzpicture}
 \node[rectangle, fill=black, minimum width=6cm, minimum height=2cm, inner sep=0pt,draw=black](rec){}; \node[left of = rec,node distance=2.7cm,text width=2cm,text centered, font=\sffamily\bfseries\small,rotate=90]{\color{white}{\textsc{Paper \thechapter}}};\end{tikzpicture}\rule{1pt}{\apa}}%
 }
-
-\newfloat{paperfoot}{b}{paper}
-\newcommand{\paperRemark}[1]{
-  \begin{paperfoot}%
-  \hrulefill \flushleft \footnotesize #1 \end{paperfoot}
-}
 %-------------------------------------------------------
 
 
@@ -129,8 +163,7 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 \renewcommand{\chaptername}{Paper}
 
 \part{Included Papers}
-
-
+\input{papers/intraj/IntraJ.tex}
 \printbibliography
 
 
