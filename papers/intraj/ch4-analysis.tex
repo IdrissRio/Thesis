@@ -341,16 +341,6 @@ the initialiser must be a \emph{common default value}, i.e., one of
 $\{ \code{null}, \code{1}, \code{0}, \code{-1}, \code{""}, \code{true}, \code{false} \}$.
 Our DAA implementation takes up 62 lines of code.
 
-% \begin{lstlisting}[language=JastAdd, caption={Dead Assignment Analsysis specification.
-% The analysis depends on the result of LVA.}, captionpos=b, label=listing:DAA]
-% syn boolean CFGNode.isDead() = !LVA_def().compl(LVA_out()).isEmpty();
-
-% syn Boolean CFGNode.isDeadAssign() = false;
-% eq VariableDeclarator.LVA_isDeadAssign() = isDead() && getDest().isLocalVar() && ...;
-
-% eq AssignExpr.isDeadAssign() = isDead() && getDest().isLocalVar() && ...;
-
-% \end{lstlisting}
 
 % ----------------------------------------
 % figure: LVA UML
