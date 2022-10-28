@@ -4,10 +4,11 @@ We used JFeature to analyse four widely used corpora, to investigate to what ext
 
 \newcolumntype{?}{!{\vrule width 1.5pt}} %Make some vertical lines thicker
 \newcommand*\rot{\rotatebox{90}}
-\setlength\tabcolsep{4.2pt}
+\setlength\tabcolsep{3.5pt}
 \begin{table*}
 \centering
 \caption{\label{tbl:corpusAnalysis} Corpora Analysis. Each entry represents the total number of projects utilising the respective feature.}
+\begin{adjustbox}{angle=90}
 \begin{tabular}{|l?c|c|c|c?c|c|c|c|c|c|c|c|c|c|c|c|c?c|c|c|c?c|c|c|c|c?}
 \hline
 \multirow{3}{*}{\begin{tabular}[c]{@{}c@{}} \\ \\ \\ \\ \textsc{Corpus} \\ ($\#$ \textsc{Projects})\end{tabular}} & \multicolumn{4}{c?}{\textsc{JAVA 1.1 - 4}} & \multicolumn{13}{c?}{\textsc{JAVA 5}}    & \multicolumn{4}{c?}{\textsc{JAVA 7}}& \multicolumn{5}{c?}{\textsc{JAVA 8}}\\
@@ -25,6 +26,7 @@ We used JFeature to analyse four widely used corpora, to investigate to what ext
 \textsc{XCorpus} \hfill (76)     & 74   & 65  & 4 & 28  & 3     &39  & 21            & 74    & 32    & 31 & 4&35 & 22   & 39    & 28    & 25 & 27& 4& 2    & 3    & 3    & 2    & 1   & 2  &0 &0\\
 \hline
 \end{tabular}
+\end{adjustbox}
 \end{table*}
 
 %The scientific community has recognised the problem of reproducibility. Whether talking about performance optimisation or bug detection, the reproducibility problem remains real. So much so that, nowadays, most conferences (e.g., ECOOP, OOPSLA, PLDI, etc.) require submitting an artifact capable of reproducing the same results obtained during the validation process to accept and publish a scientific article. Here arises the need to create a corpus, with specific properties, for instance, massive use of concurrency, non-trivial memory loads or the presence of bugs. In this section, we will give a brief description of the corpus that we will analyse later, which are:  DaCapo Benchmark Suite, Defects4J, Qualitas Corpus and XCorpus.
@@ -70,7 +72,7 @@ As Table~\ref{tbl:corpusAnalysis} shows, these limitations did not affect DaCapo
 \subsubsection*{\textbf{Corpora overlap}}
 
 \begin{table}[H]
-\setlength\tabcolsep{.4pt}
+\setlength\tabcolsep{1.0pt}
 \centering
 \begin{tabular}{|c|cc|cc|cc|cc|cc|cc|cc|cc|}
 \hline
@@ -97,6 +99,7 @@ XCorpus                 &  \checkmark    &    &      &  \checkmark &        &   
 
 
 \begin{figure}[b]
+\centering
 \input{papers/jfeature/img/ProjectsOverlapDiagram.tex}
 \caption{\label{fig:corporaOverlap} Project overlap. In the left diagram, two projects with the same name but different versions are counted as distinct---the diagram to the right shows overlap when versions are disregarded.}
 \end{figure}
