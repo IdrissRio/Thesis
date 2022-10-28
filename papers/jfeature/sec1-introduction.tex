@@ -1,0 +1,106 @@
+The impact of our research in computer science is bounded by our
+ability to demonstrate and communicate how effective our techniques
+and theories really are.
+%
+% ``Evaluation methodology underpins all innovation in experimental
+% computer science. It requires relevant workloads,
+% appropriate experimental design, and rigorous analysis.''
+% \cite{blackburn2008wake}
+%
+For research on software tools, the dominant methodology for
+demonstrating effectiveness is to apply these tool to ``real-life''
+software development tasks and to measure how well they perform.
+%
+Blackburn et al.~\cite{blackburn2008wake} outline this process in
+considerable detail, highlighting the need for
+\emph{appropriate experimental design} (to construct experiments),
+\emph{relevant  workloads} (to obtain relevant data from the experiments),
+and
+\emph{rigorous analysis} (to obtain rigorously justified insights from experimental data).
+The strength of our insights is then bounded by the weakest link in
+this chain.
+
+Carefully curated, pre-packaged workloads such as
+the DaCapo Benchmark suite~\cite{DaCapo:paper},
+Defects4J~\cite{just2014defects4j},
+the Qualitas Corpus~\cite{QualitasCorpus:APSEC:2010},
+and XCorpus~\cite{dietrich2017xcorpus}
+can help ensure that we use relevant workloads.
+%
+However, no software corpus aims to be representative of all software,
+and for any given research question there may not be any one corpus designed to
+answer that question,
+so we must still
+validate that the corpus we choose is relevant to what we want to show.
+
+For instance, the DaCapo corpus aims to provide benchmarks with ``more complex
+code, richer object behaviors, and more demanding memory system
+requirements''~\cite{DaCapo:paper} than the corpora that preceded it,
+and it systematically demonstrates
+complex interactions between architecture and the Java Run-Time
+Environment,
+whereas
+Defects4J collects ``real bugs to enable reproducible studies
+in software testing research''~\cite{just2014defects4j}.
+Despite DaCapo's focus on run-time performance and Defects4J's focus
+on software testing, both suites
+have seen heavy use in research that they were not explicitly intended for,
+%have seen heavy use in research that they were never intended for,
+%in particular for static analysis.
+%%%%% REMOVED THIS BECAUSE OF ANONYMOUS SUBMISSION
+ including the authors' own work in
+static analysis~\cite{riouak2021precise, dura2021javadl} (using Defects4J),
+and in
+compilers~\cite{ekman2007jastadd} and dynamic invariant checking~\cite{reichenbach2010can}
+(for DaCapo).
+
+For each of these ostensible mis-uses, the authors selected the corresponding benchmark corpus
+as the highest-quality corpus they were aware of whose original purpose
+seemed sufficiently close to the intended experiments.  This divergence between research
+question and corpus purpose required the authors to carefully re-validate the
+subset of the corpus that they had selected by hand.
+%%%%%
+
+% Over the years, several corpora have been published
+% to be able to conduct experiments on standardised and significantly large projects, e.g., XCorpus~\cite{dietrich2017xcorpus} and Defects4J~\cite{just2014defects4j}.
+% Each of these corpora was created with the intention of grouping projects with certain characteristics. For instance,
+% XCorpus was born with the idea of ​​providing programs that heavily use dynamic dispatch; while Defects4J
+% collects 17 projects having well-known and not trivial bugs (e.g., \code{NullPointerExceptions}).
+% Despite efforts to collect such corpora, it is not always easy to understand if the corpus is general enough
+% to cover the cases of interest for a specific analysis. For example, the ideal for evaluating a race condition detector tool would be
+% a corpus whose programs heavily use concurrency libraries.
+
+In this paper, we argue that there is a need for increased automation and decision support
+for selecting benchmarks for specific research questions, and present JFeature, a static analysis tool
+designed to help researchers in this process.
+JFeature identifies how often a Java project uses key Java features that are
+significant for different types of software tools.
+JFeature operates at the source code level, and is capable of identifying
+not only local syntactic features that may be challenging to encode in regular expression search tools
+like \texttt{grep}, but also complex semantic features that depend on types and libraries.
+We have implemented JFeature
+in the JastAdd~\cite{hedin2003jastadd} ecosystem as
+an extension of the ExtendJ~\cite{ekman2007jastadd} Java Compiler.
+This implementation architecture gives easy access to types and other properties computed by the compiler,
+and also supports extensibility,
+allowing researchers to adapt the analysis to fit their specific needs.
+
+We demonstrate JFeature by running it on several widely-used corpora, specifically the
+DaCapo, Defects4J, Qualitas, and XCorpus corpora.
+
+Our main contributions are:
+\begin{itemize}
+    \item JFeature as an example of a tool
+     for extracting information about the features used in Java source code, and
+     \item An overview over JFeature's key insights on the
+      DaCapo, Defects4J,  Qualitas, and XCorpus corpora.
+\end{itemize}
+
+
+The rest of this paper is organised as follows:
+Section~\ref{sec:jfeature} introduces JFeature and discusses the design decisions that underpin the tool.
+Section~\ref{sec:corpora} shows the results of applying JFeature to the four corpora.
+Section~\ref{sec:extension} illustrates how JFeature can be extended to extract new features, taking advantage of properties in the underlying Java compiler.
+Section~\ref{sec:discussion} outlines future applications of JFeature.
+Section~\ref{sec:related-works} discusses related work, and
+Section~\ref{sec:conclusions} summarizes our conclusions.

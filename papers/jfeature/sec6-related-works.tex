@@ -1,0 +1,19 @@
+Existing tools for code metrics are usually focused on code quality metrics, rather than what language features are used, and typically analyse the intermediate representation rather than the source code. One example is the CKJM tool~\cite{Spi05g} for the Chidamber and Kemerer metrics~\cite{chidamber1994metrics}. Another example, that more closely resembles ours, is jCT, an extensible metrics extractor for Java 6 IL-Bytecode, introduced by Lumpe et al.~\cite{jCT}, in 2011.
+Like us, they evaluated their tool on Qualitas Corpus; however, because jCT works only on annotated bytecode and not on
+source code, the number of features that can be extracted is limited.
+A significant amount of information is lost during the compilation of Java source code to Java bytecode.
+For example, enhanced \code{for} statements, diamond operators and certain annotations, such as \code{@Override}, are not present in the bytecode.
+For XCorpus, the authors analysed the language features used, and a summary was presented in their paper~\cite{dietrich2017xcorpus}.
+They also analysed the bytecode, which was implemented using the visitor pattern.
+
+
+%In~\cite{dietrich2017xcorpus}, Dietrich et al. analyze the present a summary of the features of XCorpus programmes similar to ours, but computed using scripts over the bytecode.
+%REMOVED THIS SENTENCE because they say the scripts are available./GH
+%This provides the user with an overview of the corpus, but the user will be unable to analyse a subset of the projects in the corpus.
+
+A way to improve the user experience would be to integrate JFeature with a visualisation tool like \textit{Explora}~\cite{merino2015explora}. The idea
+behind \textit{Explora} is to provide to the user a visualisation tool designed for simultaneous analysis of multiple metrics in software corpora.
+Finally, JFeature may be enhanced by incorporating automated dependency extractors, such as MagpieBridge's \emph{JavaProjectService}~\cite{luo_et_al:LIPIcs:2019:10813}, to infer and download libraries automatically. Currently, JavaProjectService infers the dependencies for projects using \emph{Gradle} or \emph{Maven} as build system.
+
+
+

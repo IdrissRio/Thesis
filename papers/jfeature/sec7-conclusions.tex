@@ -1,0 +1,11 @@
+We have presented JFeature, a declarative and extensible static analysis tool for the Java programming language that extracts syntactic and semantic features.
+JFeature comes with twenty-six predefined queries and can be easily extended with new
+ones.
+
+We ran JFeature on four widely used corpora: the DaCapo Benchmark Suite, Defects4J, Qualitas Corpus, and XCorpus.
+We have seen that, among  the corpora, Java 1-5 features are predominant. This leads us to conclude that some of the corpora may be less suited for the evaluation of tools that address features in Java 7 and 8.
+
+We have illustrated how JFeature can be extended to capture semantically complex features by writing the queries as attribute grammars, extending a full Java compiler. This allows powerful queries to be written that can make use of all the compile-time properties computed by the compiler.
+
+We discussed several possible use cases for JFeature: evaluation of corpora, mining software collections to create new corpora, and longitudinal studies of how projects have evolved with regard to the use of language features.
+We also note that for some features to be analysed, the full classpath and dependencies are required. An interesting future direction is therefore to combine JFeature with recent tools that support automatic extraction of such information from projects that follow common build conventions.

@@ -1,0 +1,125 @@
+We have designed JFeature as an extension of the ExtendJ extensible Java compiler.
+ExtendJ is implemented using Reference Attribute Grammars (RAGs)~\cite{hedin2000rags} in the JastAdd metacompilation system.
+ExtendJ is a full Java compiler, feature-compliant for Java 4 to 7 and close to being feature-compliant for Java 8\footnote{\url{https://extendj.org/compliance.html}}.
+In building compilers by means of attribute grammars~\cite{knuth1968semantics}, the abstract syntax tree (AST) is annotated with properties called \emph{attributes} whose values are defined using equations over other attributes in the AST.
+RAGs extend traditional attribute grammars by supporting that attributes can be links to other AST nodes.
+ExtendJ annotates the AST with attributes that are used for checking compile-time errors and for generating bytecode.
+Example attributes include links from variable uses to declarations, links from classes to superclasses, types of expressions, etc.
+These attributes are exploited by JFeature to easily identify AST nodes that match a particular feature of interest.
+
+\subsection{Java version features}
+There are many different features that could be interesting to investigate in a corpus.
+As the default for JFeature, we have defined feature sets for different versions of Java, according to the Java Language Specification (JLS).
+A user can then run JFeature to, e.g., investigate if a corpus is sufficiently new, or select only certain projects in a corpus, based on what features they use.
+If desired, a user can extend the feature set for a specific purpose.
+
+In recent years there have been several new releases of the Java language. Currently, Java 18 is the latest version available. However, most projects utilise Java 8 or Java 11, both of which are long-term support releases (LTS).
+\input{papers/jfeature/table-features.tex}
+Table~\ref*{tbl:features} summarises the main features introduced in each Java
+release after the initial release (JDK 1.0) up to Java 8.
+We have classified the features into either
+\begin{itemize}
+    \item \texttt{Syntactic}: can be identified using a context-free grammar, or
+    \item \texttt{Semantic}: additionally needs context-dependent information such as nesting structure, name lookup, or types.
+\end{itemize}
+While most features are syntactic, there are several features that are semantic, and where the attributes available in the compiler are very useful for identification of the features.
+
+Given any Java 8 project, JFeature collects all the feature usages, grouped by release version. By default, JFeature supports twenty-six features\footnote{The complete implementation can be found at \url{https://github.com/lu-cs-sde/JFeature}.}, but users may extend the tool and add their own. We have chosen these features by looking at each Java release note~\cite{java1,java2,java3,java4,java5,java6,java7,java8}. We included features that represent the most significant release enhancements, i.e., libraries or native language constructs whose use significantly impacts program semantics. In particular, we included the usage of two libraries, \textsc{java.util.concurrent.*} and \textsc{java.lang.reflect.*}, because their usage may be pertinent for the evaluation of academic static analysis tools.
+
+
+\subsection{Collecting features}
+To collect features, JFeature uses \emph{collection attributes}~\cite{boyland1996descriptional,collectionattributes}, also supported by JastAdd.
+Collection attributes aggregate information by combining contributions that can come from anywhere in the AST.
+A \emph{contribution clause} is associated with an AST node type, and defines information to be included, possibly conditionally, in a particular collection.
+Both the information and the condition can be defined by using attributes.
+
+\begin{figure}
+\begin{lstlisting}[language=JastAdd]
+coll HashSet<Feature> Program.features();
+
+Modifiers contributes
+  new Feature("JAVA2", "Strictfp", getCU().path())
+  when isStrictfp() to Program.features();
+
+Switch contributes
+  new Feature("JAVA7", "StringInSwitch", getCU().path())
+  when getExpr().type().isString() to Program.features();
+\end{lstlisting}
+\begin{tikzpicture}[scale=0.7,edge from parent/.style={draw,-latex},sibling distance=8em,
+  every node/.style = {align=center,scale=0.7},
+  astnode/.style={shape=rectangle, draw, fill=white},
+  contributor/.style={shape=rectangle, draw, fill=red!20},
+  attribute/.style={shape=rectangle, draw, fill=orange!20}]
+
+\node [rectangle,draw] (program) {\code{Program}}
+  child {node [draw,xshift=-1cm] (mdbar) {\code{MethodDecl} \\ \code{<bar>}}
+    child {node [contributor,rectangle,draw] (modifiers) {\code{Modifiers} \\ \code{<strictfp>}}}
+		child {node [xshift=-0.8cm,rectangle,draw] (int) {\code{...}}}
+}
+child {node [rectangle,draw] (md) {\code{MethodDecl} \\ \code{<foo>}}
+  child {node [xshift=0.6cm,rectangle,draw] (pd) {\code{ParamDecl} \\ \code{<String color>}}}
+  child {node [contributor,draw] (sw) {\code{Switch}}
+  child {
+      node [rectangle,draw] (vd2) {\code{VarAccess} \\ \code{<color>}}
+  }
+  child {
+      node [rectangle,draw] (bl) {\code{Block}}
+			child {node [xshift=0.5cm,rectangle,draw] (vd1) {\code{Case} \\ \code{<"RED">}}
+				child {node [rectangle,draw] (int) {\code{BreakStmt}}}
+      }
+      child {node [xshift=-0.5cm,rectangle,draw] (int) {\code{...}}}
+  }
+}
+}
+;
+
+  \node [attribute , draw, right=0pt of program] (att) {\code{features()}};
+
+\draw [->, -latex,dashed,color=red] (modifiers.east) -- +(1.28,0.75) -- +(2.28,1.75) -- (att.south);
+  \draw [->, -latex,dashed,color=red] (sw.east) -- +(0.3,0) |-  (att.east);
+  \node [below right= -15 pt and 24 pt of att,scale=1.2,fill=black!10] (code) {
+	\begin{lstlisting}[language=Java, frame=none,numbers=none]
+strictfp void bar(){
+  ...
+}
+
+void foo(String color){
+  switch(color){
+     case "RED":
+        break;
+     ...
+  }
+}
+\end{lstlisting}
+	};
+
+\matrix [draw, below right = 60pt and -210pt,inner sep=1ex,cells={nodes={font=\sffamily,anchor=west}}] at (code) {
+  \node [attribute] {}; & \node{Collection Attribute}; \\
+  \node [contributor] {};  & \node{Contributor Node};\\
+  \node [astnode] {}; & \node{AST Node}; \\
+  \draw[-latex,dotted,color=red](0,0) -- ++ (0.3,0); & \node{Contribution};\\
+};
+\end{tikzpicture}
+\caption{\label{fig:featureExample}Example definitions of features.}
+\end{figure}
+
+For JFeature, we use a collection attribute, \code{features}, on the root of the AST.
+The value of \code{features} is a set of objects, each defined by a contribution clause somewhere in the AST.
+The objects are of type \code{Feature} that
+models essential information about the extracted feature: the Java version, feature name, and absolute path of the compilation unit where the feature was found.
+
+Figure~\ref{fig:featureExample} shows an example with JastAdd code at the top of the figure, and below that, an example program and its attributed AST.
+The \code{features} collection is defined on the nonterminal \code{Program}, which is the root of the AST (line 1). Then two features are defined, \textsc{Strictfp} and \textsc{String In Switch} (lines 3-5 and 7-9).
+
+\textsc{Strictfp} is a syntactic feature that corresponds to the modifier \code{strictfp}.
+In ExtendJ, modifiers are represented by the nonterminal \code{Modifiers} which contains a list of modifier keywords, e.g., \code{public}, \code{static}, \code{strictfp}, etc.
+To find out if one of the keywords is \code{strictfp}, ExtendJ defines a boolean attribute \code{isStrictfp} for \code{Modifiers}.
+To identify the \textsc{Strictfp} feature, a contribution clause is defined on the nonterminal \code{Modifiers} (line 3), and the \code{isStrictfp} attribute is used for conditionally adding the feature to the collection (line 5).
+The absolute path is computed using other attributes in ExtendJ: \code{getCU} is a reference to the AST node for the enclosing compilation unit, and \code{path} is the absolute path name for that compilation unit (line 4).
+
+\textsc{String In Switch} is a semantic feature in that it depends on the type of the switch expression. It cannot be identified with simple local AST queries or regular expressions. Here, the contribution clause is defined on the nonterminal \code{Switch}, and the feature is conditionally added if the type of the switch expression is a string. ExtendJ attributes used here are \code{type} which is a reference to the expression's type, and \code{isString} which is a boolean attribute on types.
+
+
+
+
+

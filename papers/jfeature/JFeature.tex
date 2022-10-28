@@ -1,0 +1,146 @@
+\chapter[JFeature: Know Your Corpus]{\texorpdfstring{%
+JFeature: Know Your Corpus}{%
+JFeature: Know Your Corpus}}
+
+\paperRemark{\paperIref}
+
+% \documentclass[conference]{IEEEtran}
+% \IEEEoverridecommandlockouts
+% \usepackage[T1]{fontenc}
+% \usepackage{amsmath,amssymb,amsfonts}
+% \usepackage{cite}
+% \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}%TODONOTES
+% \usepackage{xargs}%TODONOTES
+%  \usepackage{multirow}
+%  \usepackage{booktabs}
+% \usepackage{hhline}
+% %\usepackage{showframe}
+%  \usepackage[normalem]{ulem}
+%  \usepackage{colortbl}
+% \usepackage{tikz}
+% %\usetikzlibrary{patterns}
+% \usetikzlibrary{patterns,arrows,decorations.pathmorphing,backgrounds,shadows,positioning,fit,shapes,matrix,calc,shapes.multipart,arrows.meta}
+% \usepackage[simplified]{pgf-umlcd}
+% \usepackage{xpatch} % Needed for patching pgf-umlcd
+% \usepackage{xparse} % Needed for patching pgf-umlcd
+% \usepackage{color,soul} % for \hl
+% \definecolor{dark-yellow}{RGB}{219, 212, 143}
+% \definecolor{dark-green}{RGB}{36,84,36}
+% \definecolor{my-gray}{gray}{0.85}
+% \sethlcolor{dark-yellow}
+%  \usepackage{makecell}
+%  \usepackage{rotating}
+%  \usepackage{multirow}
+%  \usepackage{booktabs}
+%  \usepackage{hhline}
+% \usepackage{rotating}
+% \usepackage{wrapfig}
+% \usepackage{listings}
+% \usepackage{adjustbox}
+% \usepackage{graphicx}
+% \usepackage{caption}
+% \usepackage{multirow}
+% \usepackage{subcaption}
+% \usepackage{stmaryrd}
+% \usepackage{hyperref}
+% \usepackage{float}
+% \usepackage{textcomp}
+% \usepackage{svg}
+% \usepackage{soul}
+
+% \usepackage[inline]{enumitem}
+% \input{prooftree.tex}
+
+
+
+% \input{macros.tex}
+
+% CR: nicer \texttt. This one is explicitly mentioned in the IEEEtran.cls, so I assume it's fine to use...
+%\renewcommand{\ttdefault}{cmtt}
+% \renewcommand{\ttdefault}{txtt}  % NF: allow for bold in texttt
+
+%\newcommand{\CR}[1]{\textbf{\{CR:} {\textcolor{blue!70!black} #1}\textbf{\}}}
+
+% \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+%     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% \begin{document}
+% \title{JFeature: Know Your Corpus
+% \thanks{\anonymize{This work was partially supported by the Wallenberg AI, Autonomous Systems and Software Program (WASP) funded by the Knut and Alice Wallenberg Foundation.}}
+% }
+
+% \author{
+%   \IEEEauthorblockN{%
+%     \anonymize{Idriss Riouak}\IEEEauthorrefmark{1}, %
+%     \anonymize{G\"{o}rel Hedin}\IEEEauthorrefmark{1}, %
+%     \anonymize{Christoph Reichenbach}\IEEEauthorrefmark{1}, and %
+%     \anonymize{Niklas Fors}\IEEEauthorrefmark{1}}%
+%   \IEEEauthorblockA{\IEEEauthorrefmark{1}%
+%     \anonymize{\textit{idriss.riouak},
+%     \textit{gorel.hedin},
+%     \textit{christoph.reichenbach}, and
+%     \textit{niklas.fors} (\textit{@cs.lth.se})} \\
+%     \anonymize{Department of Computer Science, Lund University, Sweden}}
+% }
+
+% \maketitle
+
+% \begin{abstract}
+\section{Abstract}
+Software corpora are crucial for evaluating research artifacts and ensuring repeatability of outcomes. Corpora such as DaCapo and Defects4J provide
+a collection of real-world open-source  projects for evaluating the robustness and performance of software tools like static analysers.
+\emph{However, what do we know about these corpora? What do we know about their composition? Are they really suited for our particular problem?}
+We developed \textsc{JFeature}, an extensible static analysis tool that extracts syntactic and semantic features from Java programs, to assist developers in answering these questions.
+We demonstrate the potential of  \textsc{JFeature} by applying it to four widely-used corpora in the program analysis area, and we suggest other applications, including
+ longitudinal studies of individual Java projects and the creation of new corpora.
+% \end{abstract}
+
+
+
+
+% \begin{IEEEkeywords}
+% Source-Code Analysis, Software Tools, Software Corpora
+% \end{IEEEkeywords}
+
+
+\section{Introduction}
+\label{sec:introduction}
+\input{papers/jfeature/sec1-introduction.tex}
+
+\section{JFeature: automatic feature extraction}
+\label{sec:jfeature}
+\input{papers/jfeature/sec2-jfeature.tex}
+
+\section{Corpora Analysis}
+\label{sec:corpora}
+\input{papers/jfeature/sec3-corpora-analysis.tex}
+
+\section{Extensibility}
+\label{sec:extension}
+\input{papers/jfeature/sec4-extension.tex}
+
+\section{Use cases for JFeature}
+\label{sec:discussion}
+\input{papers/jfeature/sec5-discussion.tex}
+
+\section{Related work}
+\label{sec:related-works}
+\input{papers/jfeature/sec6-related-works.tex}
+
+\section{Conclusions}
+\label{sec:conclusions}
+\input{papers/jfeature/sec7-conclusions.tex}
+
+
+%\newpage
+% \bibliographystyle{abbrv}
+% \bibliography{bibliography}
+
+
+
+
+
+
+
+% \end{document}
+% \endinput

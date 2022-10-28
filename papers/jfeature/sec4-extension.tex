@@ -1,0 +1,62 @@
+Extensibility is one of the key characteristics of JFeature. Users can create new queries to extract additional features, making use of all attributes available in the ExtendJ compiler.
+We illustrate this by adding a new feature, \textsc{Overloading}, that measures the number of overloaded methods in the source code.
+Listing~\ref{lst:overloading} shows the JastAdd code for this: we define a new boolean attribute, \code{isOverloading}, that checks if a method is overloaded. We then use this attribute to conditionally contribute to the \code{features} collection, only for overloaded method declarations.
+The attribute \code{isOverloading} is defined using several ExtendJ attributes:
+the attribute \code{hostType} is a reference to the enclosing type declaration of the method declaration.
+A type declaration, in turn, has an attribute \code{methodsNameMap} that holds references to all methods for that type declaration, both local and inherited. If there is more than one method for a certain name, that name is overloaded.
+
+\begin{lstlisting}[language=JastAdd, numbers=none, label=lst:overloading ,caption=Definition of the \textsc{Overloading} feature]
+MethodDecl contributes
+  new Feature("JAVA1", "Overloading", getCU().path())
+  when isOverloading() to Program.features();
+
+syn boolean MethodDecl.isOverloading()
+  = hostType().methodsNameMap().get(getID()).size() > 1;
+\end{lstlisting}
+For the computation to work, it is necessary to supply the classpath, so that ExtendJ can find the classfiles for any direct or indirect supertypes of types in the analysed source code.
+We analysed 16 distinct projects for which we  successfully extracted the classpaths and dependencies required for ExtendJ compilation. The results provided by JFeature for the sixteen projects are summarised in Table~\ref{tbl:overloading}. As can be seen, each project has overloaded methods. In some cases, such as \code{commons-codec}, \code{commons-math}, and \code{ jackson-core}, more than one fifth of the methods are overloaded.
+
+\textsc{Overloading} is a good example of a feature that requires semantic analysis---it can not be computed by a simple pattern match using regular expressions or a context-free grammar.
+
+\begin{table}[]
+\centering
+\setlength\tabcolsep{3pt}
+\begin{tabular}{|l|r|r|r|r|}
+\hline
+\multicolumn{1}{|c|}{\textsc{Projects}} & \multicolumn{1}{c|}{\textsc{$\sim$ KLOC}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}\textsc{Number}\\of \textsc{Methods}\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}\textsc{Overloaded}\\\textsc{Methods}\end{tabular}} & \multicolumn{1}{c|}{\%}  \\
+\hhline{|=====|}
+antlr-2.7.2      & 34  & 2081 & 358        & 17,2          \\
+\hline
+commons-cli-1.5.0          &  6  & 585  & 76         & 13 \\
+\hline
+commons-codec-1.16-rc1     &  24  & 1812 & 422        & 23,3          \\
+\hline
+commons-compress-1.21     &  71   & 5359 & 571        & 10,7          \\
+\hline
+commons-csv-1.90           & 8   & 716  & 93         & 13 \\
+\hline
+commons-jxpath-1.13       &   24  & 2030 & 167        & 8,23          \\
+\hline
+commons-math-3.6.1       &   100   & 7229 & 1779       & 24,6          \\
+\hline
+fop-0.95       &   102  & 8317 & 666        & 8,01          \\
+\hline
+gson-2.90   &     25   & 2289 & 125        & 5,46          \\
+\hline
+jackson-core-2.13.2    &    48    & 3687 & 839        & 22,8          \\
+\hline
+jackson-dataformat-2.13   &  15   & 1122 & 161        & 14,3          \\
+\hline
+jfreechart-1.0.0         &   95   & 6980 & 1000       & 14,3          \\
+\hline
+joda-time-2.10           &  86    & 9324 & 1257       & 13,5          \\
+\hline
+jsoup-1.14      &  25  & 2556 & 408        & 16 \\
+\hline
+mockito-4.5.1 &   19   & 2054 & 318        & 15,5          \\
+\hline
+pmd-4.2.5     &   60   & 5324 & 1021       & 19,2          \\
+\hline
+\end{tabular}
+\caption{\label{tbl:overloading} Results from the \textsc{Overloading} feature.}
+\end{table}

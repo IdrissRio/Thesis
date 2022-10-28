@@ -1,0 +1,324 @@
+\newcommand{\dataflow}{data-flow}
+\newcommand{\Dataflow}{Data-flow}
+\newcommand{\code}[1]{\texttt{\lstinline[basicstyle=\normalsize\ttfamily,identifierstyle={\normalsize},commentstyle={\normalsize\itshape},keywordstyle={\normalsize\bfseries},ndkeywordstyle={\normalsize},stringstyle={\normalsize\ttfamily},numberstyle={\normalsize}]!#1!}}
+\newcommand{\CFG}{CFG}
+\newcommand{\intraj}{\textsc{Intra}J}
+\newcommand{\jastaddjintraflow}{\textsc{jastaddj-intraflow}}
+\newcommand{\jji}{\code{JJI}}
+\newcommand{\jastadd}{\textsc{JastAdd}}
+\newcommand{\extendj}{\textsc{ExtendJ}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cE}{\rightarrowtail}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cM}{\mathcal{M}}
+
+\newcommand{\mSyn}{\ensuremath{\uparrow}}
+\newcommand{\mInh}{\ensuremath{\downarrow}}
+\newcommand{\mHOA}{\ensuremath{\rightarrow}}
+\newcommand{\mColl}{\ensuremath{\square}}
+\newcommand{\mCirc}{\ensuremath{\circlearrowleft}}
+
+\newcommand{\Abase}[1]{\textcolor{ATGsym}{\mbox{\umlcode{#1}}}}
+\newcommand{\Asyn}[1]{\textcolor{ATGsym}{\mbox{\mSyn{}\umlcode{#1}}}}
+\newcommand{\Ainh}[1]{\textcolor{ATGsym}{\mbox{\mInh{}\umlcode{#1}}}}
+\newcommand{\Ahoa}[1]{\textcolor{ATGsym}{\mbox{\mHOA{}\umlcode{#1}}}}
+\newcommand{\Acoll}[1]{\textcolor{ATGsym}{\mbox{\mColl{}\umlcode{#1}}}}
+\newcommand{\Acirc}[1]{\textcolor{ATGsym}{\mbox{\mCirc{}\umlcode{#1}}}}
+
+\newcommand{\umlcode}[1]{\textrm{#1}}  % Style of code used in UML fragments
+\newcommand{\astnodestyle}{\ttfamily\color{magenta}}
+\newcommand{\astnode}[1]{\texttt{\textcolor{magenta}{#1}}}  % Style used for AST node types
+
+\newcommand{\ASTUnrestricted}{AST-unrestricted}
+\newcommand{\ParentFirst}{Parent-First}
+
+\newcommand{\project}[1]{\textsc{#1}}
+\newcommand{\tool}[1]{\textsc{#1}}
+
+% can't get fbox to work reliably in the UML code, and adjustbox and nested \tikz don't work at all
+%\newcommand{\dfapi}{\textsf{\setlength{\fboxsep}{0pt}\fcolorbox{blue}{white}{df-api}}}
+\newcommand{\dfapi}{\textbf{\textcolor{black}{[df-api]}}}
+\newcommand{\nameapi}{\textbf{\textcolor{black}{[name-api]}}}
+
+\newcommand{\frameworkname}{\textsc{Intra}CFG}
+\newcommand{\intracfg}{\textsc{\frameworkname}}
+
+\newcommand{\node}{\mathsf{n}}
+\newcommand{\Null}{\mathtt{NULL}}
+\newcommand{\Notnull}{\mathtt{NOTNULL}}
+\newcommand{\gen}{\mathtt{gen}}
+\renewcommand{\kill}{\mathtt{kill}}
+
+\newcommand{\In}{\mathtt{in}}
+\newcommand{\Out}{\mathtt{out}}
+\newcommand{\Use}{\mathtt{use}}
+\newcommand{\Def}{\mathtt{def}}
+\newcommand{\tf}{f_t}
+\newcommand{\mCi}[1]{ { \textcolor{black!30}{\scriptstyle \pm\text{#1}}}}%Condifdence interval
+
+\newcommand{\CR}[1]{\textbf{[}\textcolor{blue!60!black}{\textbf{CR:} #1}\textbf{]}}
+\newcommand{\Ckw}[1]{\texttt{\textbf{#1}}}
+\newcommand{\auxlabel}[1]{{\scriptsize{$\textrm{\texttt{#1}}$}}}
+\newcommand{\auxlabeli}[2]{{\scriptsize{$\textrm{\texttt{#2}}_{#1}$}}}
+\newcommand{\auxlabelbox}[1]{\tikz[baseline=-0.7ex] \node[rectangle, minimum width=0, thin, draw, rounded corners, fill=white, inner sep=2pt, outer sep=0pt] (N) {\auxlabel{#1}};}
+\newcommand{\auxlabelboxhoa}[1]{\tikz[baseline=-0.7ex] \node[rectangle, dashed,minimum width=0, thin, draw, rounded corners, fill=white, inner sep=2pt, outer sep=0pt] (N) {\auxlabel{#1}};}
+
+%\newcommand{\auxlabelboxi}[2]{\tikz \node[rectangle, minimum width=0, thin, draw, rounded corners, fill=white] {\auxlabeli{#1}{#2}};}
+
+\newcommandx{\unsure}[1]{{\color{red!75}{#1}}}
+\newcommandx{\toimprove}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+
+\newcommand{\Prod}{::=}
+\newcommand{\terminal}[1]{\textcolor{green!50!black}{\textit{#1}}}
+\newcommand{\vmetavar}[1]{\textcolor{cyan!30!black}{\textsf{\textbf{#1}}}}
+\newcommand{\vcode}[1]{\textsf{\textcolor{green!35!black}{{#1}}}}
+\newcommand{\vterminal}[1]{\vcode{#1}}
+\newcommand{\nta}[1]{\ensuremath{\textit{#1}}}
+\newcommand{\tuple}[1]{\ensuremath{\langle #1 \rangle}}
+\newcommand{\nt}[1]{\ensuremath{\tuple{\hspace{-0.02cm}\nta{#1}\hspace{0.02cm}}}}
+\newcommand{\VB}{\ |\ }
+\newcommand{\Gcomment}[1]{\textrm{\textcolor{black!50!white}{({#1})}}}
+\newcommand{\sem}[1]{\ensuremath{\llbracket #1 \rrbracket}}
+%\newcommand{\semNPA}[1]{\ensuremath{\sem{#1}_{\textit{NPA}}}}
+\newcommand{\semNPA}[1]{\ensuremath{\sem{#1}}}
+
+\newcommand{\listingsfontsize}{\scriptsize}
+
+\newcommand{\NAmark}{\multicolumn{1}{c}{\textcolor{black!40!white}{-}}}
+\newcommand{\NAmarkR}{\multicolumn{1}{c|}{\textcolor{black!40!white}{-}}}
+\newcommand{\Tcenter}[1]{\multicolumn{1}{c}{#1}}
+\newcommand{\TcenterR}[1]{\multicolumn{1}{c|}{#1}}
+\newcommand{\succarrow}{\tikz[baseline=-0.7ex] \draw[succarrow, thick, -{Stealth[scale=0.9, inset=0pt, angle'=45]}] (0,0) -- (0.3,0.0);}
+
+\colorlet{hlgreen}{green}
+\colorlet{hlorange}{orange}
+\colorlet{hlgreenhalf}{green!50!white}
+\colorlet{hlorangehalf}{orange!50!white}
+
+\DeclareRobustCommand{\hlgreen}[1]{{\sethlcolor{hlgreenhalf}\hl{#1}}}
+\DeclareRobustCommand{\hlorange}[1]{{\sethlcolor{hlorangehalf}\hl{#1}}}
+
+\definecolor{ATGsym}{HTML}{206010}
+
+\definecolor{SQ}{HTML}{0080ff}
+\definecolor{JJI}{HTML}{ff0080}
+\definecolor{IJnonH}{HTML}{004010}
+\definecolor{IJH}{HTML}{00ff20}
+
+\definecolor{succarrow}{HTML}{4e90e2}	% adapted from RunningExample.tex
+
+\definecolor{lightblue}{HTML}{006699}		%#006699
+\definecolor{lightgreen}{HTML}{669900}		%#669900
+\lstdefinelanguage{JastAdd}{
+  %keyword1&2&6
+  morekeywords = [1]{abstract, class, continue, default, enum, extends, false, final, finally, implements, import, instanceof, interface, native, new, null, package, private, protected, public, static, strictfp, throws, transient, true, void, volatile, length, assert, case, return, super, this, throw, catch, do, if, else, switch, synchronized, while, try, ?, when, break},
+  %keyword3
+  morekeywords = [2]{inh, syn, coll, with, eq, NTA, contributes, to, for, each, circular, with}, %JASTADD keywords
+  %keyword4
+  morekeywords = [3]{CFGNode, Assignments, Assign,AssignBitwiseExpr, TrueLiteral, Entry,ConstructorDecl,UnceckedException, TryWithResorucesStmt, NTAFinallyBlock,ClassDecl, CloseListNTA, BreakStmt,ThrowStmt,TryStmt,ReturnStmt, ContinueStmt, Exit, Expr, AssignShiftExpr, AssignMultiplicativeExpr, IntegerLiteral, AssignAdditiveExpr, UnaryIncDec,DoStmt,VariableDeclarator, NumericLiteral, ParameterDeclaration, FieldDeclarator, PostfixExpr, PreIncExpr, PreDecExpr, ReachedLVal, Variable,EQOp,CFGSupport, ForStmt, EmptyStmt, MethodDecl, ExprStmt, AssignStmt, IfStmt, AndOp, LessOp, WhileStmt, Block, AssignExpr, PostUnaryInc, PostUnaryDec, Entry, Exit, EQExpr, VarAccess, CFGRoot, Modifiers, SwitchStmt, Switch}, %ASTnode typess. Switch ADDED BY NF (figure simplification)
+  %keyword5
+  morekeywords = [4]{Array, ArrayList, Boolean, Byte,  BitSet, BufferedReader,Collections, Character, Class, Double, Float, Gamma, AbsDomain, NULL, NOTNULL, TOP,Integer, HashMap, PrintWriter, String, StringBuffer, StringBuilder, Thread, boolean, byte, char, double, float, int, long, short, FloatDict, FloatList, IntDict, IntList, JSONArray, JSONObject, PFont, PGraphics, PImage, PShader,Feature, FeatureVersion, FeatureKind, Program, PShape, PVector, StringDict, StringList, Table, TableRow, XML, Set, HashSet, Kind},
+ %keyword6
+  morekeywords = [5]{ JAVA2, Strictfp, JAVA7, StringInSwitch},
+  %keywordstyle = [1]\color{lightblue},
+  %keywordstyle = [2]\color{lightgreen},
+  keywordstyle = [1]\bfseries,
+  keywordstyle = [2]\bfseries,
+  keywordstyle = [3]\astnodestyle,
+  keywordstyle = [4]\color{orange},
+  keywordstyle = [5]\color{cyan},
+  sensitive = true,
+  morecomment = [l]{//},
+  morecomment = [s]{/*}{*/},
+  morecomment = [s]{/**}{*/},
+  commentstyle = \color{gray},
+  morestring = [b]",
+  morestring = [b]',
+  stringstyle = \color{purple},
+ numbers=left,
+xleftmargin=2em
+}
+\lstset{
+  basicstyle=\listingsfontsize\ttfamily,
+  identifierstyle={\listingsfontsize},
+  commentstyle={\listingsfontsize\itshape},
+  keywordstyle={\listingsfontsize\bfseries},
+  ndkeywordstyle={\listingsfontsize},
+  stringstyle={\listingsfontsize\ttfamily},
+  frame={tb},
+  breaklines=true,
+  breakatwhitespace=true, %To avoid linebreaks between \code{} and comma.
+  columns=[l]{fullflexible},
+  numbers=none,
+  numberstyle={\listingsfontsize},
+  stepnumber=1,
+  mathescape
+%	escapeinside     = {@}{@}, %General escape does not seem to work in lstinline/GH.
+}
+
+\makeatletter
+\pgfdeclareshape{topbottombox}{
+  \inheritsavedanchors[from=rectangle]
+  \inheritanchorborder[from=rectangle]
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{base}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north west}
+  \backgroundpath{
+    %  store lower right in xa/ya and upper right in xb/yb
+    \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+ }
+}
+\makeatother
+
+
+% Patch UML package pgf-umlcd to be able to write abstract grammar as class name.
+\ExplSyntaxOn
+\NewDocumentCommand{\defineclassname}{m}
+ {
+  \tl_set:Nn \umlcdClassName { #1 }
+  \tl_set_eq:NN \umlcdClassNameString \umlcdClassName
+  \tl_replace_all:Nfn \umlcdClassName { \char_generate:nn { `_ } { 8 } } { \_\kern1pt }
+ }
+\cs_generate_variant:Nn \tl_replace_all:Nnn { Nf }
+\ExplSyntaxOff
+\xpatchcmd{\classAndInterfaceCommon}
+ {\def\umlcdClassName}
+ {\defineclassname}
+ {}{}
+\xpatchcmd{\endclass}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endinterface}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endabstractclass}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endobject}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endclassAndInterfaceCommon}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endclassAndInterfaceCommon}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+\xpatchcmd{\endclassAndInterfaceCommon}
+ {(\umlcdClassName)}
+ {(\umlcdClassNameString)}
+ {}{\ddt}
+
+\newbool{ANON}
+%\booltrue{ANON}
+\boolfalse{ANON}
+\newcommand{\anon}[2]
+{\ifbool{ANON}{
+   #1
+}{
+   #2
+}}
+
+\makeatletter
+\newif\if@anonymize
+
+%\@anonymizetrue    % Uncomment to hide text
+\@anonymizefalse  % Uncomment to show text
+
+
+\if@anonymize
+  \newcommand{\highlight@DoHighlight}{
+    \fill [outer sep = -15pt, inner sep = 0pt, color=black]
+          ($(begin highlight)+(0,8pt)$) rectangle ($(end highlight)+(0,-3pt)$) ;
+  }
+
+  \newcommand{\highlight@BeginHighlight}{
+    \coordinate (begin highlight) at (0,0) ;
+  }
+
+  \newcommand{\highlight@EndHighlight}{
+    \coordinate (end highlight) at (0,0) ;
+  }
+
+  \newdimen\highlight@previous
+  \newdimen\highlight@current
+  \newlength{\item@width}
+
+  \DeclareRobustCommand*\anonymize{%
+    \SOUL@setup
+    \def\SOUL@preamble{%
+      \begin{tikzpicture}[overlay, remember picture]
+        \highlight@BeginHighlight
+        \highlight@EndHighlight
+      \end{tikzpicture}%
+    }%
+    %
+    \def\SOUL@postamble{%
+      \begin{tikzpicture}[overlay, remember picture]
+        \highlight@EndHighlight
+        \highlight@DoHighlight
+      \end{tikzpicture}%
+    }%
+    %
+    \def\SOUL@everyhyphen{%
+      \discretionary{%
+        \SOUL@setkern\SOUL@hyphkern
+        \SOUL@sethyphenchar
+        \tikz[overlay, remember picture] \highlight@EndHighlight ;%
+      }{%
+      }{%
+        \SOUL@setkern\SOUL@charkern
+      }%
+    }%
+    %
+    \def\SOUL@everyexhyphen##1{%
+      \SOUL@setkern\SOUL@hyphkern
+      \settowidth{\item@width}{##1}%
+      \makebox[\item@width]{}%
+      \discretionary{%
+        \tikz[overlay, remember picture] \highlight@EndHighlight ;%
+      }{%
+      }{%
+        \SOUL@setkern\SOUL@charkern
+      }%
+    }%
+    %
+    \def\SOUL@everysyllable{%
+      \begin{tikzpicture}[overlay, remember picture]
+        \path let \p0 = (begin highlight), \p1 = (0,0) in \pgfextra
+          \global\highlight@previous=\y0
+          \global\highlight@current =\y1
+        \endpgfextra (0,0) ;
+        \ifdim\highlight@current < \highlight@previous
+          \highlight@DoHighlight
+          \highlight@BeginHighlight
+        \fi
+      \end{tikzpicture}%
+      \settowidth{\item@width}{\the\SOUL@syllable}%
+      \makebox[\item@width]{}%
+      \tikz[overlay, remember picture] \highlight@EndHighlight ;%
+    }%
+    \SOUL@
+  }
+\else
+  \newcommand{\anonymize}[1]{#1}
+\fi
+\makeatother

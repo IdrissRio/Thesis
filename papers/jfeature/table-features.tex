@@ -1,0 +1,77 @@
+% \usepackage{multirow}
+% \usepackage{hhline}
+
+
+\begin{table}
+\centering
+
+\label{tbl:features}
+\begin{tabular}{|l|l|c|c|}
+\hline
+\multicolumn{2}{|l|}{\multirow{2}{*}{Feature}}     & \multicolumn{2}{c|}{Kind}                          \\
+\cline{3-4}
+\multicolumn{2}{|l|}{}                             & Syn                       & Sem                    \\
+\hhline{|====|}
+\multicolumn{4}{|c|}{\textbf{Java 1.1 - 4, 1997-2002} -- \cite{java1,java2,java3,java4}                  }                                \\
+\hhline{|====|}
+\multicolumn{2}{|l|}{Inner Class}                  &                           & \checkmark                   \\
+\hline
+\multicolumn{2}{|l|}{java.lang.reflect.*}          &                           &  \checkmark                   \\
+\hline
+\multicolumn{2}{|l|}{Strictfp}                     &  \checkmark                      &                        \\
+\hline
+\multicolumn{2}{|l|}{Assert Stmt}                  &  \checkmark                      &                        \\
+\hhline{|====|}
+\multicolumn{4}{|c|}{\textbf{Java 5, 2004} -- \cite{java5,java6}         }                                                    \\
+\hhline{|====|}
+\multicolumn{2}{|l|}{Annotated Compilation Unit}   &  \checkmark                      &                        \\
+\hline
+\multirow{2}{*}{Annotations} & Use                 &  \checkmark                      &                        \\
+\cline{2-4}
+                             & Decl                & \multicolumn{1}{c|}{ \checkmark} & \multicolumn{1}{l|}{}  \\
+\hline
+\multirow{2}{*}{Enum}        & Use                 &                           &  \checkmark                   \\
+\cline{2-4}
+                             & Decl                &  \checkmark                      &                        \\
+\hline
+\multirow{4}{*}{Generics}    & Method              &  \checkmark                      &                        \\
+\cline{2-4}
+                             & Constructor         & \multicolumn{1}{c|}{ \checkmark} & \multicolumn{1}{l|}{}  \\
+\cline{2-4}
+                             & Class               & \multicolumn{1}{c|}{ \checkmark} & \multicolumn{1}{l|}{}  \\
+\cline{2-4}
+                             & Interface           & \multicolumn{1}{c|}{ \checkmark} & \multicolumn{1}{l|}{}  \\
+\hline
+\multicolumn{2}{|l|}{Enhanced For}                 &  \checkmark                      &                        \\
+\hline
+\multicolumn{2}{|l|}{Varargs}                      &  \checkmark                      &                        \\
+\hline
+\multicolumn{2}{|l|}{Static Import}                &  \checkmark                      &                        \\
+\hline
+\multicolumn{2}{|l|}{java.util.concurrent.*}       &                           &  \checkmark                   \\
+\hhline{|====|}
+\multicolumn{4}{|c|}{\textbf{Java 7, 2011}--\cite{java7}                 }                                            \\
+\hhline{|====|}
+\multicolumn{2}{|l|}{Diamond  Operator}            &  \checkmark                      &                        \\
+\hline
+\multicolumn{2}{|l|}{String in Switch}             &                           &  \checkmark                   \\
+\hline
+\multicolumn{2}{|l|}{Try with Resources}           &  \checkmark                      &                        \\
+\hline
+\multicolumn{2}{|l|}{Multi Catch}                  &  \checkmark                      &                        \\
+\hhline{|====|}
+\multicolumn{4}{|c|}{\textbf{Java 8, 2014}-- \cite{java8}                }                                             \\
+\hhline{|====|}
+\multicolumn{2}{|l|}{Lambda Expression}            &  \checkmark                      &                        \\
+\hline
+\multicolumn{2}{|l|}{Constructor Reference}        &                           &  \checkmark                   \\
+\hline
+\multicolumn{2}{|l|}{Method Reference}             &                           &  \checkmark                   \\
+\hline
+\multicolumn{2}{|l|}{Intersection Cast}            &  \checkmark                      &                        \\
+\hline
+\multicolumn{2}{|l|}{Default Method}               &  \checkmark                      &                        \\
+\hline
+\end{tabular}
+\caption{\label{tbl:features} Major changes in the Java language up to Java 8.}
+\end{table}

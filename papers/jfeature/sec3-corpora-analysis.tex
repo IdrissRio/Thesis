@@ -1,0 +1,118 @@
+We used JFeature to analyse four widely used corpora, to investigate to what extent the different Java features from Table~\ref{tbl:features} are used. We picked the newest available version of each of the corpora.
+
+\subsection{Corpora Description}
+
+\newcolumntype{?}{!{\vrule width 1.5pt}} %Make some vertical lines thicker
+\newcommand*\rot{\rotatebox{90}}
+\setlength\tabcolsep{4.2pt}
+\begin{table*}
+\centering
+\caption{\label{tbl:corpusAnalysis} Corpora Analysis. Each entry represents the total number of projects utilising the respective feature.}
+\begin{tabular}{|l?c|c|c|c?c|c|c|c|c|c|c|c|c|c|c|c|c?c|c|c|c?c|c|c|c|c?}
+\hline
+\multirow{3}{*}{\begin{tabular}[c]{@{}c@{}} \\ \\ \\ \\ \textsc{Corpus} \\ ($\#$ \textsc{Projects})\end{tabular}} & \multicolumn{4}{c?}{\textsc{JAVA 1.1 - 4}} & \multicolumn{13}{c?}{\textsc{JAVA 5}}    & \multicolumn{4}{c?}{\textsc{JAVA 7}}& \multicolumn{5}{c?}{\textsc{JAVA 8}}\\
+\cline{2-27}
+           & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Inner Class\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{java.lang.reflect.*\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rotatebox{90}{Strictfp\quad}}} & \multicolumn{1}{c?}{\multirow{2}{*}{\rotatebox{90}{Assert Stmt\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Annotated CU\quad}}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}} \\  \\ Annotation\end{tabular}}  &\multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}} \\  \\ Enum\end{tabular}} & \multicolumn{4}{c|}{\begin{tabular}[c]{@{}c@{}} \\  \\ Generics\end{tabular}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Enhanced For\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{VarArgs\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Static Import\quad}}} & \multicolumn{1}{c?}{\multirow{2}{*}{\rot{java.util.concurrent.*}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Diamond Operator\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{String in Switch\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Try w/ Resources\quad}}} & \multicolumn{1}{c?}{\multirow{2}{*}{\rot{Multi Catch\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Lambda Expression\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Constructor Reference\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Method Reference\quad}}}  & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Intersection Cast\quad}}}& \multicolumn{1}{c?}{\multirow{2}{*}{\rot{Default Method\quad}}} \\[30pt]
+\cline{7-14}
+           & \multicolumn{1}{c|}{}    & \multicolumn{1}{c|}{}   & \multicolumn{1}{c|}{} & \multicolumn{1}{c?}{} & \multicolumn{1}{c|}{} &  \multicolumn{1}{c|}{\begin{sideways}Use\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Decl\end{sideways}} &  \multicolumn{1}{c|}{\begin{sideways}Use\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Decl\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Method\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Constructor \phantom{..}\end{sideways}} &  \multicolumn{1}{c|}{\begin{sideways}Class \phantom{..}\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Interface\end{sideways}} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{}& \multicolumn{1}{c|}{}& \multicolumn{1}{c?}{} & \multicolumn{1}{c|}{}& \multicolumn{1}{c|}{}    & \multicolumn{1}{c|}{}    & \multicolumn{1}{c?}{}    & \multicolumn{1}{c|}{}    & \multicolumn{1}{c|}{}   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{}& \multicolumn{1}{c?}{}   \\
+\hline
+\textsc{DaCapo} \hfill(15)      & 15   & 12  & 2 & 5  & 0            & 8& 4                     & 14  & 8& 6  & 2 & 7& 4& 8& 7& 5 & 7 & 2& 1    & 3    & 2    & 2    & 0   & 2 &0 &0 \\
+\hline
+\textsc{Defects4J} \hfill(16)  & 16  & 15  & 1 & 8  & 0            &15  &  7                     & 16   & 14& 13 & 3 & 12& 10 & 15    & 13    & 14& 14& 14    & 7    & 13   & 10    & 10    & 5   & 8 &1&1 \\
+\hline
+\textsc{Qualitas} \hfill (112)    & 109  & 100  & 4 & 51  & 9    &67 & 35       & 109   &45     & 55 & 7& 59 &41   & 68    & 49    & 46 & 50& 1& 1    & 1    & 1    & 0    & 0   & 0&0 &0  \\
+\hline
+\textsc{XCorpus} \hfill (76)     & 74   & 65  & 4 & 28  & 3     &39  & 21            & 74    & 32    & 31 & 4&35 & 22   & 39    & 28    & 25 & 27& 4& 2    & 3    & 3    & 2    & 1   & 2  &0 &0\\
+\hline
+\end{tabular}
+\end{table*}
+
+%The scientific community has recognised the problem of reproducibility. Whether talking about performance optimisation or bug detection, the reproducibility problem remains real. So much so that, nowadays, most conferences (e.g., ECOOP, OOPSLA, PLDI, etc.) require submitting an artifact capable of reproducing the same results obtained during the validation process to accept and publish a scientific article. Here arises the need to create a corpus, with specific properties, for instance, massive use of concurrency, non-trivial memory loads or the presence of bugs. In this section, we will give a brief description of the corpus that we will analyse later, which are:  DaCapo Benchmark Suite, Defects4J, Qualitas Corpus and XCorpus.
+
+\subsubsection*{\textbf{DaCapo Benchmark Suite}}Blackburn et al. introduced it in 2006 as a set of general-purpose (i.e., library), freely available, real-world Java applications. They provided performance measurements and workload characteristics, such as object size distributions, allocation rates and live sizes. Even if the primary goal of the
+DaCapo Benchmark Suite is intended as a corpus for Java benchmarking, there are
+several instances of frontend and static analysers evaluation.
+For evaluation, we used version 9.12-bach-MR1 released in 2018.
+
+\subsubsection*{\textbf{Defects4J}}
+introduced by Just et al., is a bug database consisting of 835 real-world bugs from 17 widely-used open-source Java projects.
+Each bug is provided with a test suite and at least one failing test case that triggers the bug.
+Defects4J found many uses in the program analysis and repair community.
+For evaluation, we used version 2.0.0 released in 2020.
+
+\subsubsection*{\textbf{Qualitas Corpus}}
+ is  a set of 112 open-source Java programs, characterised by different sizes and belonging to different
+application domains.  The corpus was specially designed for empirical software engineering research and static analysis.
+For evaluation, we used the release from 2013 (20130901).
+
+\subsubsection*{\textbf{XCorpus}}
+is a corpus of modern real Java programs with an explicit goal of being a target for analysing dynamic proxies. XCorpus provides a set of 76 executable, real-world Java programs, including a subset of 70 programs from the Qualitas Corpus. The corpus was designed
+to overcome a lack of a sufficiently large and general corpus to validate static and dynamic analysis artefacts. The six additional projects added in the XCorpus make use of dynamic language features, i.e., invocation handler.
+For evaluation, we used the release from 2017.
+
+
+
+\subsection{Evaluation}
+
+\subsubsection*{\textbf{Methodology}}
+To compute complete semantic analysis with JFeature and ExtendJ, all dependent libraries and the classpath are needed for each analysed project. Unfortunately, different projects use different conventions and build systems, making automatic extraction of this information difficult.
+Therefore, for our study of the full corpora, we decided to extract features depending only on the language constructs and the standard library, but that did not require analysis of the project dependencies. This way, we could run JFeature on these projects without any classpath (except for the default standard library).
+
+Table~\ref{tbl:corpusAnalysis} shows an overview of the results of the analysis. For each corpus, we report the number of projects that use a particular feature from Table~\ref{tbl:features}. More detailed results, including the results for all 26 features, and counts for each individual project, are available at \url{https://github.com/lu-cs-sde/JFeature/blob/main/features.xlsx}.
+
+For standard libraries, like \code{ java.lang.reflect.*} and \code{java.util.concurrent.*}, we count all variable accesses, variable declarations, and method calls whose type is hosted in the respective package.
+
+While ExtendJ mostly complies to the JLS version 8, its Java 8 type inference support diverges from the specification in several corner cases.
+As Table~\ref{tbl:corpusAnalysis} shows, these limitations did not affect DaCapo, but they did surface in 43 method calls in 9 projects (2 projects in Defects4J that we manually inspected to validate our findings.
+
+%\todo[inline]{Should analyze all projects by tweaking the ones that break, but without changing the feature results. Could either exclude some files that break, or tweak some lines of code to make them not break. Could then rewrite the above paragraph something like: The current version of ExtendJ has some limitations for Java 8. We have therefore had to modify some of the projects slightly to be able to analyze them fully. As shown in the table, we were able to examine all 15 projects included in DaCapo, but had to modify a total of X lines of code in Y projects (Y1 projects in Defects4J, Y2 in Qualitas Corpus, and Y3 in XCorpus.}
+
+\subsubsection*{\textbf{Corpora overlap}}
+
+\begin{table}[H]
+\setlength\tabcolsep{.4pt}
+\centering
+\begin{tabular}{|c|cc|cc|cc|cc|cc|cc|cc|cc|}
+\hline
+\multirow{3}{*}{\textsc{Corpus}} & \multicolumn{16}{c|}{\textsc{Projects}}       \\
+\cline{2-17}
+    & \multicolumn{2}{c|}{\textsc{Mock}}     & \multicolumn{2}{c|}{\textsc{Asm}}        & \multicolumn{2}{c|}{\textsc{Derby}}         & \multicolumn{2}{c|}{\textsc{Junit}}        & \multicolumn{2}{c|}{\textsc{Tomcat}}     & \multicolumn{2}{c|}{\textsc{Xerces}}      & \multicolumn{2}{c|}{\textsc{JRep}}               & \multicolumn{2}{c|}{\textsc{Jmeter}}      \\
+%
+\cline{2-17}
+%
+    & \multicolumn{1}{c|}{1.1} & \multicolumn{1}{c|}{2.0} & \multicolumn{1}{c|}{3.3} & \multicolumn{1}{c|}{5.2} & \multicolumn{1}{c|}{10.14} & \multicolumn{1}{c|}{10.9} & \multicolumn{1}{c|}{4.10} & \multicolumn{1}{c|}{4.12} & \multicolumn{1}{c|}{6.0} & \multicolumn{1}{c|}{7.0} & \multicolumn{1}{c|}{2.8} & \multicolumn{1}{c|}{2.10} & \multicolumn{1}{c|}{1.1} & \multicolumn{1}{c|}{3.7} & \multicolumn{1}{c|}{2.5} & \multicolumn{1}{c|}{3.1}  \\
+\hline
+DaCapo                  &   &       &  \checkmark &      &  \checkmark   &       &    &  \checkmark     &  \checkmark &      &  \checkmark &       &      &      &      &       \\
+\hline
+Defects4J               &      &  \checkmark     &      &      &        &       &       &       &      &      &      &       &      &      &      &       \\
+\hline
+Qualitas                &      &       &      &      &        &  \checkmark  &   \checkmark    &    &      &  \checkmark &      &  \checkmark  &      &  \checkmark &    \checkmark  &    \\
+\hline
+XCorpus                 &  \checkmark    &    &      &  \checkmark &        &       &       &       &      &  \checkmark &      & \checkmark  & \checkmark &      &   &    \checkmark   \\
+\hline
+\end{tabular}
+\caption{\label{tbl:sameprojects} Projects used in the corpora with different versions.}
+\end{table}
+
+
+
+\begin{figure}[b]
+\input{papers/jfeature/img/ProjectsOverlapDiagram.tex}
+\caption{\label{fig:corporaOverlap} Project overlap. In the left diagram, two projects with the same name but different versions are counted as distinct---the diagram to the right shows overlap when versions are disregarded.}
+\end{figure}
+Figure~\ref{fig:corporaOverlap} shows the overlap between the four corpora as two Venn diagrams where each number represents a project. In the left diagram,  two versions of the same project are counted as two separate projects. In the right diagram, we only consider the project name, disregarding the version.
+From the left diagram, we can see that Defects4J does not overlap with any other corpus analysed. As expected, most of the projects are shared across Qualitas and XCorpus as XCorpus was built as an extension of Qualitas. From the diagrams, we can see that eight projects (145-137) are used among the corpora, but with different versions. Table~\ref{tbl:sameprojects} details these projects and versions.
+
+% \usepackage{multirow}
+% \usepackage{booktabs}
+
+
+
+\subsubsection*{\textbf{Discussion}}
+Table~\ref{tbl:corpusAnalysis} provides insight into the features utilised by each project. Using Qualitas Corpus as an illustration, we see that \code{strictfp} is only used in four projects.
+Similarly, in DaCapo, fewer than fifty percent of the projects use concurrency libraries.
+With JFeature, we can achieve a fine-grained classification of the properties. We can, for instance, distinguish between uses and declarations of annotations, and when it comes to generics, we can distinguish between the declarations of generic methods, classes, and interfaces, providing the user with a better comprehension of the corpus.
+It is apparent that most projects utilise only Java 4 and Java 5 features. With the exception of Defects4J, few projects employ Java 7 and Java 8.
+Indeed, this table reveals that Defects4J is the most modern corpus, as nine of the fourteen assessed applications utilise at least one of the observed Java 8 features.
+
+
