@@ -73,6 +73,8 @@
 % Bibliography setting and style
 \usepackage[backend=bibtex8,mincrossrefs=99,style=alphabetic,doi=false,isbn=false,url=false,refsegment=chapter,defernumbers=true,sorting=nyt]{biblatex}
 \addbibresource{Thesis.bib}
+\addbibresource{papers/intraj/bibliography.bib}
+\addbibresource{papers/jfeature/bibliography.bib}
 \defbibheading{subbibliography}{\addcontentsline{toc}{section}{References}\section*{References}}
 
 \include{macros}
@@ -151,12 +153,18 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 
 % Introduction
 \include{kappa/introduction}
+% Motivations
+
 % Background
 \include{kappa/rags}
 \include{kappa/controlflow}
 \include{kappa/dataflow}
+% Contribution
 
 
+{\raggedright% TODO remove me
+\printbibliography[segment=\therefsegment,heading=subbibliography]
+}%raggedright
 % remove the paper number(the LaTeX chapter) from all numberings
 \renewcommand{\thesection}{\arabic{section}}
 \renewcommand{\thefigure}{\arabic{figure}}
@@ -182,7 +190,7 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 \part{Included Papers}
 \input{papers/intraj/IntraJ.tex}
 \input{papers/jfeature/JFeature.tex}
-\printbibliography
+
 
 
 \end{document}
