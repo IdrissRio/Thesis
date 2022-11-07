@@ -12,22 +12,48 @@ violations, and many others. In this thesis we will focus on a specific type of 
 \emph{Static Program Analysis}, or \emph{Static Analysis} for short.
 
 
-In~\cite{spa}, M\o{}ller et al.~define 
-static program analysis, as the \emph{art} of reasoning about a program's behaviour
-without executing it. The analysis is performed by a static analysis tool,
-which is a program that takes as input the source code of other programs and
-generates a set of properties that hold for the program being analysed as output.
-The properties verified by static analysis techniques are independent of the input
-used to execute the program under analysis. Moreover, static analysis techniques can analyse unreachable code.
-The main limitations of static analysis techniques are the results of the Turing and Rice~\cite{rice1953classes} undecidability
-theorems, i.e., it is impossible to perform sound and complete static analysis of a program for non-trivial properties, e.g., 
-we cannot always prove whether a program terminates or not. However, it is possible
-to approximate the analyses introducing imprecision, e.g., adding a new possible answer
-``I do not know'' to  ``It terminates'' or ``It does not terminate''. The introduction 
-of imprecision is a trade-off between the precision of the analysis and the complexity
-of the analysis. The more precise the analysis, the more complex it is. 
-The more imprecise the analysis, the higher the probability of reporting 
-false positives and false negatives to the user. 
+In~\cite{spa}, M\o{}ller et al.~define static program analysis,
+as \emph{the art of reasoning about a program's behaviour without executing it}. 
+The analysis is performed by processing the program's source code or its 
+intermediate representation, to infer and prove properties about the program's behaviour.
+The mathematical specification of a static analysis is implemented in a program analysis tool, which
+takes as input a program and produces a set of reports for each property that is violated by the program.
+Nowadays, static program analysis tools are widely used in industry~\cite{piskachev2022far} and are an
+essential part of the software development process in many companies. Static Analysis
+is used to detect bugs, code smells and vulnerabilities, but more in general, it is used to
+reduce the cost of software development and maintenance by shifting-left the analses execution, i.e., by
+performing the analysis in earlier stages in the software development process allowing
+to detect and fix subtle and hard to detect misbehaviours of the analysed program.
+Often, static analyses are executed as part of a Continuous Integration (CI) pipeline, to
+detect and fix bugs before they are deployed to production. For huge projects, such as
+the Linux kernel~\cite{rusling1999linux}, static analyses are executed on a daily basis to detect
+and fix bugs before they are merged into the main branch of the project.
+In order to find and solve defects before they are submitted to version control,
+it is necessary to execute analyses even earlier in the software development lifecycle, i.e., during the implementation.
+In this thesis, we focused on the implementation of on-demand static analyses that are 
+intended to be run in the developer's Integrated Development Environment (IDE).
+The goal of these analyses is to detect problems in the code as soon as they are written,
+and to provide the developer an explanation of the problem and a set of suggestions to fix it.
+We are interested in providing local feedback to the developer, i.e., feedback that is
+provided for a specific piece of code, and not for the whole program, avoiding to 
+provide the developer with a list of problems\footnote{also known as \emph{wall of warnings.}} 
+that are not related to the code that is currently being edited.
+
+
+
+
+
+% The properties verified by static analysis techniques are independent of the input
+% used to execute the program under analysis. Moreover, static analysis techniques can analyse unreachable code.
+% The main limitations of static analysis techniques are the results of the Turing and Rice~\cite{rice1953classes} undecidability
+% theorems, i.e., it is impossible to perform sound and complete static analysis of a program for non-trivial properties, e.g., 
+% we cannot always prove whether a program terminates or not. However, it is possible
+% to approximate the analyses introducing imprecision, e.g., adding a new possible answer
+% ``I do not know'' to  ``It terminates'' or ``It does not terminate''. The introduction 
+% of imprecision is a trade-off between the precision of the analysis and the complexity
+% of the analysis. The more precise the analysis, the more complex it is. 
+% The more imprecise the analysis, the higher the probability of reporting 
+% false positives and false negatives to the user. 
 
 
 Among the numerous approaches to static program analysis, dataflow analysis stands out.
