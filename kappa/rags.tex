@@ -143,7 +143,7 @@ The last line is an equation that defines the value of the inherited attribute \
 \begin{figure}
     \begin{center}
         \begin{tikzpicture}
-            \tikzstyle{block} = [rectangle, draw, text centered, minimum height=10em, minimum width=10em]
+            \tikzstyle{block} = [rectangle, draw, text centered, minimum height=8em, minimum width=8em]
             \tikzstyle{line} = [draw, -latex]
             \node [block] (A) {
                 \begin{lstlisting}[language=JastAdd]
@@ -172,27 +172,27 @@ class B {
                   \end{lstlisting}
              };
         
-             \node (v1) at (-1.3,0) {};
-             \node (v2) at (1.8,0) {};
-             \node (v3) at (3.1,1.3) {};
-             \node (v4) at (6.1,1.3) {};
-             \node (v5) at (6.1,2.3) {};
-             \node (v6) at (3.1,2.3) {};
-             \node (v7) at (1.8,0.3) {};
-             \node (v8) at (-1.3,0.3) {};
+             \node (v1) at (-1.9,-0.05) {};
+             \node (v2) at (2,-0.05) {};
+             \node (v3) at (3.8,1.1) {};
+             \node (v4) at (7.1,1.1) {};
+             \node (v5) at (7.1,2.3) {};
+             \node (v6) at (3.8,2.3) {};
+             \node (v7) at (2,0.3) {};
+             \node (v8) at (-1.9,0.3) {};
              \draw[opacity=0.2,fill=blue] (v1.center)--(v2.center)--(v3.center)--(v4.center)--(v5.center)--(v6.center)--(v7.center)--(v8.center)--(v1.center);
         
              \fill [opacity=0.2,blue]
                  (v1) \foreach \i in {2,...,8}{ -- (v\i) } -- cycle;
             
-            \node (vv1) at (-1.3,-0.01) {};
-            \node (vv2) at (1.8,-0.01) {};
-            \node (vv3) at (3.1,-2.3) {};
-            \node (vv4) at (6.1,-2.3) {};
-            \node (vv5) at (6.1,-3.3) {};
-            \node (vv6) at (3.1,-3.3) {};
-            \node (vv7) at (1.8,-0.3) {};
-            \node (vv8) at (-1.3,-0.3) {};
+            \node (vv1) at (-1.9,-0.1) {};
+            \node (vv2) at (2,-0.1) {};
+            \node (vv3) at (3.8,-1.5) {};
+            \node (vv4) at (7.1,-1.5) {};
+            \node (vv5) at (7.1,-2.8) {};
+            \node (vv6) at (3.8,-2.8) {};
+            \node (vv7) at (2,-0.45) {};
+            \node (vv8) at (-1.9,-0.45) {};
             \draw[opacity=0.2,fill=red] (vv1.center)--(vv2.center)--(vv3.center)--(vv4.center)--(vv5.center)--(vv6.center)--(vv7.center)--(vv8.center)--(vv1.center);
         
             \fill [opacity=0.2,red]
@@ -217,7 +217,9 @@ JastAdd supports not only synthesized and inherited attributes, but also:
     to it. Attributes of this kind are widely used, especially in the definition of 
     type-checking rules.
     \begin{lstlisting}[language=JastAdd]
-        syn boolean Type.compatibleType(Type t) = this == t;
+syn boolean Type.compatibleType(Type t){
+    return this==t;
+}
     \end{lstlisting}
     
 
@@ -232,8 +234,8 @@ JastAdd supports not only synthesized and inherited attributes, but also:
     a unique entry point and a unique exit point for the method. In JastAdd, this can be
     achived using an HOA:
     \begin{lstlisting}[language=JastAdd]
-        syn nta Entry MethodDecl.entry() = new Entry();
-        syn nta Exit MethodDecl.exit() = new Exit();
+syn nta Entry MethodDecl.entry() = new Entry();
+syn nta Exit MethodDecl.exit() = new Exit();
     \end{lstlisting}
     We use the right-arrow symbol to denote HOAs, e.g.,  \Ahoa{MethodDecl}{entry} and \Ahoa{MethodDecl}{exit}.
     \item \emph{Circular Attribute}: an attribute which definition might depend direclty

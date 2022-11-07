@@ -652,4 +652,132 @@
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
+@inproceedings{piskachev2021secucheck,
+  title        = {SecuCheck: Engineering configurable taint analysis for software developers},
+  author       = {Piskachev, Goran and Krishnamurthy, Ranjith and Bodden, Eric},
+  booktitle    = {2021 IEEE 21st International Working Conference on Source Code Analysis and Manipulation (SCAM)},
+  pages        = {24--29},
+  year         = {2021},
+  organization = {IEEE}
+}
+@article{10.1145/2666356.2594299,
+  author     = {Arzt, Steven and Rasthofer, Siegfried and Fritz, Christian and Bodden, Eric and Bartel, Alexandre and Klein, Jacques and Le Traon, Yves and Octeau, Damien and McDaniel, Patrick},
+  title      = {FlowDroid: Precise Context, Flow, Field, Object-Sensitive and Lifecycle-Aware Taint Analysis for Android Apps},
+  year       = {2014},
+  issue_date = {June 2014},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {49},
+  number     = {6},
+  issn       = {0362-1340},
+  url        = {https://doi.org/10.1145/2666356.2594299},
+  doi        = {10.1145/2666356.2594299},
+  abstract   = {Today's smartphones are a ubiquitous source of private and confidential data. At the same time, smartphone users are plagued by carelessly programmed apps that leak important data by accident, and by malicious apps that exploit their given privileges to copy such data intentionally. While existing static taint-analysis approaches have the potential of detecting such data leaks ahead of time, all approaches for Android use a number of coarse-grain approximations that can yield high numbers of missed leaks and false alarms.In this work we thus present FlowDroid, a novel and highly precise static taint analysis for Android applications. A precise model of Android's lifecycle allows the analysis to properly handle callbacks invoked by the Android framework, while context, flow, field and object-sensitivity allows the analysis to reduce the number of false alarms. Novel on-demand algorithms help FlowDroid maintain high efficiency and precision at the same time.We also propose DroidBench, an open test suite for evaluating the effectiveness and accuracy of taint-analysis tools specifically for Android apps. As we show through a set of experiments using SecuriBench Micro, DroidBench, and a set of well-known Android test applications, FlowDroid finds a very high fraction of data leaks while keeping the rate of false positives low. On DroidBench, FlowDroid achieves 93% recall and 86% precision, greatly outperforming the commercial tools IBM AppScan Source and Fortify SCA. FlowDroid successfully finds leaks in a subset of 500 apps from Google Play and about 1,000 malware apps from the VirusShare project.},
+  journal    = {SIGPLAN Not.},
+  month      = {jun},
+  pages      = {259–269},
+  numpages   = {11}
+}
 
+@inproceedings{flowDroid,
+  author    = {Arzt, Steven and Rasthofer, Siegfried and Fritz, Christian and Bodden, Eric and Bartel, Alexandre and Klein, Jacques and Le Traon, Yves and Octeau, Damien and McDaniel, Patrick},
+  title     = {FlowDroid: Precise Context, Flow, Field, Object-Sensitive and Lifecycle-Aware Taint Analysis for Android Apps},
+  year      = {2014},
+  isbn      = {9781450327848},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/2594291.2594299},
+  doi       = {10.1145/2594291.2594299},
+  abstract  = {Today's smartphones are a ubiquitous source of private and confidential data. At the same time, smartphone users are plagued by carelessly programmed apps that leak important data by accident, and by malicious apps that exploit their given privileges to copy such data intentionally. While existing static taint-analysis approaches have the potential of detecting such data leaks ahead of time, all approaches for Android use a number of coarse-grain approximations that can yield high numbers of missed leaks and false alarms.In this work we thus present FlowDroid, a novel and highly precise static taint analysis for Android applications. A precise model of Android's lifecycle allows the analysis to properly handle callbacks invoked by the Android framework, while context, flow, field and object-sensitivity allows the analysis to reduce the number of false alarms. Novel on-demand algorithms help FlowDroid maintain high efficiency and precision at the same time.We also propose DroidBench, an open test suite for evaluating the effectiveness and accuracy of taint-analysis tools specifically for Android apps. As we show through a set of experiments using SecuriBench Micro, DroidBench, and a set of well-known Android test applications, FlowDroid finds a very high fraction of data leaks while keeping the rate of false positives low. On DroidBench, FlowDroid achieves 93% recall and 86% precision, greatly outperforming the commercial tools IBM AppScan Source and Fortify SCA. FlowDroid successfully finds leaks in a subset of 500 apps from Google Play and about 1,000 malware apps from the VirusShare project.},
+  booktitle = {Proceedings of the 35th ACM SIGPLAN Conference on Programming Language Design and Implementation},
+  pages     = {259–269},
+  numpages  = {11},
+  location  = {Edinburgh, United Kingdom},
+  series    = {PLDI '14}
+}
+
+@inproceedings{cousot2005astree,
+  title        = {The ASTR{\'E}E analyzer},
+  author       = {Cousot, Patrick and Cousot, Radhia and Feret, J{\'e}r{\^o}me and Mauborgne, Laurent and Min{\'e}, Antoine and Monniaux, David and Rival, Xavier},
+  booktitle    = {European Symposium on Programming},
+  pages        = {21--30},
+  year         = {2005},
+  organization = {Springer}
+}
+
+@inbook{Blanchet2002,
+  author    = {Blanchet, Bruno
+               and Cousot, Patrick
+               and Cousot, Radhia
+               and Feret, J{\'e}r{\^o}me
+               and Mauborgne, Laurent
+               and Min{\'e}, Antoine
+               and Monniaux, David
+               and Rival, Xavier},
+  editor    = {Mogensen, Torben {\AE}.
+               and Schmidt, David A.
+               and Sudborough, I. Hal},
+  title     = {Design and Implementation of a Special-Purpose Static Program Analyzer for Safety-Critical Real-Time Embedded Software},
+  booktitle = {The Essence of Computation: Complexity, Analysis, Transformation},
+  year      = {2002},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {85--108},
+  abstract  = {We report on a successful preliminary experience in the design and implementation of a special-purpose Abstract Interpretation based static program analyzer for the verification of safety critical embedded real-time software. The analyzer is both precise (zero false alarm in the considered experiment) and efficient (less than one minute of analysis for 10,000 lines of code). Even if it is based on a simple interval analysis, many features have been added to obtain the desired precision: expansion of small arrays, widening with several thresholds, loop unrolling, trace partitioning, relations between loop counters and other variables. The efficiency of the tool mainly comes from a clever representation of abstract environments based on balanced binary search trees.},
+  isbn      = {978-3-540-36377-4},
+  doi       = {10.1007/3-540-36377-7_5},
+  url       = {https://doi.org/10.1007/3-540-36377-7_5}
+}
+
+@misc{spa,
+  author = {Anders M\o{}ller and Michael I. Schwartzbach},
+  title  = {Static Program Analysis},
+  year   = {2018},
+  month  = {October},
+  note   = {Department of Computer Science, Aarhus University,
+            \texttt{http://cs.au.dk/\~{}amoeller/spa/}}
+}
+
+@article{rice1953classes,
+  title     = {Classes of recursively enumerable sets and their decision problems},
+  author    = {Rice, Henry Gordon},
+  journal   = {Transactions of the American Mathematical society},
+  volume    = {74},
+  number    = {2},
+  pages     = {358--366},
+  year      = {1953},
+  publisher = {JSTOR}
+}
+
+
+@article{SLOANE2010205,
+  title    = {A Pure Object-Oriented Embedding of Attribute Grammars},
+  journal  = {Electronic Notes in Theoretical Computer Science},
+  volume   = {253},
+  number   = {7},
+  pages    = {205-219},
+  year     = {2010},
+  note     = {Proceedings of the Ninth Workshop on Language Descriptions Tools and Applications (LDTA 2009)},
+  issn     = {1571-0661},
+  doi      = {https://doi.org/10.1016/j.entcs.2010.08.043},
+  url      = {https://www.sciencedirect.com/science/article/pii/S1571066110001222},
+  author   = {Anthony M. Sloane and Lennart C.L. Kats and Eelco Visser},
+  keywords = {language processing, compilers, domain-specific languages},
+  abstract = {Attribute grammars are a powerful specification paradigm for many language processing tasks, particularly semantic analysis of programming languages. Recent attribute grammar systems use dynamic scheduling algorithms to evaluate attributes by need. In this paper, we show how to remove the need for a generator, by embedding a dynamic approach in a modern, object-oriented programming language to implement a small, lightweight attribute grammar library. The Kiama attribution library has similar features to current generators, including cached, uncached, circular, higher-order and parameterised attributes, and implements new techniques for dynamic extension and variation of attribute equations. We use the Scala programming language because of its combination of object-oriented and functional features, support for domain-specific notations and emphasis on scalability. Unlike generators with specialised notation, Kiama attribute grammars use standard Scala notations such as pattern-matching functions for equations and mixins for composition. A performance analysis shows that our approach is practical for realistic language processing.}
+}
+
+@article{VANWYK201039,
+  title    = {Silver: An extensible attribute grammar system},
+  journal  = {Science of Computer Programming},
+  volume   = {75},
+  number   = {1},
+  pages    = {39-54},
+  year     = {2010},
+  note     = {Special Issue on ETAPS 2006 and 2007 Workshops on Language Descriptions, Tools, and Applications (LDTA ’06 and ’07)},
+  issn     = {0167-6423},
+  doi      = {https://doi.org/10.1016/j.scico.2009.07.004},
+  url      = {https://www.sciencedirect.com/science/article/pii/S0167642309001099},
+  author   = {Eric {Van Wyk} and Derek Bodin and Jimin Gao and Lijesh Krishnan},
+  keywords = {Extensible languages, Extensible compilers, Attribute grammars, Forwarding, Silver attribute grammar system},
+  abstract = {Attribute grammar specification languages, like many domain-specific languages, offer significant advantages to their users, such as high-level declarative constructs and domain-specific analyses. Despite these advantages, attribute grammars are often not adopted to the degree that their proponents envision. One practical obstacle to their adoption is a perceived lack of both domain-specific and general purpose language features needed to address the many different aspects of a problem. Here we describe Silver, an extensible attribute grammar specification system, and show how it can be extended with general purpose features such as pattern matching and domain-specific features such as collection attributes and constructs for supporting data-flow analysis of imperative programs. The result is an attribute grammar specification language with a rich set of language features. Silver is implemented in itself by a Silver attribute grammar and utilizes forwarding to implement the extensions in a cost-effective manner.}
+}

@@ -60,32 +60,27 @@ In this section, we discuss \texttt{JastAddJ-Intraflow}, the first attempt of
 implementing control-flow analysis using RAGs.
 
 Before discussing \texttt{JastAddJ-Intraflow}, we first introduce the 
-\emph{SimpliC} language, a simple but powerful enough,  imperative language, that we 
+\bnc\ language, a simple but powerful enough,  imperative language, that we 
 will use to illustrate how JastAddJ-Intraflow works.
 
 
-\subsection{The SimpliC Language}
-SimpliC is a simple imperative language subset of the C language.
-The syntax of SimpliC is defined by the following abstract syntax:
-\begin{lstlisting}[caption={Syntax of the SimpliC language}]
-Program ::= MethodDecl*
-MethodDecl ::= Type id Param* Block
-Param ::= Type id
+\subsection{The \bnc\ Language}
+\bnc\ is a simple imperative language subset of the C language.
+The syntax of \bnc\ is defined by the following abstract syntax:
+\begin{lstlisting}[caption={Syntax of the \bnc\ language}]
+Program ::= Stmt
+Stmt ::= Block | IfStmt | WhileStmt | DeclStmt | AssignStmt
 Block ::= Stmt*
-Stmt ::= Block | IfStmt | WhileStmt | ReturnStmt | ExprStmt | DeclStmt | AssignStmt
 IfStmt ::= Cond:Expr Then:Expr Else:Expr
 WhileStmt ::= Cond:Expr Body:Expr
-ReturnStmt ::= Expr
-ExprStmt ::= Expr
 DeclStmt ::= Type id Init:Expr
 AssignStmt ::= Dest:Expr Source:Expr
-Expr ::= id | Numeral | true | false | Add | Less | Not | Call
-Add ::= Left:Expr Right:Expr
-Less ::= Left:Expr Right:Expr
+Expr ::= id | true | false | Not | And | Or
+And ::= Left:Expr Right:Expr
+Or ::= Left:Expr Right:Expr
 Not ::= Expr
-Call ::= id Arg:Expr*
 \end{lstlisting}
-The starting symbol of the SimpliC language is the \texttt{Program} non-terminal.
+The starting symbol of the \bnc\ language is the \texttt{Program} non-terminal.
 A \texttt{Program} is a list of \texttt{MethodDecl}s. A \texttt{MethodDecl} is a method
 declaration, which is composed of a return type, a name, a list of parameters, and a body.
 The body of a function is a \texttt{Block}, which is a list of statements. A \texttt{Block}
@@ -143,7 +138,7 @@ In terms of RAGs, the framework is defined by the following attributes:
 \end{align*}
 
 The equations for the \texttt{following} attribute are defined based on the context 
-of the node. For example, if we consider the SimpliC language, the \code{Block} node
+of the node. For example, if we consider the \bnc\ language, the \code{Block} node
 defines the inherited the attribute \Ainh{Stmt}{following} as follows, where $n$ is the
 number of statements in the block:
 \begin{align}

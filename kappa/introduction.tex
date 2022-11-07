@@ -4,35 +4,22 @@
 
 Program Analysis is the branch of Computer Science that investigates the behaviour
 and characteristics of a computer program. Program analysis applications are widely
-used in numerous areas of Computer Science, including compiler construction,
-e.g., to perform optimisations; software engineering, e.g., to detect bugs or
-code smells; security, e.g., to detect vulnerabilities; safety
-critical systems, e.g., avionic, automotive, and medical, to detect safety
-violations, and many others.
-We can distinguish between static and dynamic program analysis techniques.
-
-Dynamic analysis involves executing the program under analysis and gathering
-detailed information about its behaviour. Widely used dynamic analysis applications
-are, for instance, tracing, profiling, and step-by-step debugging. More sophisticated dynamic
-analysis techniques are based on symbolic execution, which consists in executing
-the program under analysis with symbolic inputs and then solving the resulting
-constraints to obtain concrete values for the program variables. Symbolic execution
-is used, for instance, to detect buffer overflows, perform program verification,
-and perform program synthesis.
-Negatively, the properties verified using dynamic analysis techniques 
-are dependent on the parameter used to execute the application. For example, if the
-program under analysis is a web server, the properties verified by dynamic analysis
-are dependent on the requests issued to the web server. Moreover, dynamic analysis
-techniques are not able to detect properties that are not reachable, i.e., dead code.
+used in numerous areas of Computer Science, including compiler construction~\cite{aho2007compilers,appel2004modern},
+e.g., to perform optimisations; software engineering~\cite{ayewah2008using,dura2021javadl,fink2012wala}, e.g., to detect bugs or
+code smells; security~\cite{piskachev2021secucheck,flowDroid}, e.g., to detect vulnerabilities; safety
+critical systems~\cite{cousot2005astree,Blanchet2002}, e.g., avionic, automotive, and medical, to detect safety
+violations, and many others. In this thesis we will focus on a specific type of program analysis, called
+\emph{Static Program Analysis}, or \emph{Static Analysis} for short.
 
 
-Static program analysis, static analysis for short, is the practice of reasoning
-about a program's behaviour without executing it. The analysis is performed by a static analysis tool,
+In~\cite{spa}, M\o{}ller et al.~define 
+static program analysis, as the \emph{art} of reasoning about a program's behaviour
+without executing it. The analysis is performed by a static analysis tool,
 which is a program that takes as input the source code of other programs and
 generates a set of properties that hold for the program being analysed as output.
 The properties verified by static analysis techniques are independent of the input
 used to execute the program under analysis. Moreover, static analysis techniques can analyse unreachable code.
-The main limitations of static analysis techniques are the results of the Turing and Rice undecidability
+The main limitations of static analysis techniques are the results of the Turing and Rice~\cite{rice1953classes} undecidability
 theorems, i.e., it is impossible to perform sound and complete static analysis of a program for non-trivial properties, e.g., 
 we cannot always prove whether a program terminates or not. However, it is possible
 to approximate the analyses introducing imprecision, e.g., adding a new possible answer
@@ -48,7 +35,7 @@ Dataflow analysis is utilised to examine the data dependencies between programme
 (such as variables, expressions, and statements) in order to infer and collect constraints
 on the values of the program's entities. Dataflow applications include, for instance,
 constant propagation, registers optimisations, and, null-pointer exception detection.
-Dataflow analysis is performed on the program's control-flow graph (CFG), which is a
+Dataflow analysis is performed on the program's control-flow graph~\cite{allen1970control} (CFG), which is a
 directed graph where the nodes represent the program statements or expressions,
 and the edges reflect the program control-flow. In most cases, the CFG is constructed 
 from an intermediate representation of the program's source code (IR).
@@ -76,19 +63,19 @@ easy to extend and maintain. In this thesis, we employ the Declarative Programmi
 paradigm to overcome this issue. Declarative Programming is a programming 
 paradigm that allows the programmer to specify what are the properties of a
 program without specifying how to compute them (i.e., without specifying the 
-algorithm). We used as declarative formalism an extension of Attribute Grammars. Attribute Grammars
+algorithm). We used as declarative formalism an extension of Attribute Grammars~\cite{knuth1968semantics}. Attribute Grammars
 were first introduced in 1968 by Donald Knuth and are a formalism for the specification
 of the semantics of programming languages. Attribute Grammars are a generalisation
 of Context-Free Grammars, which are a formalism for the specification of the syntax
 of programming languages. 
 Attribute grammars allow to decorate the nodes of an Abstract Syntax Tree (AST) with attributes. 
 The attributes are computed by the attribute grammar rules, i.e., the values are specified
-through equations. Reference Attribute Grammars extend Knuth's Attribute Grammars
+through equations. Reference Attribute Grammars~\cite{hedin2000rags} extend Knuth's Attribute Grammars
 with reference attributes whose values are references to other AST nodes. 
 There are many implementations of Reference Attribute Grammars systems, including
-the metacompiler and langauge JastAdd, used to implement large-scale compilers, such as,
-ExtendJ and JModelica, and static analysis tools like the one described in this thesis.
-Other famous implementations of Reference Attribute Grammars systems are Kiama and Silver, 
+the metacompiler and langauge JastAdd~\cite{ekman2007jastadd}, used to implement large-scale compilers, such as,
+ExtendJ~\cite{DBLP:conf/oopsla/EkmanH07}.
+Other famous implementations of Reference Attribute Grammars systems are Kiama~\cite{SLOANE2010205} and Silver~\cite{VANWYK201039}, 
 the latter being used to implement a C and Java compiler.
 
 In Paper I, we present IntraCFG, a declarative and language-independent framework for 
