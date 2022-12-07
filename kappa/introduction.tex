@@ -1,6 +1,15 @@
-\part{Introduction}
 \chapter{Introduction}
 \section{Introduction}
+In this Section, we  introduce the reader of this Thesis to the topic of Static Program Analysis and
+the challenges and opportunities associated with the development of precise and fast static analysers.
+We present an overview of the design and implementation context of this Thesis, i.e., 
+declarative specification of on-demand static analyses meant to be run in the the developer's 
+integrated development environment (IDE).
+We will also examine and summarise the thesis's contributions and results.
+
+
+
+\section{Static Program Analysis}
 
 Program Analysis is the branch of Computer Science that investigates the behaviour
 and characteristics of a computer program. Program analysis applications are widely
@@ -34,51 +43,87 @@ In this thesis, we focused on the implementation of on-demand static analyses th
 intended to be run in the developer's Integrated Development Environment (IDE).
 The goal of these analyses is to detect problems in the code as soon as they are written,
 and to provide the developer an explanation of the problem and a set of suggestions to fix it.
-We are interested in providing local feedback to the developer, i.e., feedback that is
-provided for a specific piece of code, and not for the whole program, avoiding to 
+
+Our focus in the work presented in this Thesis is on the specification and implementation of
+precise and fast static analyses. We are interested in providing local feedback 
+to the developer, i.e., feedback that is provided for a specific piece of code, and not for the whole program, avoiding to 
 provide the developer with a list of problems\footnote{also known as \emph{wall of warnings.}} 
 that are not related to the code that is currently being edited.
 
 
 
 
+\subsection{The Need of Precise and Fast Static Analyses}
+Static analyses are used to detect bugs, code smells, and vulnerabilities, but more in general, they are used to
+reduce the cost of software development and maintenance by shifting-left the analses execution. 
+In order to be useful, static analysers must be able to detect
+most of the problems in the code and to provide the developer with a fast feedback.
+Unfortunately, the precision and the speed of static analyses are often in conflict with each other.
+In fact, the precision of a static analysis is often inversely proportional to its speed: the more precise
+the analysis is, the slower it is. This is due to the fact that the precision of an analysis is often
+achieved by performing a more complex analysis, which is more expensive to execute.
+Moreover, due to the implications of the Halting Problem, it is not possible to
+perform a sound and complete analysis in a finite amount of time leading to the
+introduction of false positives and false negatives in the analysis results. 
+However, the trade-off between precision and performance can be reduced by 
+optimising certain aspects of the analysis, e.g., by using more efficient underlying
+data structures, or by performing analyses only when and where necessary. 
 
-% The properties verified by static analysis techniques are independent of the input
-% used to execute the program under analysis. Moreover, static analysis techniques can analyse unreachable code.
-% The main limitations of static analysis techniques are the results of the Turing and Rice~\cite{rice1953classes} undecidability
-% theorems, i.e., it is impossible to perform sound and complete static analysis of a program for non-trivial properties, e.g., 
-% we cannot always prove whether a program terminates or not. However, it is possible
-% to approximate the analyses introducing imprecision, e.g., adding a new possible answer
-% ``I do not know'' to  ``It terminates'' or ``It does not terminate''. The introduction 
-% of imprecision is a trade-off between the precision of the analysis and the complexity
-% of the analysis. The more precise the analysis, the more complex it is. 
-% The more imprecise the analysis, the higher the probability of reporting 
-% false positives and false negatives to the user. 
+In this thesis, we focused on the design and implementation of precise and fast
+Control Flow Analysis (CFA)~\cite{spa}.  CFA is a static analysis that computes
+the control-flow graph of a program, i.e., a graph overapproximation of all the possible
+execution paths of the program. CFA is the underlying analysis for most of the dataflow-based analyses, such as
+constant propagation, dead-code elimination, and null-pointer dereferencing detection.
+We compute CFA on the source code level of the program avoiding the step of
+generating an intermediate representation (IR) of the program. The 
+main advantage of this approach is that it allows us to perform CFA on the whole program
+in a single pass, without the need to perform a second pass to compute the control-flow graph.
+This approach is also more precise than the traditional approach, which is based on the
+construction of the control-flow graph on the IR of the program. In fact, the IR is often
+simpler (number of instructions) than the source code, and it is not always possible to reconstruct the source code
+from the IR. This is due to the fact that the IR is often a simplified representation of the source code,
+which is used to perform optimisations on the program. For instance, the IR is often
+constructed by removing the syntactic sugar of the source code, such as the \emph{for} loop, 
+or the \emph{switch} statement.
+On the other hand, designing and implementing CFA (more generally, any static analysis) on the source code level
+requires a higher engineering effort than designing and implementing the same analysis on the IR level.
+In fact, IRs, such as LLVM-IR~\cite{LLVM}, or Java Bytecode~\cite{javaBytecode}, are 
+the target of several compiler frontends. Meaning that the analysis can be implemented once
+and then used on any program that is compiled to the IR.
 
 
-Among the numerous approaches to static program analysis, dataflow analysis stands out.
+
+
+\subsection{Shifting-left Static Analyses}
+Detecting and fixing bugs before they are deployed to production is a crucial 
+step in the software development process. Progress have been made and it is 
+good practice to execute static analyses as part of a Continuous Integration (CI) pipeline.
+Platfoms such as GitHub~\footnote{\url{www.github.com}}, GitLab~\footnote{\url{www.gitlab.com}}, and BitBucket~\footnote{\url{www.bitbucket.com}}
+provide the possibility to execute static analyses as part of the CI pipeline. 
+However, is it possible to execute static analyses even earlier in the software development lifecycle, 
+i.e., during the implementation phase.
+%Let's continue from there. 
+
+
+
+\subsection{Thesis Contributions}
+
+
+
+
+\subsection{Dataflow Analysis}
+Among the numerous approaches to static program analysis, dataflow analysis is one of the most used.
 Dataflow analysis is utilised to examine the data dependencies between programme entities
 (such as variables, expressions, and statements) in order to infer and collect constraints
 on the values of the program's entities. Dataflow applications include, for instance,
 constant propagation, registers optimisations, and, null-pointer exception detection.
 Dataflow analysis is performed on the program's control-flow graph~\cite{allen1970control} (CFG), which is a
 directed graph where the nodes represent the program statements or expressions,
-and the edges reflect the program control-flow. In most cases, the CFG is constructed 
-from an intermediate representation of the program's source code (IR).
-Different IRs are emplyed for different purposes. For instance, the Abstract Syntax Tree (AST), which
+and the edges reflect the program control-flow. 
+In most cases, the CFG is constructed on a simpler representation of the program, called the intermediate representation (IR).
+Different IRs are employed for different purposes. For instance, the Abstract Syntax Tree (AST), which
 is the tree representation of the program constructed by the parser, is used to perform semantics checks, e.g.,
-name analysis and type analysis. Wheras, more low-level IRs, such as the Three Address Code (TAC),
-are used to perform optimisations, e.g., registers allocations and dead code elimination. The advantage
-of building the CFG on a low-level IR is that the CFG is more compact and requires 
-less engineering effort to build it, in that, the implementation can be reused by each 
-compiler front-end that targets the same IR.
-% The main disadvantage is that the information
-% contained in the IR is not easy to map back to the original source code and, therefore,
-% the analysis results are not easy to understand by the user.
-
-
-
-
+name analysis and type analysis.
 
 
 
@@ -103,6 +148,7 @@ the metacompiler and langauge JastAdd~\cite{ekman2007jastadd}, used to implement
 ExtendJ~\cite{DBLP:conf/oopsla/EkmanH07}.
 Other famous implementations of Reference Attribute Grammars systems are Kiama~\cite{SLOANE2010205} and Silver~\cite{VANWYK201039}, 
 the latter being used to implement a C and Java compiler.
+
 
 In Paper I, we present IntraCFG, a declarative and language-independent framework for 
 construcing control-flow graph superimposed on top of the AST. In the same paper, we
