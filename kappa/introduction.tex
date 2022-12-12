@@ -95,14 +95,66 @@ and then used on any program that is compiled to the IR.
 
 
 \subsection{Shifting-left Static Analyses}
-Detecting and fixing bugs before they are deployed to production is a crucial 
-step in the software development process. Progress have been made and it is 
-good practice to execute static analyses as part of a Continuous Integration (CI) pipeline.
-Platfoms such as GitHub~\footnote{\url{www.github.com}}, GitLab~\footnote{\url{www.gitlab.com}}, and BitBucket~\footnote{\url{www.bitbucket.com}}
-provide the possibility to execute static analyses as part of the CI pipeline. 
-However, is it possible to execute static analyses even earlier in the software development lifecycle, 
-i.e., during the implementation phase.
-%Let's continue from there. 
+Shifting left is a generally recommended practice in the software development process.
+It is the concept of pushing operations such as testing earlier in the development process.
+In the context of static analysis, shifting left refers to the practice of performing
+static analysis earlier in the development process, ideally as part of the coding process.
+This has numerous significant advantages.
+
+
+Moving left the execution of static analysers can increase the quality and robustness of the code. 
+This enables it to uncover potential flaws within the code, e.g., logical errors,
+and other issues that could compromise the software's operation and
+dependability. By using static analysis early in the development process, developers
+can discover and correct these issues before they become more challenging and time-consuming.
+This can increase the chanse to delivery a high-quality (mostly) defect-free product.
+
+Moreover, shifting left static analysis can lower the development process's
+time and expense. By detecting and addressing flaws early in the development process,
+developers can prevent costly and time-consuming rework later on. This can assist 
+in enhancing the development team's overall productivity, allowing them to create high-quality 
+software faster and at a lesser cost.
+
+Finally, shifting left static analysis can prevent the introduction of 
+potentially severe security flaws in the code. Potential security flaws in the code,
+such as SQL injection attacks and cross-site scripting attacks, can be identified 
+by static analysis. By using static analysis early in the development process,
+developers can patch these vulnerabilities before their exploitation by attackers.
+This can aid in protecting the software and its users from the repercussions of
+these vulnerabilities.
+ 
+Progress have been made and it is good practice to execute static analyses as part
+of a Continuous Integration (CI) pipeline.
+Platfoms such as GitHub~\footnote{\url{www.github.com}}, GitLab~\footnote{\url{www.gitlab.com}},
+and BitBucket~\footnote{\url{www.bitbucket.com}} provide the possibility to execute static
+analyses as part of the CI pipeline. 
+However, it is possible to execute static analyses even earlier in the software development lifecycle, 
+i.e., during the implementation phase.The natural place to execute static analyses is directly into 
+the developer's Integrated Development Environment (IDE). 
+Running static analysis in the IDE allows developers to receive feedback on their
+code in real-time, as they are writing it.  Moreover, developers to customize the analysis
+to their specific needs. Different projects and teams have different requirements for
+their code, and different static analysis tools have different strengths and weaknesses.
+By running static analysis in the IDE, developers can choose the tools and settings
+that are most appropriate for their project, allowing them to get the most value
+from the analysis.
+
+But running static analysis in the IDE can be resource-intensive, especially for
+large code bases or for analysis that is performed frequently. This can slow down
+the IDE and make it less responsive, which can be frustrating for developers and
+can impact their productivity. 
+
+% TODO: review this paragraph
+In this Thesis, we present the design and implementation of a IDE plugin that
+allows developers to run static analysis on their code in real-time, as they are writing it.
+The plugin uses the \emph{Language Server Protocol} (LSP)~\cite{LSP} to communicate with the IDE.
+We exploit on-demand evaluation to analyse only the code that is currently being edited 
+by the developer.
+This allows us to reduce the analysis time and the resource consumption of the analysis.
+
+
+
+
 
 
 
