@@ -1,228 +1,69 @@
 \chapter{Introduction}
 \section{Introduction}
-In this Section, we  introduce the reader of this Thesis to the topic of Static Program Analysis and
-the challenges and opportunities associated with the development of precise and fast static analysers.
-We present an overview of the design and implementation context of this Thesis, i.e., 
-declarative specification of on-demand static analyses meant to be run in the the developer's 
-integrated development environment (IDE).
-We will also examine and summarise the thesis's contributions and results.
+
+Static program analysis (static analysis for short) is 
+\emph{the art of reasoning about a program's behaviour without executing it}~\cite{spa}.
+It is an essential tool for improving the quality and reliability of software
+systems and has been widely used in various applications such
+as safety~\cite{cousot2005astree,Blanchet2002} and security~\cite{piskachev2021secucheck,flowDroid,ayewah2008using,dura2021javadl,fink2012wala},
+performance optimization~\cite{aho2007compilers,appel2004modern}, and software maintenance.
+Static program analysis aims to identify potential errors, bugs, or vulnerabilities
+in a program before it is executed, thus avoiding costly and time-consuming 
+debugging processes. By examining the source code of a program, static program 
+analysis can provide a detailed and precise understanding of its behaviour, including
+its control flow~\cite{allen1970control}, dataflow~\cite{kam1977monotone}, and potential interactions with other system components.
 
 
 
-\section{Static Program Analysis}
+One of the key techniques used in static program analysis is dataflow analysis,
+which focuses on the flow of data through a program. Dataflow analysis applications are used to identify
+potential sources of errors, such as uninitialised variables or null pointers dereference, 
+and to optimise the program's performance by identifying opportunities for 
+parallelisation or other forms of optimisation.
+Traditionally, dataflow analysis has been performed using imperative paradigms, 
+which are based on the idea of explicitly specifying how the analysis should be 
+performed. 
 
-Program Analysis is the branch of Computer Science that investigates the behaviour
-and characteristics of a computer program. Program analysis applications are widely
-used in numerous areas of Computer Science, including compiler construction~\cite{aho2007compilers,appel2004modern},
-e.g., to perform optimisations; software engineering~\cite{ayewah2008using,dura2021javadl,fink2012wala}, e.g., to detect bugs or
-code smells; security~\cite{piskachev2021secucheck,flowDroid}, e.g., to detect vulnerabilities; safety
-critical systems~\cite{cousot2005astree,Blanchet2002}, e.g., avionic, automotive, and medical, to detect safety
-violations, and many others. In this thesis we will focus on a specific type of program analysis, called
-\emph{Static Program Analysis}, or \emph{Static Analysis} for short.
+However, more recently, there has been a growing interest in using 
+declarative paradigms for dataflow analysis, which are based on specifying what 
+the analysis should accomplish rather than how it should be performed.
 
+In this thesis, we will explore the use of declarative paradigms for dataflow 
+analysis, focusing on developing new underlying framework for constructing 
+efficient control-flow graphs for performing dataflow 
+analysis more effectively and efficiently.
 
-In~\cite{spa}, M\o{}ller et al.~define static program analysis,
-as \emph{the art of reasoning about a program's behaviour without executing it}. 
-The analysis is performed by processing the program's source code or its 
-intermediate representation, to infer and prove properties about the program's behaviour.
-The mathematical specification of a static analysis is implemented in a program analysis tool, which
-takes as input a program and produces a set of reports for each property that is violated by the program.
-Nowadays, static program analysis tools are widely used in industry~\cite{piskachev2022far} and are an
-essential part of the software development process in many companies. Static Analysis
-is used to detect bugs, code smells and vulnerabilities, but more in general, it is used to
-reduce the cost of software development and maintenance by shifting-left the analses execution, i.e., by
-performing the analysis in earlier stages in the software development process allowing
-to detect and fix subtle and hard to detect misbehaviours of the analysed program.
-Often, static analyses are executed as part of a Continuous Integration (CI) pipeline, to
-detect and fix bugs before they are deployed to production. For huge projects, such as
-the Linux kernel~\cite{rusling1999linux}, static analyses are executed on a daily basis to detect
-and fix bugs before they are merged into the main branch of the project.
-In order to find and solve defects before they are submitted to version control,
-it is necessary to execute analyses even earlier in the software development lifecycle, i.e., during the implementation.
-In this thesis, we focused on the implementation of on-demand static analyses that are 
-intended to be run in the developer's Integrated Development Environment (IDE).
-The goal of these analyses is to detect problems in the code as soon as they are written,
-and to provide the developer an explanation of the problem and a set of suggestions to fix it.
-
-Our focus in the work presented in this Thesis is on the specification and implementation of
-precise and fast static analyses. We are interested in providing local feedback 
-to the developer, i.e., feedback that is provided for a specific piece of code, and not for the whole program, avoiding to 
-provide the developer with a list of problems\footnote{also known as \emph{wall of warnings.}} 
-that are not related to the code that is currently being edited.
+This thesis aims to contribute to the field of static program analysis 
+by enhancing the state-of-the-art in dataflow analysis using the declarative paradigm. 
+By doing so, we hope to enable researchers and developers to understand and 
+analyse complex programs' behaviour and develop more effective tools for 
+identifying and fixing errors in software.
 
 
 
+\subsection*{Thesis Contribution}
 
-\subsection{The Need of Precise and Fast Static Analyses}
-Static analyses are used to detect bugs, code smells, and vulnerabilities, but more in general, they are used to
-reduce the cost of software development and maintenance by shifting-left the analses execution. 
-In order to be useful, static analysers must be able to detect
-most of the problems in the code and to provide the developer with a fast feedback.
-Unfortunately, the precision and the speed of static analyses are often in conflict with each other.
-In fact, the precision of a static analysis is often inversely proportional to its speed: the more precise
-the analysis is, the slower it is. This is due to the fact that the precision of an analysis is often
-achieved by performing a more complex analysis, which is more expensive to execute.
-Moreover, due to the implications of the Halting Problem, it is not possible to
-perform a sound and complete analysis in a finite amount of time leading to the
-introduction of false positives and false negatives in the analysis results. 
-However, the trade-off between precision and performance can be reduced by 
-optimising certain aspects of the analysis, e.g., by using more efficient underlying
-data structures, or by performing analyses only when and where necessary. 
+The contributions of this thesis are summarised by the following two papers:
 
-In this thesis, we focused on the design and implementation of precise and fast
-Control Flow Analysis (CFA)~\cite{spa}.  CFA is a static analysis that computes
-the control-flow graph of a program, i.e., a graph overapproximation of all the possible
-execution paths of the program. CFA is the underlying analysis for most of the dataflow-based analyses, such as
-constant propagation, dead-code elimination, and null-pointer dereferencing detection.
-We compute CFA on the source code level of the program avoiding the step of
-generating an intermediate representation (IR) of the program. The 
-main advantage of this approach is that it allows us to perform CFA on the whole program
-in a single pass, without the need to perform a second pass to compute the control-flow graph.
-This approach is also more precise than the traditional approach, which is based on the
-construction of the control-flow graph on the IR of the program. In fact, the IR is often
-simpler (number of instructions) than the source code, and it is not always possible to reconstruct the source code
-from the IR. This is due to the fact that the IR is often a simplified representation of the source code,
-which is used to perform optimisations on the program. For instance, the IR is often
-constructed by removing the syntactic sugar of the source code, such as the \emph{for} loop, 
-or the \emph{switch} statement.
-On the other hand, designing and implementing CFA (more generally, any static analysis) on the source code level
-requires a higher engineering effort than designing and implementing the same analysis on the IR level.
-In fact, IRs, such as LLVM-IR~\cite{LLVM}, or Java Bytecode~\cite{javaBytecode}, are 
-the target of several compiler frontends. Meaning that the analysis can be implemented once
-and then used on any program that is compiled to the IR.
+\begin{itemize}
+	\item \paperIref.
+	This paper presents a new framework for precise source-level control-flow 
+	analysis, called IntraCFG. This framework is based on the idea of 
+	representing a program's control flow at the source code level, instead of 
+	the traditional intermediate representation level. This allows for more 
+	precise analysis, as it captures the exact control flow of the original program.
+    We also implemented IntraJ, an instance of IntraCFG for the Java programming 
+	language, and demonstrated its effectiveness (performance and precision) in 
+	two study cases.
 
+	\item \paperIIref.
+	This paper introduces JFeature, an extensible tool for automatically extracting and summarising
+	the key features of a corpus (i.e., collection) of Java programs. JFeature 
+	allows researchers to quickly gain an understanding of the characteristics of a codebase, 
+	which can be used to evaluate the effectiveness of their tools and techniques.
+	In addition, in this paper, we also present a case study of using JFeature to
+	identify the key features of four popular open-source corpora, providing a
+	baseline for future research.
+\end{itemize}
 
-
-
-\subsection{Shifting-left Static Analyses}
-Shifting left is a generally recommended practice in the software development process.
-It is the concept of pushing operations such as testing earlier in the development process.
-In the context of static analysis, shifting left refers to the practice of performing
-static analysis earlier in the development process, ideally as part of the coding process.
-This has numerous significant advantages.
-
-
-Moving left the execution of static analysers can increase the quality and robustness of the code. 
-This enables it to uncover potential flaws within the code, e.g., logical errors,
-and other issues that could compromise the software's operation and
-dependability. By using static analysis early in the development process, developers
-can discover and correct these issues before they become more challenging and time-consuming.
-This can increase the chanse to delivery a high-quality (mostly) defect-free product.
-
-Moreover, shifting left static analysis can lower the development process's
-time and expense. By detecting and addressing flaws early in the development process,
-developers can prevent costly and time-consuming rework later on. This can assist 
-in enhancing the development team's overall productivity, allowing them to create high-quality 
-software faster and at a lesser cost.
-
-Finally, shifting left static analysis can prevent the introduction of 
-potentially severe security flaws in the code. Potential security flaws in the code,
-such as SQL injection attacks and cross-site scripting attacks, can be identified 
-by static analysis. By using static analysis early in the development process,
-developers can patch these vulnerabilities before their exploitation by attackers.
-This can aid in protecting the software and its users from the repercussions of
-these vulnerabilities.
- 
-Progress have been made and it is good practice to execute static analyses as part
-of a Continuous Integration (CI) pipeline.
-Platfoms such as GitHub~\footnote{\url{www.github.com}}, GitLab~\footnote{\url{www.gitlab.com}},
-and BitBucket~\footnote{\url{www.bitbucket.com}} provide the possibility to execute static
-analyses as part of the CI pipeline. 
-However, it is possible to execute static analyses even earlier in the software development lifecycle, 
-i.e., during the implementation phase.The natural place to execute static analyses is directly into 
-the developer's Integrated Development Environment (IDE). 
-Running static analysis in the IDE allows developers to receive feedback on their
-code in real-time, as they are writing it.  Moreover, developers to customize the analysis
-to their specific needs. Different projects and teams have different requirements for
-their code, and different static analysis tools have different strengths and weaknesses.
-By running static analysis in the IDE, developers can choose the tools and settings
-that are most appropriate for their project, allowing them to get the most value
-from the analysis.
-
-But running static analysis in the IDE can be resource-intensive, especially for
-large code bases or for analysis that is performed frequently. This can slow down
-the IDE and make it less responsive, which can be frustrating for developers and
-can impact their productivity. 
-
-% TODO: review this paragraph
-In this Thesis, we present the design and implementation of a IDE plugin that
-allows developers to run static analysis on their code in real-time, as they are writing it.
-The plugin uses the \emph{Language Server Protocol} (LSP)~\cite{LSP} to communicate with the IDE.
-We exploit on-demand evaluation to analyse only the code that is currently being edited 
-by the developer.
-This allows us to reduce the analysis time and the resource consumption of the analysis.
-
-
-
-
-
-
-
-\subsection{Thesis Contributions}
-
-
-
-
-\subsection{Dataflow Analysis}
-Among the numerous approaches to static program analysis, dataflow analysis is one of the most used.
-Dataflow analysis is utilised to examine the data dependencies between programme entities
-(such as variables, expressions, and statements) in order to infer and collect constraints
-on the values of the program's entities. Dataflow applications include, for instance,
-constant propagation, registers optimisations, and, null-pointer exception detection.
-Dataflow analysis is performed on the program's control-flow graph~\cite{allen1970control} (CFG), which is a
-directed graph where the nodes represent the program statements or expressions,
-and the edges reflect the program control-flow. 
-In most cases, the CFG is constructed on a simpler representation of the program, called the intermediate representation (IR).
-Different IRs are employed for different purposes. For instance, the Abstract Syntax Tree (AST), which
-is the tree representation of the program constructed by the parser, is used to perform semantics checks, e.g.,
-name analysis and type analysis.
-
-
-
-Like any other software project, the development of a static analysis tool
-it is a complex process that involves several steps, including the design of 
-flexible and extensible architecture, i.e., a software architecture that is 
-easy to extend and maintain. In this thesis, we employ the Declarative Programming
-paradigm to overcome this issue. Declarative Programming is a programming 
-paradigm that allows the programmer to specify what are the properties of a
-program without specifying how to compute them (i.e., without specifying the 
-algorithm). We used as declarative formalism an extension of Attribute Grammars~\cite{knuth1968semantics}. Attribute Grammars
-were first introduced in 1968 by Donald Knuth and are a formalism for the specification
-of the semantics of programming languages. Attribute Grammars are a generalisation
-of Context-Free Grammars, which are a formalism for the specification of the syntax
-of programming languages. 
-Attribute grammars allow to decorate the nodes of an Abstract Syntax Tree (AST) with attributes. 
-The attributes are computed by the attribute grammar rules, i.e., the values are specified
-through equations. Reference Attribute Grammars~\cite{hedin2000rags} extend Knuth's Attribute Grammars
-with reference attributes whose values are references to other AST nodes. 
-There are many implementations of Reference Attribute Grammars systems, including
-the metacompiler and langauge JastAdd~\cite{ekman2007jastadd}, used to implement large-scale compilers, such as,
-ExtendJ~\cite{DBLP:conf/oopsla/EkmanH07}.
-Other famous implementations of Reference Attribute Grammars systems are Kiama~\cite{SLOANE2010205} and Silver~\cite{VANWYK201039}, 
-the latter being used to implement a C and Java compiler.
-
-
-In Paper I, we present IntraCFG, a declarative and language-independent framework for 
-construcing control-flow graph superimposed on top of the AST. In the same paper, we
-present the implementation of a static analysis tool, called IntraJ, that uses IntraCFG
-to perform static analysis on Java programs. IntraJ supports two different dataflow analysis:
-null-pointer exception analysis and dead assignments detection, that are, a forward and 
-backward analysis, respectively. 
-In Paper II, we discuss the lack of autmated tools that helps the researcher 
-selecting appropriate and relevant corpora for the evaluation of static analysis tools, and more
-generally, for the evaluation of any software engineering tool. We present a tool, called
-JFeature, that automatically extracts a set of features, divided in different categories,
-from Java programs. We used JFeature to extract relevant features introduced in different 
-Java versions, and we conducted an empirical study on four well-known Java corpora analysing 
-their modernity. We figured out that only one of the four corpora is modern enough to be used
-for evaluating Java 8 applications.
-
- \subsection{Thesis Outline}
-
-
-
-
-
-
-
-
+Together, these contributions advance the state of the art in program analysis and software engineering, and provide practical tools for improving the development and maintenance of software systems.
