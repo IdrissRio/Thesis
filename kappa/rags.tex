@@ -1,9 +1,33 @@
 \section{Background}
 \label{chap:attr-grammars}
 \subsection{Attribute Grammars}
-Attribute Grammars were first introduced in 1968 by Donald Knuth and are a formalism for the specification
-of the semantics of programming languages. Attributes are used to decorate nodes of the AST
-and are defeined by a pure function, i.e., side-effect free, that can access other attributes of the same node or of its children.
+Attribute grammars~\cite{knuth1968semantics} (AGs) are a formalism for specifying
+the syntax and semantics of programming languages.
+They were first introduced by Knuth in 1968 as a way to define the syntax and semantics of the programming
+language ALGOL 68. This formalism is based on the concept of attributes, 
+which are properties associated with the elements of a language's abstract syntax tree.
+Attribute grammars provide a powerful tool for specifying the behavior of a programming 
+language and for verifying the correctness of programs written in that language.
+%
+AR are composed of two components: a context-free grammar, 
+which defines the syntax of the language, and an attribute evaluation function, 
+which defines the semantics of the language. The context-free grammar is used to 
+parse a program into its abstract syntax tree, and the attribute evaluation function 
+is used to compute the values of the attributes associated with each element 
+of the tree.
+
+A key advantage of attribute grammars is their ability to capture the 
+interdependence of syntactic and semantic elements of a programming language. 
+For example, the type of a variable may be determined by its declaration, 
+but the type of an expression may be determined by the types of its subexpressions. 
+Attribute grammars provide a precise and elegant way to specify these dependencies.
+
+Moreover, AG, because of their intrinsic declarative nature, support modular specification.
+Attribute grammars can be composed from smaller attribute grammars 
+in a way that is similar to the composition of context-free grammars. This allows 
+language and compiler designers to specify and verify the behavior of a language in a modular
+and composable manner.
+
 Attributes are define using equations. We can distinguish two types of attributes: synthesized attributes and inherited attributes.
 For the sake of redability, we borrow the notation introduced in pattern, 
 where attribute names are preceded by a symbol that indicates the type of the attribute.
@@ -11,7 +35,30 @@ We reserve the symbol \Abase{x} to denote the attribute name and the symbol $e$ 
 e.g., a constant, a function of the node's children, or a function of the node's children 
 and the node's own attributes. 
 
-Synthesized attributes are defined by equations of the form:
+
+A synthesized attribute is a property of a language element that is computed 
+based on the attributes of its subelements. For example, the type of an expression 
+in a programming language may be a synthesized attribute that is computed based 
+on the types of the subexpressions in the expression.
+
+An inherited attribute is a property of a language element that is inherited from 
+its parent element in the abstract syntax tree. For example, the scope of a variable 
+in a programming language may be an inherited attribute that is inherited from the
+scope in which the variable is declared.
+
+One example of a synthesized attribute is the type of a variable in a programming language. 
+The type of a variable may be determined based on the type of the expression that 
+is used to initialize the variable. For example, if a variable is initialized
+with the expression ``3 + 4'', the type of the variable would be determined to 
+be integer based on the types of the operands in the expression.
+
+One example of an inherited attribute is the scope of a variable in a programming 
+language. The scope of a variable is the region of a program in which the variable 
+is visible and can be accessed. The scope of a variable is inherited from the 
+context in which it is declared. For example, if a variable is declared within a 
+function, the variable will be visible and accessible within the body of the function, 
+but not outside of the function.
+
 \begin{equation*}
 \Asyn{A}{x} = e
 \end{equation*}

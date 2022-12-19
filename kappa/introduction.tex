@@ -17,22 +17,20 @@ its control flow~\cite{allen1970control}, dataflow~\cite{kam1977monotone}, and p
 
 One of the key techniques used in static program analysis is dataflow analysis,
 which focuses on the flow of data through a program. Dataflow analysis applications are used to identify
-potential sources of errors, such as uninitialised variables or null pointers dereference, 
+potential sources of errors, such as uninitialised variables or null pointers dereference~\cite{riouak2021precise,10.1016/j.scico.2012.02.002}, 
 and to optimise the program's performance by identifying opportunities for 
-parallelisation or other forms of optimisation.
+parallelisation or other forms of optimisation~\cite{aho2007compilers}.
 Traditionally, dataflow analysis has been performed using imperative paradigms, 
-which are based on the idea of explicitly specifying how the analysis should be 
+which are based on the idea of explicitly specifying \emph{how} the analysis should be 
 performed. 
-
 However, more recently, there has been a growing interest in using 
-declarative paradigms for dataflow analysis, which are based on specifying what 
+declarative paradigms for dataflow analysis, which are based on specifying \emph{what}
 the analysis should accomplish rather than how it should be performed.
 
 In this thesis, we will explore the use of declarative paradigms for dataflow 
-analysis, focusing on developing new underlying framework for constructing 
+analysis~\cite{smits2020flowspec,madsen2016programming}, focusing on developing new underlying framework for constructing 
 efficient control-flow graphs for performing dataflow 
 analysis more effectively and efficiently.
-
 This thesis aims to contribute to the field of static program analysis 
 by enhancing the state-of-the-art in dataflow analysis using the declarative paradigm. 
 By doing so, we hope to enable researchers and developers to understand and 
@@ -66,4 +64,7 @@ The contributions of this thesis are summarised by the following two papers:
 	baseline for future research.
 \end{itemize}
 
-Together, these contributions advance the state of the art in program analysis and software engineering, and provide practical tools for improving the development and maintenance of software systems.
+% Is this too much? 'advance the state-of-the-art'
+Together, these contributions advance the state-of-the-art in program analysis 
+and software engineering, and provide practical tools for improving the development
+and maintenance of software systems.
