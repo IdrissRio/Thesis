@@ -9,7 +9,7 @@ which are properties associated with the elements of a language's abstract synta
 Attribute grammars provide a powerful tool for specifying the behavior of a programming 
 language and for verifying the correctness of programs written in that language.
 %
-AR are composed of two components: a context-free grammar, 
+ARs are composed of two components: a context-free grammar, 
 which defines the syntax of the language, and an attribute evaluation function, 
 which defines the semantics of the language. The context-free grammar is used to 
 parse a program into its abstract syntax tree, and the attribute evaluation function 
@@ -22,14 +22,9 @@ For example, the type of a variable may be determined by its declaration,
 but the type of an expression may be determined by the types of its subexpressions. 
 Attribute grammars provide a precise and elegant way to specify these dependencies.
 
-Moreover, AG, because of their intrinsic declarative nature, support modular specification.
-Attribute grammars can be composed from smaller attribute grammars 
-in a way that is similar to the composition of context-free grammars. This allows 
-language and compiler designers to specify and verify the behavior of a language in a modular
-and composable manner.
-
-Attributes are define using equations. We can distinguish two types of attributes: synthesized attributes and inherited attributes.
-For the sake of redability, we borrow the notation introduced in pattern, 
+Attributes are define using equations. We can distinguish two types of
+attributes: synthesized attributes and inherited attributes.
+For the sake of redability, we borrow the notation introduced by Fors et al. in~\cite{fors2020patterns}, 
 where attribute names are preceded by a symbol that indicates the type of the attribute.
 We reserve the symbol \Abase{x} to denote the attribute name and the symbol $e$ to denote the attribute value,
 e.g., a constant, a function of the node's children, or a function of the node's children 
