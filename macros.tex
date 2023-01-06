@@ -217,11 +217,22 @@ pp. 236--241s}. Limassol, Cyprus, 2022.
 
 
 
+\lstdefinelanguage{bytecode}{
+  basicstyle=\ttfamily,
+  commentstyle=\color{green},
+  numbers=none,
+  numberstyle=\color{blue},
+  keywordstyle=\bfseries
+   morekeywords = [1]{return,iconst\_m1,goto,istore\_1,iconst\_1,ifle,iload\_1,iconst\_0},
+   keywordstyle = [1]\bfseries
+}
 
-% From here on, the macros.tex file contains settings about the layout of the 
+
+
+% From here on, the macros.tex file contains settings about the layout of the
 % Thesis itself. Do not change anything below this line unless you know what
 % you are doing.
- 
+
 
 % Defines the layout settings for the thesis
 \newcommand{\pageSettings}{
@@ -394,3 +405,6 @@ pp. 236--241s}. Limassol, Cyprus, 2022.
  {(\umlcdClassName)}
  {(\umlcdClassNameString)}
  {}{\ddt}
+
+
+
