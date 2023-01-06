@@ -229,6 +229,11 @@ on the types of the subexpressions in the expression. For instance, if a variabl
 with the expression ``3 + 4'', the type of the variable would be determined to 
 be integer based on the types of the operands in the expression.
 
+\begin{equation*}
+  \Asyn{A}{x} = e
+  \end{equation*}
+where \astnode{A} is the name of the node type.
+
 An \emph{inherited} attribute is a property of a language element that is inherited from 
 its parent element in the abstract syntax tree. For example, the scope of a variable 
 in a programming language may be an inherited attribute that is inherited from the
@@ -240,10 +245,7 @@ context in which it is declared. For example, if a variable is declared within a
 function, the variable will be visible and accessible within the body of the function, 
 but not outside of the function.
 
-\begin{equation*}
-\Asyn{A}{x} = e
-\end{equation*}
-where \astnode{A} is the name of the node type.
+
 Inherited attributes are defined by two parts: a declaration and an equation.
 \begin{equation*}
 \Ainh{A}{x} \quad\quad \quad\quad \Ainhdef{B}{*}{x} = e
@@ -253,7 +255,6 @@ The first part of the equation declares the attribute \Ainh{A}{x} as inherited b
 so that every node of type \astnode{A} has can access it. The second part of the 
 equation defines the attribute for each child of \astnode{B}. The whildcard \astnode{*}
 indicates that the attribute is defined and broadcasted to all children of \astnode{B} with type \astnode{A}.
-
 
 \begin{figure}
     \begin{tikzpicture}[scale=0.7,edge from parent/.style={draw,-latex},sibling distance=8em,
@@ -335,6 +336,28 @@ Examples of the relations that can be constructed using RAGs are:
     \item Control flow graph: a graph where nodes are statements and/or expressions, and edges are control flow relations, and,
     \item Call graph: a graph where nodes are methods and edges are method calls.
 \end{itemize}
+
+\subsection{The TEAL Programming Language}
+TEAL (Typed Easily Analysable Language) is a programming language designed to be used in the 
+program analysis\footnote{\url{https://fileadmin.cs.lth.se/cs/Education/EDAP15/2022/web/index.html}} course at Lund University.
+It is a simplified version of Java and its grammar and some aspects of its semantics are 
+listed in Appendix~TBD.  %Not sure if we should include the grammar in the thesis or just cite it.
+One of the key features of TEAL is that it is an object-oriented language, 
+which means that it allows the creation of classes and objects that can inherit 
+characteristics and behavior from one another. However, it does not have a dynamic 
+dispatcher, which means that the method that is called for an object at runtime 
+is determined at compile time based on the type of the object.
+In addition to supporting the definition of new types, TEAL also allows the use 
+of arrays. It was developed in an incremental manner, with each version building 
+upon the features of the previous one. TEAL-0 is the most basic version and includes 
+support for variable declarations and use, procedures, and basic control structures such as if 
+and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2 allows users to 
+define their own types.
+
+Overall, the goal of TEAL is to provide a language that allows students to 
+focus on the challenges of performing program analysis on a real-world language 
+without being overwhelmed by the details of a fully-featured language.
+We will use TEAL to demonstrate the use of RAGs and the main results summarized in this thesis.
 
 \subsection{The JastAdd Metacompiler}
 \label{sec:jastadd}
