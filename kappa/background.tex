@@ -1,25 +1,25 @@
 \section{Background}
 \label{sec:background}
-Static analysis is a technique for automatically analyzing the behavior of software
+Static analysis is a technique for automatically analysing the behaviour of software
 without executing it. It has a wide range of applications, including code optimization,
 bug detection, security vulnerability analysis, and program understanding.
 In this Section, we will focus on two specific types of static analysis:
 control-flow analysis and dataflow analysis.
 
-Control-flow analysis involves analyzing the control flow of a program,
+Control-flow analysis involves analysing the control flow of a program,
 which refers to the order in which the statements in the program are executed.
 This type of analysis is useful for understanding the logical structure of a
 program and identifying potential errors, such as uninitialized variables or
 infinite loops.
-Dataflow analysis, on the other hand, involves analyzing the flow of data through
-a program. Most of the dataflow analyses heavily use the results produced by the control-flow analysis. 
+Dataflow analysis, on the other hand, involves analysing the flow of data through
+a program. Most of the dataflow analyses heavily use the results produced by the control-flow analysis.
 Examples of analyses include tracking the sources and uses of variables, as well as
 determining the possible values that variables can take on at different points in
 the program. Dataflow analysis can be used to optimize code, detect defects, and
 perform other tasks such as type checking.
 
 Both control-flow analysis and dataflow analysis are important tools for improving
-the quality and reliability of software. 
+the quality and reliability of software.
 In this Section, we will discuss the basics of control-flow analysis and dataflow analysis,
 and we will provide the basic definitions and terminology of the formalisms and framework used
 in this Thesis to design and implement IntraCFG and IntraJ.
@@ -37,18 +37,18 @@ Control-flow analysis is the basis for many other static analyses including data
 
 Control-flow analysis can be performed without executing the program, which makes
 it a useful analysis for debugging and testing. In addition, control-flow analysis
-can provide valuable insights into the structure and behavior of a program,
+can provide valuable insights into the structure and behaviour of a program,
 which can help with program understanding and maintenance.
 However, one major limitation of control-flow analysis is that it is subject to the Rice-Turing theorem result,
 meaning that it is not always possible to determine the exact control flow of a program.
 Additionally, control-flow analysis may not be sound or complete, or may not
 strive for either property. This means that it may not always accurately capture
-the full behavior of a program, particularly in cases involving complex
-interactions or data-dependent behavior.
+the full behaviour of a program, particularly in cases involving complex
+interactions or data-dependent behaviour.
 
 There are two main approaches to constructing the control-flow graph for a program:
 on the source-level and on the intermediate representation. The source-level approach
-involves analyzing the source code of a program and constructing the control-flow graph
+involves analysing the source code of a program and constructing the control-flow graph
 directly from the source code. The intermediate representation approach involves
 first converting the source code into an intermediate representation, such as bytecode,
 and then constructing the control-flow graph from the intermediate representation.
@@ -63,9 +63,9 @@ Another advantage of constructing the CFG on the source level is that it does no
 require the generation of an intermediate representation (IR). This can make the
 analysis faster and more efficient, as it avoids the overhead of IR generation.
 In addition, constructing the CFG on the source level can work with semantically
-and syntactically broken code, which can be useful for analyzing programs with
+and syntactically broken code, which can be useful for analysing programs with
 errors or inconsistencies.
-Furthermore, in situations where the (IR) must be generated in real-time,
+Furthermore, in situations where the IR must be generated in real-time,
 such as for integrated development environment (IDE) analysis integration and support,
 the overhead of code generation and optimization may make this process too expensive.
 In such cases, constructing the control-flow graph (CFG) on the source level
@@ -143,10 +143,10 @@ void foo(){
   \node (14) [below=of 3] {};
   \node (15) [below=of 14] {};
   \node (13) [below=of 15] {13};
-  
+
   % Edges
   \path[->] (0) edge (1) (1) edge (2) (2) edge (3) (3) edge[bend right] (6) (3) edge[bend left] (11) (6) edge (7) (7) edge (8) (8) edge (13) (11) edge (12) (12) edge (13);
-  
+
   \draw[dashed] (1.north west) rectangle (2.south east);
   \draw[dashed] (6.north west) rectangle (8.south east);
   \draw[dashed] (11.north west) rectangle (12.south east);
@@ -157,76 +157,76 @@ void foo(){
 \end{figure}
 
 
-The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the control-flow 
+The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the control-flow
 graphs of the simple \texttt{foo} method.
 
 
 \subsection{Dataflow Analysis}
 \label{sec:dataflowanalysis}
-Dataflow analysis is a technique used in computer science to analyze the flow of 
-data through a program. It has its roots in the field of program optimization, 
-where it was originally used to identify opportunities for improving the performance 
+Dataflow analysis is a technique used in computer science to analyse the flow of
+data through a program. It has its roots in the field of program optimization,
+where it was originally used to identify opportunities for improving the performance
 of programs by removing unnecessary computations e.g., Very Busy Expression or Available Expression analyses~\cite{aho2007compilers,vallee-rai10soot,falconer2007deepweaver,sagiv1996ide,kildall1973dataflow}.
-Dataflow analysis involves tracking the flow of data through a program by 
-identifying the variables that are defined and used at each point in the program's 
-control flow. This information can be used to optimize the program by eliminating 
+Dataflow analysis involves tracking the flow of data through a program by
+identifying the variables that are defined and used at each point in the program's
+control flow. This information can be used to optimize the program by eliminating
 unnecessary computations and improving the use of available resources.
-One of the primary advantages of dataflow analysis is its ability to handle programs 
-with complex control flow, such as those with loops and conditional statements. 
+One of the primary advantages of dataflow analysis is its ability to handle programs
+with complex control flow, such as those with loops and conditional statements.
 
-In the context of bug detection~\cite{spoon, fink2012wala}, dataflow analysis can be used to identify 
-potential sources of errors in a program by tracking the flow of data through 
-the program and identifying points where data may be used in unexpected or 
-incorrect ways. This can be particularly useful in identifying bugs that may 
-not be immediately apparent, such as those that only occur under certain 
+In the context of bug detection~\cite{spoon, fink2012wala}, dataflow analysis can be used to identify
+potential sources of errors in a program by tracking the flow of data through
+the program and identifying points where data may be used in unexpected or
+incorrect ways. This can be particularly useful in identifying bugs that may
+not be immediately apparent, such as those that only occur under certain
 conditions or when certain combinations of input data are used.
 Many tools for static analysis of Java programs, such as FindBugs~\cite{findbugs},
 SpotBugs~\cite{spotbugs}, and PMD~\cite{copeland2005pmd}, use dataflow analysis to identify
-potential bugs in Java programs. 
+potential bugs in Java programs.
 % I looked here how they cited pmd, findbugs and spotbugs. https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8103456
 
-Dataflow analysis can also be used to identify potential security vulnerabilities 
-in software~\cite{flowDroid,piskachev2021secucheck,lawall10coccinelle}. By tracking the flow of sensitive data through a program and  
-identifying points where it may be exposed to unauthorized access or manipulation, 
-dataflow analysis can help to identify potential vulnerabilities that could be 
-exploited by attackers. 
+Dataflow analysis can also be used to identify potential security vulnerabilities
+in software~\cite{flowDroid,piskachev2021secucheck,lawall10coccinelle}. By tracking the flow of sensitive data through a program and
+identifying points where it may be exposed to unauthorized access or manipulation,
+dataflow analysis can help to identify potential vulnerabilities that could be
+exploited by attackers.
 
 \subsection{Attribute Grammars}
 \label{chap:attr-grammars}
 Attribute grammars~\cite{knuth1968semantics} (AGs) are a formalism for specifying
 the syntax and semantics of programming languages.
 They were first introduced by Knuth in 1968 as a way to define the syntax and semantics of the programming
-language ALGOL 68. This formalism is based on the concept of attributes, 
+language ALGOL 68. This formalism is based on the concept of attributes,
 which are properties associated with the elements of a language's abstract syntax tree.
-Attribute grammars provide a powerful tool for specifying the behavior of a programming 
+Attribute grammars provide a powerful tool for specifying the behaviour of a programming
 language and for verifying the correctness of programs written in that language.
 %
-ARs are composed of two components: a context-free grammar~\cite{CREMERS197586}, 
-which defines the syntax of the language, and an attribute evaluation function, 
-which defines the semantics of the language. The context-free grammar is used to 
-parse a program into its abstract syntax tree, and the attribute evaluation function 
-is used to compute the values of the attributes associated with each element 
+ARs are composed of two components: a context-free grammar~\cite{CREMERS197586},
+which defines the syntax of the language, and an attribute evaluation function,
+which defines the semantics of the language. The context-free grammar is used to
+parse a program into its abstract syntax tree, and the attribute evaluation function
+is used to compute the values of the attributes associated with each element
 of the tree.
 
-A key advantage of attribute grammars is their ability to capture the 
-interdependence of syntactic and semantic elements of a programming language. 
-For example, the type of a variable may be determined by its declaration, 
-but the type of an expression may be determined by the types of its subexpressions. 
+A key advantage of attribute grammars is their ability to capture the
+interdependence of syntactic and semantic elements of a programming language.
+For example, the type of a variable may be determined by its declaration,
+but the type of an expression may be determined by the types of its subexpressions.
 Attribute grammars provide a way to specify these constraints.
 
 Attributes are define using equations. We can distinguish two types of
 attributes: synthesized attributes and inherited attributes.
-For the sake of redability, we borrow the notation introduced by Fors et al. in~\cite{fors2020patterns}, 
+For the sake of readability, we borrow the notation introduced by Fors et al. in~\cite{fors2020patterns},
 where attribute names are preceded by a symbol that indicates the type of the attribute.
 We reserve the symbol \Abase{x} to denote the attribute name and the symbol $e$ to denote the attribute value,
-e.g., a constant, a function of the node's children, or a function of the node's children 
-and the node's own attributes. 
+e.g., a constant, a function of the node's children, or a function of the node's children
+and the node's own attributes.
 
-A \emph{synthesized} attribute is a property of a language element that is computed 
-based on the attributes of its subelements. For example, the type of an expression 
-in a programming language may be a synthesized attribute that is computed based 
+A \emph{synthesized} attribute is a property of a language element that is computed
+based on the attributes of its subelements. For example, the type of an expression
+in a programming language may be a synthesized attribute that is computed based
 on the types of the subexpressions in the expression. For instance, if a variable is initialized
-with the expression ``3 + 4'', the type of the variable would be determined to 
+with the expression ``3 + 4'', the type of the variable would be determined to
 be integer based on the types of the operands in the expression.
 
 \begin{equation*}
@@ -234,15 +234,15 @@ be integer based on the types of the operands in the expression.
   \end{equation*}
 where \astnode{A} is the name of the node type.
 
-An \emph{inherited} attribute is a property of a language element that is inherited from 
-its parent element in the abstract syntax tree. For example, the scope of a variable 
+An \emph{inherited} attribute is a property of a language element that is inherited from
+its parent element in the abstract syntax tree. For example, the scope of a variable
 in a programming language may be an inherited attribute that is inherited from the
 scope in which the variable is declared.
-An example of an inherited attribute is the scope of a variable in a programming 
-language. The scope of a variable is the region of a program in which the variable 
-is visible and can be accessed. The scope of a variable is inherited from the 
-context in which it is declared. For example, if a variable is declared within a 
-function, the variable will be visible and accessible within the body of the function, 
+An example of an inherited attribute is the scope of a variable in a programming
+language. The scope of a variable is the region of a program in which the variable
+is visible and can be accessed. The scope of a variable is inherited from the
+context in which it is declared. For example, if a variable is declared within a
+function, the variable will be visible and accessible within the body of the function,
 but not outside of the function.
 
 
@@ -250,9 +250,9 @@ Inherited attributes are defined by two parts: a declaration and an equation.
 \begin{equation*}
 \Ainh{A}{x} \quad\quad \quad\quad \Ainhdef{B}{*}{x} = e
 \end{equation*}
-where \astnode{A} and \astnode{B} are node types. 
+where \astnode{A} and \astnode{B} are node types.
 The first part of the equation declares the attribute \Ainh{A}{x} as inherited by \astnode{A},
-so that every node of type \astnode{A} has can access it. The second part of the 
+so that every node of type \astnode{A} has can access it. The second part of the
 equation defines the attribute for each child of \astnode{B}. The whildcard \astnode{*}
 indicates that the attribute is defined and broadcasted to all children of \astnode{B} with type \astnode{A}.
 
@@ -264,7 +264,7 @@ indicates that the attribute is defined and broadcasted to all children of \astn
       synthesized/.style={shape=rectangle, draw, fill=orange!15},
       inherited/.style={shape=rectangle, draw, fill=blue!15}
       ]
-    
+
     \node [astnode,draw] (A) {\code{A}}
       child {node [astnode] (B) {\code{B}}}
       child {node [astnode] (C) {\code{C}}
@@ -274,7 +274,7 @@ indicates that the attribute is defined and broadcasted to all children of \astn
     \node [synthesized , draw, left=0pt of B] (BB) {\Asyn{B}{x} = 2};
     \node [synthesized , draw, right=0pt of C] (CC) {\Asyn{C}{v} = 5};
     \node [inherited , draw, below right =0pt of C] (CC) {\Ainh{C}{y} = \Asyn{A}{z} + \Asyn{C}{v} = 8};
-    
+
     \matrix [draw, below right = -50pt and -180pt,inner sep=1ex,cells={nodes={font=\sffamily,anchor=west}}] at (B) {
       \node [synthesized] {}; & \node{Synthesized attributes}; \\
       \node [inherited] {}; & \node{Inherited attributes}; \\
@@ -288,7 +288,7 @@ indicates that the attribute is defined and broadcasted to all children of \astn
 Let us consider the following abstract grammar:
 
     \begin{align*}
-        A& ::= B \quad C \\ 
+        A& ::= B \quad C \\
         B& \\
         C&
     \end{align*}
@@ -301,7 +301,7 @@ and the following attribute declarations:
         \Ainh{C}{y}& \\
         \Ainhdef{A}{C}{y}& = \Asyn{A}{z} + \Asyn{C}{v} \\
     \end{align*}
-The value for the synthesized attribute \Asyn{A}{z} is computed by solving 
+The value for the synthesized attribute \Asyn{A}{z} is computed by solving
 the equation systems for the attributes \Asyn{A}{z} and \Asyn{B}{x}:
 \begin{align*}
     \Asyn{A}{z} &= \Asyn{B}{x} + 1 \\
@@ -323,12 +323,12 @@ resulting in \Ainh{C}{y} = 8. Figure~\ref{fig:ragsExample} depicts the described
 Reference Attribute Grammars (RAGs) where introduced in~\cite{DBLP:journals/informaticaSI/Hedin00}
 and are an extension of Attribute Grammars to Object-Oriented languages. While attributes in Attribute Grammars
 can only refer to terminal values, RAGs allow attributes to refer to non-terminals i.e., node in the AST.
-RAGs are well-suited for the analysis of object-oriented languages, since they enable 
-the definition of relation between AST nodes. Attributes that refer to 
+RAGs are well-suited for the analysis of object-oriented languages, since they enable
+the definition of relation between AST nodes. Attributes that refer to
 to AST nodes can declaratively construct relation, i.e., graphs, on the AST.
 Examples of the relations that can be constructed using RAGs are:
 \begin{itemize}
-    \item Name analysis: checks that all names are well-defined and used correctly. A relation between 
+    \item Name analysis: checks that all names are well-defined and used correctly. A relation between
     the name and the definition of the name is constructed,
     \item Type analysis: checks that all expressions have a valid type. A relation between the expression
     and its type is constructed,
@@ -338,24 +338,24 @@ Examples of the relations that can be constructed using RAGs are:
 \end{itemize}
 
 \subsection{The TEAL Programming Language}
-TEAL (Typed Easily Analysable Language) is a programming language designed to be used in the 
+TEAL (Typed Easily Analysable Language) is a programming language designed to be used in the
 program analysis\footnote{\url{https://fileadmin.cs.lth.se/cs/Education/EDAP15/2022/web/index.html}} course at Lund University.
-It is a simplified version of Java and its grammar and some aspects of its semantics are 
+It is a simplified version of Java and its grammar and some aspects of its semantics are
 listed in Appendix~TBD.  %Not sure if we should include the grammar in the thesis or just cite it.
-One of the key features of TEAL is that it is an object-oriented language, 
-which means that it allows the creation of classes and objects that can inherit 
-characteristics and behavior from one another. However, it does not have a dynamic 
-dispatcher, which means that the method that is called for an object at runtime 
+One of the key features of TEAL is that it is an object-oriented language,
+which means that it allows the creation of classes and objects that can inherit
+characteristics and behavior from one another. However, it does not have a dynamic
+dispatcher, which means that the method that is called for an object at runtime
 is determined at compile time based on the type of the object.
-In addition to supporting the definition of new types, TEAL also allows the use 
-of arrays. It was developed in an incremental manner, with each version building 
-upon the features of the previous one. TEAL-0 is the most basic version and includes 
-support for variable declarations and use, procedures, and basic control structures such as if 
-and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2 allows users to 
+In addition to supporting the definition of new types, TEAL also allows the use
+of arrays. It was developed in an incremental manner, with each version building
+upon the features of the previous one. TEAL-0 is the most basic version and includes
+support for variable declarations and use, procedures, and basic control structures such as if
+and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2 allows users to
 define their own types.
 
-Overall, the goal of TEAL is to provide a language that allows students to 
-focus on the challenges of performing program analysis on a real-world language 
+Overall, the goal of TEAL is to provide a language that allows students to
+focus on the challenges of performing program analysis on a real-world language
 without being overwhelmed by the details of a fully-featured language.
 We will use TEAL to demonstrate the use of RAGs and the main results summarized in this thesis.
 
@@ -367,18 +367,18 @@ Java code from a RAG. The generated code can be used to construct an AST and to 
 analysis on the AST.
 The JastAdd metacompiler is based on the following components:
 \begin{itemize}
-    \item The JastAdd language: a language for the definition of RAGs. 
+    \item The JastAdd language: a language for the definition of RAGs.
     The JastAdd language allow to specify the abstract grammar of a language, and,
     with a java-like syntax, the attributes of the RAG.
     \item The JastAdd compiler: a compiler that generates Java code from a RAG.
 \end{itemize}
 In JastAdd, synthesized attributs are defined using the \code{syn} keyword followed
 by the type and the name of the attribute. Similarly, inherited attributes are defined
-using the \code{inh} keyword. Let us reconsider the example depicted in Figure~\ref{fig:ragsExample}. 
+using the \code{inh} keyword. Let us reconsider the example depicted in Figure~\ref{fig:ragsExample}.
 The abstract grammar is defined in a \code{.ast} file with the following syntax:
     \begin{lstlisting}[language=JastAdd]
         A ::= B C;
-        B; 
+        B;
         C;
     \end{lstlisting}
 where each line defines a non-terminal, i.e., a node in the AST.
@@ -422,7 +422,7 @@ class B {
 }
                   \end{lstlisting}
              };
-        
+
              \node (v1) at (-1.9,-0.05) {};
              \node (v2) at (2,-0.05) {};
              \node (v3) at (3.8,1.1) {};
@@ -432,10 +432,10 @@ class B {
              \node (v7) at (2,0.3) {};
              \node (v8) at (-1.9,0.3) {};
              \draw[opacity=0.2,fill=blue] (v1.center)--(v2.center)--(v3.center)--(v4.center)--(v5.center)--(v6.center)--(v7.center)--(v8.center)--(v1.center);
-        
+
              \fill [opacity=0.2,blue]
                  (v1) \foreach \i in {2,...,8}{ -- (v\i) } -- cycle;
-            
+
             \node (vv1) at (-1.9,-0.1) {};
             \node (vv2) at (2,-0.1) {};
             \node (vv3) at (3.8,-1.5) {};
@@ -445,7 +445,7 @@ class B {
             \node (vv7) at (2,-0.45) {};
             \node (vv8) at (-1.9,-0.45) {};
             \draw[opacity=0.2,fill=red] (vv1.center)--(vv2.center)--(vv3.center)--(vv4.center)--(vv5.center)--(vv6.center)--(vv7.center)--(vv8.center)--(vv1.center);
-        
+
             \fill [opacity=0.2,red]
                 (v1) \foreach \i in {2,...,8}{ -- (vv\i) } -- cycle;
         \end{tikzpicture}
@@ -455,31 +455,31 @@ class B {
 
 
 JastAdd supports intertype declarations for the definition of attributes. An intertype declaration
-of an attribute is a declaration that is performed into an aspect that, at compile time, 
+of an attribute is a declaration that is performed into an aspect that, at compile time,
 is inlined in the class specified in the intertype declaration. The example in Figure~\ref{fig:interType}
-shows an intertype declaration of an attribute. 
-The attributes \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrDecl} 
+shows an intertype declaration of an attribute.
+The attributes \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrDecl}
 that is inlined in the classes \code{A} and \code{B} respectively.
 
 JastAdd supports not only synthesized and inherited attributes, but also:
 \begin{itemize}
     \item \emph{Parametrised Attribute}: the value of the attribute might depend
     not only on the AST node itself, but also on the value of the arguments supplied
-    to it. Attributes of this kind are widely used, especially in the definition of 
+    to it. Attributes of this kind are widely used, especially in the definition of
     type-checking rules.
     \begin{lstlisting}[language=JastAdd]
 syn boolean Type.compatibleType(Type t){
     return this==t;
 }
     \end{lstlisting}
-    
+
 
     \item \emph{Higher-Order Attribute (HOA)}\footnote{Also known as \emph{Non-Terminal Attributes (NTA)}.}:
     the value of an HOA is a freshly new subtree. Are called \emph{Higher-Order Attributes}
     because are attribute and at the same time a non-terminal, therefore they can be attributed.
     The subtree computed by an HOA behaves like a normal non-terminal, i.e., it can be
     attributed and it can be used in the definition of other attributes. In JastAdd, HOAs
-    are defined using the \code{nta} keyword. HOAs are widely used to reify information 
+    are defined using the \code{nta} keyword. HOAs are widely used to reify information
     that are not explicit in the source-code and therefore, not present in the AST.
     For example, when constructing a CFG of a method, is always useful to specify
     a unique entry point and a unique exit point for the method. In JastAdd, this can be
@@ -495,12 +495,12 @@ syn nta Exit MethodDecl.exit() = new Exit();
     computation, i.e., the attribute is evaluated until the value of the attribute does not change.
     The requirements, that are not checked by JastAdd, to guarantee termination are:
     \begin{itemize}
-        \item All the possible values computed by the attribute must be placed 
+        \item All the possible values computed by the attribute must be placed
         in a lattice of finite height.
-        \item The intermediate results of the fix-point algorithm must increase 
+        \item The intermediate results of the fix-point algorithm must increase
         or decrease monotonically\footnote{In this Thesis, boolean circular attributes start
         as \emph{false} and monotonically grow with $\vee$, while set-typed circular attributes
-        start as the empty set and monotonically grow with $\cup$.}. 
+        start as the empty set and monotonically grow with $\cup$.}.
     \end{itemize}
     We use the symbol \AcircSyn{A}{x} to denote a circular synthesized attribute.
 
@@ -509,8 +509,8 @@ syn nta Exit MethodDecl.exit() = new Exit();
     come frome anywhere else in the AST. A contribution clause is associated with
     an AST node type and describes information to be included in a collection
     attribute, possibly under certain conditions. Collection attributes, are expecially
-    useful in compiler construction, to collect all the semantic errors in a program 
-    from anywhere in the AST. In JastAdd, collection attributes are defined using the 
+    useful in compiler construction, to collect all the semantic errors in a program
+    from anywhere in the AST. In JastAdd, collection attributes are defined using the
     \code{coll} keyword. For example, the following collection attribute collects all
     the type errors in a program:
     \begin{lstlisting}[language=JastAdd]
