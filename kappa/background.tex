@@ -78,7 +78,8 @@ code may contain various constructs, such as macros and preprocessor directives,
 can complicate the analysis. In addition, the source code may be written in a variety
 of languages with different syntax and semantics, which can make it challenging to
 design a single analysis that works across all languages.
-
+The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the control-flow
+graphs of the simple \texttt{foo} method.
 \begin{figure}[h]
   \centering
 \begin{tabular}{l r}
@@ -157,9 +158,6 @@ void foo(){
 \end{figure}
 
 
-The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the control-flow
-graphs of the simple \texttt{foo} method.
-
 
 \subsection{Dataflow Analysis}
 \label{sec:dataflowanalysis}
@@ -222,8 +220,8 @@ We reserve the symbol \Abase{x} to denote the attribute name and the symbol $e$ 
 e.g., a constant, a function of the node's children, or a function of the node's children
 and the node's own attributes.
 
-A \emph{synthesized} attribute is a property of a language element that is computed
-based on the attributes of its subelements. For example, the type of an expression
+A \emph{synthesized} attribute is a property of a non-terminal that is computed
+based on the attributes of its possible derivations. For example, the type of an expression
 in a programming language may be a synthesized attribute that is computed based
 on the types of the subexpressions in the expression. For instance, if a variable is initialized
 with the expression ``3 + 4'', the type of the variable would be determined to
@@ -234,7 +232,7 @@ be integer based on the types of the operands in the expression.
   \end{equation*}
 where \astnode{A} is the name of the node type.
 
-An \emph{inherited} attribute is a property of a language element that is inherited from
+An \emph{inherited} attribute is a property of a non-terminal that is inherited from
 its parent element in the abstract syntax tree. For example, the scope of a variable
 in a programming language may be an inherited attribute that is inherited from the
 scope in which the variable is declared.
