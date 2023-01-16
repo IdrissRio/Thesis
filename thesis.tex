@@ -48,6 +48,62 @@
 \usepackage{rotating}
 % ---- END Packages used for JFeature ----
 
+% ---- START Packages used for Teal ----
+\usepackage[utf8]{inputenc}
+\usepackage{wasysym}
+\usepackage{array}
+\usepackage{icomma}
+\usepackage{proof}
+\usepackage[xcolor]{mdframed}
+\usepackage{pgf}
+\usepackage{color}
+\usepackage[normalem]{ulem}
+\usepackage{moresize}
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage{pgfpages}
+\usepackage{colortbl}
+\usepackage{galois}
+\usepackage{marvosym}
+\usepackage{scalerel}
+\usepackage{comment}
+\usepackage{ulem}
+\usepackage[outline]{contour}
+\usepackage{libertine}
+\usepackage[scaled]{inconsolata}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{dcyan}{rgb}{0,0.4,0.4}
+\definecolor{mcyan}{rgb}{0,0.6,0.6}
+\definecolor{dgreen}{rgb}{0,0.4,0}
+\definecolor{mgreen}{rgb}{0,0.6,0}
+\definecolor{dorange}{rgb}{0.6,0.4,0.2}
+\definecolor{dyellow}{rgb}{0.5,0.5,0.0}
+\definecolor{dred}{rgb}{0.5,0,0}
+\definecolor{mblue}{rgb}{0,0,0.75}
+\definecolor{dblue}{rgb}{0,0,0.5}
+\definecolor{dbluez}{rgb}{0,0.2,0.6}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+\definecolor{dgrey}{rgb}{0.3,0.3,0.3}
+\definecolor{lgrey}{rgb}{0.4,0.6,0.6}
+\definecolor{llgrey}{rgb}{0.85,0.85,0.85}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{lgreen}{rgb}{0.8,1,0.8}
+\definecolor{lblue}{rgb}{0.85,0.85,1}
+\definecolor{lorange}{rgb}{1,0.92,0.80}
+\definecolor{astree-purple}{HTML}{A92666}
+\contourlength{0.8pt}
+
+\newcommand{\ulm}[1]{%
+  \uline{\phantom{#1}}%
+  \llap{\contour{white}{#1}}%
+}
+
+
+
+
+
+% ---- END Packages used for Teal ----
+
 % Bibliography setting and style
 \usepackage[backend=bibtex8,mincrossrefs=99,style=alphabetic,doi=false,isbn=false,url=false,refsegment=chapter,defernumbers=true,sorting=nyt]{biblatex}
 \addbibresource{Thesis.bib}
@@ -136,6 +192,7 @@ Printed in Sweden by Tryckeriet i E-huset, Lund, 2022\linebreak[2]
 % Background
 \include{kappa/background}
 % Contribution
+\include{kappa/realcontribution}
 
 
 {\raggedright% TODO remove me

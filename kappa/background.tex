@@ -1,29 +1,68 @@
 \section{Background}
 \label{sec:background}
-Static analysis is a technique for automatically analysing the behaviour of software
-without executing it. It has a wide range of applications, including code optimization,
-bug detection, security vulnerability analysis, and program understanding.
-In this Section, we will focus on two specific types of static analysis:
-control-flow analysis and dataflow analysis.
+This Section provides an overview of the research that 
+underlies the main results of the thesis. Specifically, in this Section we will explore
+the concepts of dataflow analysis, control-flow analysis, attribute grammars, 
+and their implementation through the JastAdd framework.
 
-Control-flow analysis involves analysing the control flow of a program,
-which refers to the order in which the statements in the program are executed.
-This type of analysis is useful for understanding the logical structure of a
-program and identifying potential errors, such as uninitialized variables or
-infinite loops.
-Dataflow analysis, on the other hand, involves analysing the flow of data through
-a program. Most of the dataflow analyses heavily use the results produced by the control-flow analysis.
-Examples of analyses include tracking the sources and uses of variables, as well as
-determining the possible values that variables can take on at different points in
-the program. Dataflow analysis can be used to optimize code, detect defects, and
-perform other tasks such as type checking.
+Dataflow analysis is a technique used to determine the values that are used and 
+defined within a program. It is a fundamental concept in the field of compiler 
+construction, and it is used to optimize code and to security threats and bugs. 
+Dataflow analysis depends on control-flow analysis, which computes an overapproxiamation of
+all possible paths that a program can take.
 
-Both control-flow analysis and dataflow analysis are important tools for improving
-the quality and reliability of software.
-In this Section, we will discuss the basics of control-flow analysis and dataflow analysis,
-and we will provide the basic definitions and terminology of the formalisms and framework used
-in this Thesis to design and implement IntraCFG and IntraJ.
+Attribute grammars are a formalism for describing the structure of a program, 
+and for specifying properties of the program. They are used in the implementation 
+of compilers, and program analysis tools.
+Reference Attribute Grammars (RAGs) is a particular kind of attribute grammars 
+where the attribute values are defined in terms of references to the attributes 
+of other elements in the grammar. JastAdd which is used in our work is a meta-compiler 
+for implementing compilers and other language tools, e.g., static analysers, using RAGs.
 
+The main results of this thesis are IntraCFG and JFeature. 
+IntraCFG is a language-independent framework for implementing control-flow graphs 
+on the source code level.
+It is based on JastAdd and Control-flow analysis theory. IntraTeal is a instance
+of IntraCFG on the TEAL language that we will use to demonstrate the effectiveness
+of the framework. We also designed JFeature, a fact extractor for Java programs,
+with the aim of presenting a more comprehensive overview of a Java program by 
+taking into account the utilisation of various features and constructs specific 
+to the Java language across different Java versions. The objective of JFeature is
+to assist researchers and developers in the process of selecting benchmarks.
+
+Throughout this Section, these concepts will be discussed in more detail and used to 
+demonstrate the effectiveness of the proposed methods.
+
+% Here we can use different styles to distinguish between the different types of nodes
+% Everything is already set up, we just need to use the right style
+\begin{figure}[h]
+    \centering
+    \scalebox{0.8}{
+\begin{tikzpicture}[ 
+    node distance=2.5cm,
+    results/.style={rectangle,draw=black,text width=2cm,text centered},
+    rags/.style={rectangle,draw=black,text width=2cm,text centered},
+    analysis/.style={rectangle,draw=black,text width=2cm,text centered},
+    teal/.style={rectangle,draw=black,text width=2cm,text centered}]
+    \node[analysis] (dataflow) {Dataflow Analysis};
+    \node[analysis, below of = dataflow] (cfa) {Control-flow Analysis};
+    \node[results, right of = dataflow] (intracfg) {IntraCFG};
+    \node[teal, below of = intracfg] (teal) {TEAL};
+	\node[rags, right of = teal] (jastadd) {JastAdd};
+    \node[rags, below of = jastadd] (rags) {Reference Attribute Grammars (RAGs)};
+	\node[rags, below of = rags] (ags) {Attribute Grammars};
+    \node[results, above of = intracfg] (intrateal) {IntraTeal};
+    \path[->] (dataflow) edge (cfa);
+    \path[->] (jastadd) edge (rags);
+    \path[->] (rags) edge (ags);
+    \path[->] (intracfg) edge (cfa);
+    \path[->] (intracfg) edge (teal);
+    \path[->] (intracfg) edge (jastadd);
+    \path[->] (intrateal) edge (dataflow);
+    \path[->] (intrateal) edge (intracfg);
+  \end{tikzpicture}}
+  \caption{Dependency graph of the concepts discussed in this Section.}
+\end{figure}
 
 
 \subsection{Control-flow analysis}
@@ -31,34 +70,27 @@ in this Thesis to design and implement IntraCFG and IntraJ.
 Control-flow analysis involves analysing the control flow of the program, which refers
 to the execution order of the program's statements. It aids in comprehending the logical
 structure of a program and recognising potential flaws, such as uninitialized variables
-and infinite loops.
-Control-flow analysis is the basis for many other static analyses including dataflow analysis.
-
-
-Control-flow analysis can be performed without executing the program, which makes
-it a useful analysis for debugging and testing. In addition, control-flow analysis
+and infinite loops. Control-flow analysis
 can provide valuable insights into the structure and behaviour of a program,
 which can help with program understanding and maintenance.
-However, one major limitation of control-flow analysis is that it is subject to the Rice-Turing theorem result,
-meaning that it is not always possible to determine the exact control flow of a program.
-Additionally, control-flow analysis may not be sound or complete, or may not
-strive for either property. This means that it may not always accurately capture
-the full behaviour of a program, particularly in cases involving complex
-interactions or data-dependent behaviour.
 
-There are two main approaches to constructing the control-flow graph for a program:
+
+However, it is not always possible to establish the exact control flow of a program
+due to the Rice-Turing theorem, which is a key limitation of control-flow analysis.
+
+
+There are two main approaches to constructing the control-flow graph (CFG) for a program:
 on the source-level and on the intermediate representation. The source-level approach
 involves analysing the source code of a program and constructing the control-flow graph
-directly from the source code. The intermediate representation approach involves
-first converting the source code into an intermediate representation, such as bytecode,
+directly from the source code on top of the abstract syntax tree. The intermediate representation approach involves
+first converting the source code into an intermediate representation, e.g., bytecode,
 and then constructing the control-flow graph from the intermediate representation.
 
-Constructing the control-flow graph (CFG) on the source level has several advantages.
+Constructing the control-flow graph on the source level has several advantages.
 One of the main benefits is that it allows for the analysis to be performed directly
 on the source code of the program, which can be more easily understood by humans.
 This can be particularly useful for debugging and program understanding tasks,
 as it allows the analysis to be performed in the context of the original program.
-
 Another advantage of constructing the CFG on the source level is that it does not
 require the generation of an intermediate representation (IR). This can make the
 analysis faster and more efficient, as it avoids the overhead of IR generation.
@@ -66,8 +98,9 @@ In addition, constructing the CFG on the source level can work with semantically
 and syntactically broken code, which can be useful for analysing programs with
 errors or inconsistencies.
 Furthermore, in situations where the IR must be generated in real-time,
-such as for integrated development environment (IDE) analysis integration and support,
-the overhead of code generation and optimization may make this process too expensive.
+for instance, when the analysis is performed in an integrated development environment (IDE),
+the overhead of code generation and optimization may make this process too expensive,
+causing latency in the IDE and frustration in the developer.
 In such cases, constructing the control-flow graph (CFG) on the source level
 may be a more efficient option.
 
@@ -148,7 +181,7 @@ void foo(){
   % Edges
   \path[->] (0) edge (1) (1) edge (2) (2) edge (3) (3) edge[bend right] (6) (3) edge[bend left] (11) (6) edge (7) (7) edge (8) (8) edge (13) (11) edge (12) (12) edge (13);
 
-  \draw[dashed] (1.north west) rectangle (2.south east);
+  \draw[dashed] (0.north west) rectangle (2.south east);
   \draw[dashed] (6.north west) rectangle (8.south east);
   \draw[dashed] (11.north west) rectangle (12.south east);
 
@@ -336,7 +369,7 @@ Examples of the relations that can be constructed using RAGs are:
 \end{itemize}
 
 \subsection{The TEAL Programming Language}
-TEAL (Typed Easily Analysable Language) is a programming language designed to be used in the
+TEAL (Typed Easily Analysable Language) is a programming language designed by Christoph Reichenbach, and  used in the
 program analysis\footnote{\url{https://fileadmin.cs.lth.se/cs/Education/EDAP15/2022/web/index.html}} course at Lund University.
 It is a simplified version of Java and its grammar and some aspects of its semantics are
 listed in Appendix~TBD.  %Not sure if we should include the grammar in the thesis or just cite it.
@@ -355,7 +388,7 @@ define their own types.
 Overall, the goal of TEAL is to provide a language that allows students to
 focus on the challenges of performing program analysis on a real-world language
 without being overwhelmed by the details of a fully-featured language.
-We will use TEAL to demonstrate the use of RAGs and the main results summarized in this thesis.
+We will use TEAL-0 to demonstrate the use of RAGs and the main results summarized in this thesis.
 
 \subsection{The JastAdd Metacompiler}
 \label{sec:jastadd}
