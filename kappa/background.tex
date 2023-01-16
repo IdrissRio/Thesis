@@ -73,13 +73,9 @@ structure of a program and recognising potential flaws, such as uninitialized va
 and infinite loops. Control-flow analysis
 can provide valuable insights into the structure and behaviour of a program,
 which can help with program understanding and maintenance.
-
-
-However, it is not always possible to establish the exact control flow of a program
-due to the Rice-Turing theorem, which is a key limitation of control-flow analysis.
-
-
-There are two main approaches to constructing the control-flow graph (CFG) for a program:
+% However, it is not always possible to establish the exact control flow of a program
+% due to the Rice-Turing theorem, which is a key limitation of control-flow analysis.
+We can distinguish two main approaches to constructing the control-flow graph (CFG) for a program:
 on the source-level and on the intermediate representation. The source-level approach
 involves analysing the source code of a program and constructing the control-flow graph
 directly from the source code on top of the abstract syntax tree. The intermediate representation approach involves
@@ -106,8 +102,8 @@ may be a more efficient option.
 
 However, there are also some disadvantages to constructing the CFG on the source level.
 One of the main limitations is that it can be more difficult to accurately capture the
-control-flow of a program when working with the source code. This is because the source
-code may contain various constructs, such as macros and preprocessor directives, that
+control-flow of a program when working with the source code it may contain constructs,
+such as macros and preprocessor directives, that
 can complicate the analysis. In addition, the source code may be written in a variety
 of languages with different syntax and semantics, which can make it challenging to
 design a single analysis that works across all languages.
@@ -192,6 +188,7 @@ void foo(){
 
 
 
+
 \subsection{Dataflow Analysis}
 \label{sec:dataflowanalysis}
 Dataflow analysis is a technique used in computer science to analyse the flow of
@@ -221,6 +218,75 @@ in software~\cite{flowDroid,piskachev2021secucheck,lawall10coccinelle}. By track
 identifying points where it may be exposed to unauthorized access or manipulation,
 dataflow analysis can help to identify potential vulnerabilities that could be
 exploited by attackers.
+
+\subsubsection*{Monotone Frameworks}
+Monotone framework~\cite{kam1977monotone} is a teoretical framework for reasoning about program dataflow properties.
+These frameworks provide a flexible and generic framework for expressing and solving
+dataflow equations, which can be used to reason about a wide range of dataflow 
+properties, such as live variables, reaching definitions, and available expressions analyses.
+Monotone frameworks are built on the concept of lattice~\cite{Donnellan1968,Birkhoff1967,cousot1977ai}. 
+A lattice is a partially ordered set in which any two elements have a unique least 
+upper bound (also known as a join or a supremum) and a unique greatest lower bound 
+(also known as a meet or an infimum). Meaning that, any elements a and b in 
+the lattice, there exists a unique element denoted as a $\vee$ b (or a $\cup$ b) 
+such that a $\leq$ a $\vee$ b and b $\leq$ a $\vee$ b, and a $\wedge$ b 
+(or a $\cap$ b) such that a $\wedge$ b $\leq$ a and a $\wedge$ b $\leq$ b.
+
+A well-formed lattice has a unique least element, commonly denoted as $\bot$, 
+and a unique greatest element, commonly denoted as $\top$. These elements satisfy 
+the properties that for any element $x$ in the lattice, $\bot \leq x$ and x $\leq \top$.
+The diagram in Figure~\ref{fig:lattice} shows the lattice of sets over the set
+$S = \{s_1, s_2, s_3\}$, where the partial ordering is defined by set inclusion
+and the least upper bound and greatest lower bound are set union and set intersection
+respectively. The least element in this lattice is the empty set $\emptyset$ and the
+greatest element is the set $S$ itself. 
+
+A forward monotone framework consist of two equations and a transfer function $f$.
+For each node $n$ in the control-flow graph, we define the following two equations:
+$$\text{in}(n) = \bigcup\limits_{p \in \text{pred}(n)} \text{out}(p)$$
+
+$$\text{out}(n) = f(\text{in}(n), n)$$
+
+where $f:C \mapsto L$ is a monotone transfer function, also called transfer function. 
+The transfer function $f$ maps each element $c$ in the set $C$ (i.e., concrete domain) 
+to an element $f(c)$ in the lattice $L$ (i.e., abstract domain). $pred(n)$ and $succ(n)$ 
+denote the set of predecessors and successors of node $n$, respectively.
+
+A backward monotone framework is similar to a forward framework, except that the equations are reversed:
+$$\text{out}(n) = \bigcup\limits_{s \in \text{succ}(n)} \text{in}(s)$$
+
+$$\text{in}(n) = f(\text{out}(n), n).$$
+
+The framework defines a mutual dependency between the $in$ and $out$ sets of a node.
+This circular dependency is solved through a fix point computation.
+Fix point computation is a mathematical technique that finds a stable 
+state, or fix point, in a system. In the context of the Monotone framework, this 
+refers to finding a state where the $in$ and $out$ sets of all nodes in the CFG have reached a 
+stable value, and no further changes will occur. The fix point is guarantee to exist
+because the transfer function $f$ is monotone~\cite{Knaster1929}.
+
+
+
+
+\begin{figure}[h]
+    \centering
+\begin{tikzpicture}
+    \node (max) at (0,4) {$S$};
+    \node (a) at (-2,2) {$\{s_1,s_3\}$};
+    \node (b) at (0,2) {$\{s_1,s_2\}$};
+    \node (c) at (2,2) {$\{s_2,s_3\}$};
+    \node (d) at (-2,0) {$\{s_1\}$};
+    \node (e) at (0,0) {$\{s_2\}$};
+    \node (f) at (2,0) {$\{s_3\}$};
+    \node (min) at (0,-2) {$\emptyset$};
+    \draw (min) -- (d) -- (a) -- (max) -- (b) -- (f)
+    (e) -- (min) -- (f) -- (c) -- (max)
+    (d) -- (b);
+    \draw[preaction={draw=white, -,line width=6pt}] (a) -- (e) -- (c);
+  \end{tikzpicture}
+  \caption{\label{fig:lattice}Hesse diagram~\cite{Hesse1874} of the $\mathcal{P}(S)$ lattice.
+  In this case, $S = \top$ and $\emptyset = \bot$.}
+\end{figure}
 
 \subsection{Attribute Grammars}
 \label{chap:attr-grammars}
@@ -388,7 +454,8 @@ define their own types.
 Overall, the goal of TEAL is to provide a language that allows students to
 focus on the challenges of performing program analysis on a real-world language
 without being overwhelmed by the details of a fully-featured language.
-We will use TEAL-0 to demonstrate the use of RAGs and the main results summarized in this thesis.
+For the sake of simplicity, we will use TEAL-0 and TEAL-1 to exemplyfy the use of RAGs 
+and the main results summarized in this thesis.
 
 \subsection{The JastAdd Metacompiler}
 \label{sec:jastadd}
