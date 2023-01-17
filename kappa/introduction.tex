@@ -25,7 +25,7 @@ which are based on the idea of explicitly specifying \emph{how} the analysis sho
 performed. 
 However, more recently, there has been a growing interest in using 
 declarative paradigms for dataflow analysis, which are based on specifying \emph{what}
-the analysis should accomplish rather than how it should be performed.
+the analysis should accomplish rather than \emph{how} it should be performed.
 
 In this thesis, we will explore the use of declarative paradigms for dataflow 
 analysis~\cite{smits2020flowspec,madsen2016programming}, focusing on developing new underlying framework for constructing 
@@ -46,20 +46,20 @@ The contributions of this thesis are summarised by the following two papers:
 \begin{itemize}
 	\item \paperIref.
 	This paper presents a new framework for precise source-level control-flow 
-	analysis, called IntraCFG. This framework is based on the idea of 
+	analysis, called \textsc{IntraCFG}. This framework is based on the idea of 
 	representing a program's control flow at the source code level, instead of 
 	the traditional intermediate representation level. This allows for more 
 	precise analysis, as it captures the exact control flow of the original program.
-    We also implemented IntraJ, an instance of IntraCFG for the Java programming 
+    We also implemented IntraJ, an instance of \textsc{IntraCFG} for the Java programming 
 	language, and demonstrated its effectiveness (performance and precision) in 
 	two study cases.
 
 	\item \paperIIref.
-	This paper introduces JFeature, an extensible tool for automatically extracting and summarising
-	the key features of a corpus (i.e., collection) of Java programs. JFeature 
+	This paper introduces \textsc{JFeature}, an extensible tool for automatically extracting and summarising
+	the key features of a corpus (i.e., collection) of Java programs. \textsc{JFeature} 
 	allows researchers to quickly gain an understanding of the characteristics of a codebase, 
 	which can be used to evaluate the effectiveness of their tools and techniques.
-	In addition, in this paper, we also present a case study of using JFeature to
+	In addition, in this paper, we also present a case study of using \textsc{JFeature} to
 	identify the key features of four popular open-source corpora, providing a
 	baseline for future research.
 \end{itemize}

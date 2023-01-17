@@ -3,11 +3,11 @@
 This Section provides an overview of the research that 
 underlies the main results of the thesis. Specifically, in this Section we will explore
 the concepts of dataflow analysis, control-flow analysis, attribute grammars, 
-and their implementation through the JastAdd framework.
+and their implementation through the \textsc{JastAdd} framework.
 
 Dataflow analysis is a technique used to determine the values that are used and 
 defined within a program. It is a fundamental concept in the field of compiler 
-construction, and it is used to optimize code and to security threats and bugs. 
+construction, and it is used in the field of code optimisation, security vulnerabilities, and bugs detection. 
 Dataflow analysis depends on control-flow analysis, which computes an overapproxiamation of
 all possible paths that a program can take.
 
@@ -16,20 +16,19 @@ and for specifying properties of the program. They are used in the implementatio
 of compilers, and program analysis tools.
 Reference Attribute Grammars (RAGs) is a particular kind of attribute grammars 
 where the attribute values are defined in terms of references to the attributes 
-of other elements in the grammar. JastAdd which is used in our work is a meta-compiler 
+of other elements in the grammar. \textsc{JastAdd} which is used in our work is a meta-compiler 
 for implementing compilers and other language tools, e.g., static analysers, using RAGs.
 
-The main results of this thesis are IntraCFG and JFeature. 
-IntraCFG is a language-independent framework for implementing control-flow graphs 
+The main results of this thesis are \textsc{IntraCFG} and \textsc{JFeature}. 
+\textsc{IntraCFG} is a language-independent framework for implementing control-flow graphs 
 on the source code level.
-It is based on JastAdd and Control-flow analysis theory. IntraTeal is a instance
-of IntraCFG on the TEAL language that we will use to demonstrate the effectiveness
-of the framework. We also designed JFeature, a fact extractor for Java programs,
+It is based on \textsc{JastAdd} and Control-flow analysis theory. \textsc{IntraTeal} is a instance
+of \textsc{IntraCFG} on the TEAL language that we will use to demonstrate the effectiveness
+of the framework. We also designed \textsc{JFeature}, a fact extractor for Java programs,
 with the aim of presenting a more comprehensive overview of a Java program by 
 taking into account the utilisation of various features and constructs specific 
-to the Java language across different Java versions. The objective of JFeature is
+to the Java language across different Java versions. The objective of \textsc{JFeature} is
 to assist researchers and developers in the process of selecting benchmarks.
-
 Throughout this Section, these concepts will be discussed in more detail and used to 
 demonstrate the effectiveness of the proposed methods.
 
@@ -46,12 +45,12 @@ demonstrate the effectiveness of the proposed methods.
     teal/.style={rectangle,draw=black,text width=2cm,text centered}]
     \node[analysis] (dataflow) {Dataflow Analysis};
     \node[analysis, below of = dataflow] (cfa) {Control-flow Analysis};
-    \node[results, right of = dataflow] (intracfg) {IntraCFG};
+    \node[results, right of = dataflow] (intracfg) {\textsc{IntraCFG}};
     \node[teal, below of = intracfg] (teal) {TEAL};
 	\node[rags, right of = teal] (jastadd) {JastAdd};
     \node[rags, below of = jastadd] (rags) {Reference Attribute Grammars (RAGs)};
 	\node[rags, below of = rags] (ags) {Attribute Grammars};
-    \node[results, above of = intracfg] (intrateal) {IntraTeal};
+    \node[results, above of = intracfg] (intrateal) {\textsc{IntraTeal}};
     \path[->] (dataflow) edge (cfa);
     \path[->] (jastadd) edge (rags);
     \path[->] (rags) edge (ags);
@@ -68,11 +67,17 @@ demonstrate the effectiveness of the proposed methods.
 \subsection{Control-flow analysis}
 
 Control-flow analysis involves analysing the control flow of the program, which refers
-to the execution order of the program's statements. It aids in comprehending the logical
-structure of a program and recognising potential flaws, such as uninitialized variables
-and infinite loops. Control-flow analysis
+to the execution order and evaluation order of the program's statements and expressions.
+It aids in comprehending the logical structure of a program and recognising potential flaws,
+such as uninitialized variables and infinite loops. Control-flow analysis
 can provide valuable insights into the structure and behaviour of a program,
 which can help with program understanding and maintenance.
+The main result of control-flow analysis is the control-flow graph (CFG), $G = (V, E)$,
+which is a directed graph where each node $v \in V$ represents a basic block
+and each edge $e \in E$ represents a control-flow edge. A basic block is a sequence of
+statements that are executed in order, and that are always executed together, 
+wheras a control-flow edge is an edge that represents a control-flow dependency between two basic blocks.
+
 % However, it is not always possible to establish the exact control flow of a program
 % due to the Rice-Turing theorem, which is a key limitation of control-flow analysis.
 We can distinguish two main approaches to constructing the control-flow graph (CFG) for a program:
@@ -96,13 +101,13 @@ errors or inconsistencies.
 Furthermore, in situations where the IR must be generated in real-time,
 for instance, when the analysis is performed in an integrated development environment (IDE),
 the overhead of code generation and optimization may make this process too expensive,
-causing latency in the IDE and frustration in the developer.
+causing latency in the IDE and frustration in the developer~\cite{piskachev2022far}.
 In such cases, constructing the control-flow graph (CFG) on the source level
 may be a more efficient option.
 
 However, there are also some disadvantages to constructing the CFG on the source level.
 One of the main limitations is that it can be more difficult to accurately capture the
-control-flow of a program when working with the source code it may contain constructs,
+control-flow of a program when working with the source code containing unsugared \todo{Not sure if it's clear} constructs,
 such as macros and preprocessor directives, that
 can complicate the analysis. In addition, the source code may be written in a variety
 of languages with different syntax and semantics, which can make it challenging to
@@ -122,13 +127,15 @@ void foo(){
   }
 }
   \end{lstlisting} &\hspace{2.5cm}
-  \begin{tikzpicture}[node distance=1.5cm, baseline=(current bounding box.center)]
+  \begin{tikzpicture}[node distance=1.25cm, baseline=(current bounding box.center)]
       \node (start) [rectangle] {\texttt{Entry}};
-      \node (if) [rectangle, below of=start] {\texttt{if (x > 0)}};
+      \node (assign) [rectangle, below of=start] {\texttt{x = 0}};
+      \node (if) [rectangle, below of=assign] {\texttt{if (x > 0)}};
       \node (then) [rectangle, below of=if] {\texttt{x = 1}};
       \node (else) [rectangle, right of=then] {\texttt{x = -1}};
       \node (end) [rectangle, below of=else] {\texttt{Exit}};
-      \draw [->] (start) -- (if);
+      \draw [->] (start) -- (assign);
+        \draw [->] (assign) -- (if);
       \draw [->] (if) -- node [left, font=\scriptsize] {\textsc{true}} (then);
       \draw [->] (if) -- node [right,  font=\scriptsize]{\textsc{false}} (else);
       \draw [->] (then) -- (end);
@@ -198,16 +205,16 @@ of programs by removing unnecessary computations e.g., Very Busy Expression or A
 Dataflow analysis involves tracking the flow of data through a program by
 identifying the variables that are defined and used at each point in the program's
 control flow. This information can be used to optimize the program by eliminating
-unnecessary computations and improving the use of available resources.
+unnecessary computations and improving the use of available resources (e.g., registers optimisation).
 One of the primary advantages of dataflow analysis is its ability to handle programs
-with complex control flow, such as those with loops and conditional statements.
+with complex control flow, such as those with nested loops, jumps (e.g., break) and exceptions.
 
 In the context of bug detection~\cite{spoon, fink2012wala}, dataflow analysis can be used to identify
 potential sources of errors in a program by tracking the flow of data through
 the program and identifying points where data may be used in unexpected or
 incorrect ways. This can be particularly useful in identifying bugs that may
 not be immediately apparent, such as those that only occur under certain
-conditions or when certain combinations of input data are used.
+conditions or when certain combinations of input data are used (e.g., \texttt{IndexOutOfBound} exception).
 Many tools for static analysis of Java programs, such as FindBugs~\cite{findbugs},
 SpotBugs~\cite{spotbugs}, and PMD~\cite{copeland2005pmd}, use dataflow analysis to identify
 potential bugs in Java programs.
@@ -219,6 +226,7 @@ identifying points where it may be exposed to unauthorized access or manipulatio
 dataflow analysis can help to identify potential vulnerabilities that could be
 exploited by attackers.
 
+
 \subsubsection*{Monotone Frameworks}
 Monotone framework~\cite{kam1977monotone} is a teoretical framework for reasoning about program dataflow properties.
 These frameworks provide a flexible and generic framework for expressing and solving
@@ -227,10 +235,10 @@ properties, such as live variables, reaching definitions, and available expressi
 Monotone frameworks are built on the concept of lattice~\cite{Donnellan1968,Birkhoff1967,cousot1977ai}. 
 A lattice is a partially ordered set in which any two elements have a unique least 
 upper bound (also known as a join or a supremum) and a unique greatest lower bound 
-(also known as a meet or an infimum). Meaning that, any elements a and b in 
-the lattice, there exists a unique element denoted as a $\vee$ b (or a $\cup$ b) 
-such that a $\leq$ a $\vee$ b and b $\leq$ a $\vee$ b, and a $\wedge$ b 
-(or a $\cap$ b) such that a $\wedge$ b $\leq$ a and a $\wedge$ b $\leq$ b.
+(also known as a meet or an infimum). Meaning that, for any elements $a$ and $b$ in 
+the lattice, there exists a unique element denoted as  $a \vee b$  (or  $a \cup b$ ) 
+such that  $a \leq a \vee b$  and  $ b \leq a \vee b$ , and  $a \wedge b$  
+(or  $ a\cap b$ ) such that  $ a\wedge b\leq a$  and  $a \wedge b\leq b$.
 
 A well-formed lattice has a unique least element, commonly denoted as $\bot$, 
 and a unique greatest element, commonly denoted as $\top$. These elements satisfy 
@@ -249,7 +257,7 @@ $$\text{out}(n) = f(\text{in}(n), n)$$
 
 where $f:C \mapsto L$ is a monotone transfer function, also called transfer function. 
 The transfer function $f$ maps each element $c$ in the set $C$ (i.e., concrete domain) 
-to an element $f(c)$ in the lattice $L$ (i.e., abstract domain). $pred(n)$ and $succ(n)$ 
+to an element $f(c)$ in the \emph{finite} lattice $L$ (i.e., abstract domain). The sets $pred(n)$ and $succ(n)$ 
 denote the set of predecessors and successors of node $n$, respectively.
 
 A backward monotone framework is similar to a forward framework, except that the equations are reversed:
@@ -258,9 +266,9 @@ $$\text{out}(n) = \bigcup\limits_{s \in \text{succ}(n)} \text{in}(s)$$
 $$\text{in}(n) = f(\text{out}(n), n).$$
 
 The framework defines a mutual dependency between the $in$ and $out$ sets of a node.
-This circular dependency is solved through a fix point computation.
-Fix point computation is a mathematical technique that finds a stable 
-state, or fix point, in a system. In the context of the Monotone framework, this 
+This circular dependency is solved through a fix point computation that is
+a mathematical technique that finds a stable state, or fix point, in a system.
+In the context of the Monotone frameworks, this 
 refers to finding a state where the $in$ and $out$ sets of all nodes in the CFG have reached a 
 stable value, and no further changes will occur. The fix point is guarantee to exist
 because the transfer function $f$ is monotone~\cite{Knaster1929}.
@@ -272,8 +280,8 @@ because the transfer function $f$ is monotone~\cite{Knaster1929}.
     \centering
 \begin{tikzpicture}
     \node (max) at (0,4) {$S$};
-    \node (a) at (-2,2) {$\{s_1,s_3\}$};
-    \node (b) at (0,2) {$\{s_1,s_2\}$};
+    \node (a) at (-2,2) {$\{s_1,s_2\}$};
+    \node (b) at (0,2) {$\{s_1,s_3\}$};
     \node (c) at (2,2) {$\{s_2,s_3\}$};
     \node (d) at (-2,0) {$\{s_1\}$};
     \node (e) at (0,0) {$\{s_2\}$};
@@ -305,9 +313,9 @@ parse a program into its abstract syntax tree, and the attribute evaluation func
 is used to compute the values of the attributes associated with each element
 of the tree.
 
-A key advantage of attribute grammars is their ability to capture the
+Attribute grammars enable the description of the 
 interdependence of syntactic and semantic elements of a programming language.
-For example, the type of a variable may be determined by its declaration,
+For instance, the type of a variable may be determined by its declaration,
 but the type of an expression may be determined by the types of its subexpressions.
 Attribute grammars provide a way to specify these constraints.
 
@@ -343,7 +351,7 @@ function, the variable will be visible and accessible within the body of the fun
 but not outside of the function.
 
 
-Inherited attributes are defined by two parts: a declaration and an equation.
+Inherited attributes are defined in two parts: a declaration and an equation.
 \begin{equation*}
 \Ainh{A}{x} \quad\quad \quad\quad \Ainhdef{B}{*}{x} = e
 \end{equation*}
@@ -435,40 +443,110 @@ Examples of the relations that can be constructed using RAGs are:
 \end{itemize}
 
 \subsection{The TEAL Programming Language}
-TEAL (Typed Easily Analysable Language) is a programming language designed by Christoph Reichenbach, and  used in the
+TEAL v0.4 (Typed Easily Analysable Language) is a programming language designed by Christoph Reichenbach, and  used in the
 program analysis\footnote{\url{https://fileadmin.cs.lth.se/cs/Education/EDAP15/2022/web/index.html}} course at Lund University.
-It is a simplified version of Java and its grammar and some aspects of its semantics are
-listed in Appendix~TBD.  %Not sure if we should include the grammar in the thesis or just cite it.
+The goal of TEAL is to provide a language that allows students to
+focus on the challenges of performing program analysis on a real-world language
+without being overwhelmed by the details of a fully-featured language.
+The concrete and part of the abstract syntax of TEAL is shown in Figure~\ref{fig:tealGrammar}.
 One of the key features of TEAL is that it is an object-oriented language,
 which means that it allows the creation of classes and objects that can inherit
 characteristics and behavior from one another. However, it does not have a dynamic
 dispatcher, which means that the method that is called for an object at runtime
 is determined at compile time based on the type of the object.
-In addition to supporting the definition of new types, TEAL also allows the use
-of arrays. It was developed in an incremental manner, with each version building
+TEAL was developed in an incremental manner, with each version building
 upon the features of the previous one. TEAL-0 is the most basic version and includes
 support for variable declarations and use, procedures, and basic control structures such as if
 and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2 allows users to
 define their own types.
-
-Overall, the goal of TEAL is to provide a language that allows students to
-focus on the challenges of performing program analysis on a real-world language
-without being overwhelmed by the details of a fully-featured language.
 For the sake of simplicity, we will use TEAL-0 and TEAL-1 to exemplyfy the use of RAGs 
 and the main results summarized in this thesis.
+\begin{figure}
+    
 
-\subsection{The JastAdd Metacompiler}
+\[\footnotesize
+  \begin{array}[t]{lcl@{\hspace{0.4cm}}l}
+    \nta{Program} & \Prod & \ntstar{Module} \\
+    \\
+    \nta{Module} & \Prod & \ntstar{ImportDecl}\ \ntstar{Decl}\\
+    \\
+    \nta{ImportDecl} & \Prod & \vterminal{import}\ \nt{PackagePath}\ \vterminal{;}\\
+    \\
+    \nta{PackagePath} & \Prod & \terminal{id}\\
+                    & \VB   & \nt{PackagePath}\ \vterminal{::}\ \terminal{id} \\
+    \\
+    \nta{Decl} & \Prod & \nt{VarDecl}\ \\
+                 & \VB & \vterminal{fun}\ \terminal{id}\ \vterminal{(}\ \ntq{formals}\ \vterminal{)}\ \nt{optTyped}\ \vterminal{=}\ \nt{stmt}  & \astmap{Represented as } \ntaX{FunDecl} \\
+    \\
+    \nta{VarDecl} & \Prod & \vterminal{var}\ \terminal{id}\ \nt{optTyped} \\
+                  & \VB   & \vterminal{var}\ \terminal{id}\ \nt{optTyped}\ \vterminal{:=}\ \nt{Expr} \vterminal{;}\\
+    \\
+    \nta{formals} & \Prod & \terminal{id}\ \nt{optTyped} & \astmap{Formals represented as \ntaX{VarDecl}s} \\
+                  & \VB & \terminal{id}\ \nt{optTyped}\ \vterminal{,}\ \nt{formals}\\
+                \\
+    \nta{optTyped} & \Prod & \vterminal{:}\ \nt{Type}\\
+                  & \VB{} & \varepsilon \\
+    \\
+    \nta{Type} & \Prod & \Cty{int}\ \VB\ \Cty{string}\ \VB\ \Cty{any} & \astmap{Represented as \ntaX{Int}, \ntaX{String}, \ntaX{Any}}\\
+               & \VB   & \Cty{array}\ \Cty{[}\ \nt{Type}\ \Cty{]} & \astmap{Represented as \ntaX{Array}}\\
+    \\
+    \nta{BlockStmt} & \Prod & \vterminal{\{}\ \ntstar{Stmt}\ \vterminal{\}} \\
+    \\
+    \nta{Expr} & \Prod & \nt{Expr}\ \nt{binop}\ \nt{Expr} & \astmap{Represented as \ntaX{BinExpr}}\\
+               & \VB   & \vterminal{not}\ \nt{Expr} & \astmap{Represented as \ntaX{NotExpr}}\\
+               & \VB   & \vterminal{(}\ \nt{Expr}\ \nt{optTyped}\ \vterminal{)} & \astmap{Represented as \ntaX{TypedExpr}}\\
+               & \VB   & \nt{Expr}\ \vterminal{[}\ \nt{Expr}\ \vterminal{]} & \astmap{Represented as \ntaX{CallExpr}}\\
+               & \VB   & \terminal{id}\ \vterminal{(}\ \ntq{actuals}\ \vterminal{)} & \astmap{Represented as \ntaX{IndexExpr}}\\
+               & \VB   & \vterminal{[}\ \ntq{actuals}\ \vterminal{]} & \astmap{Represented as \ntaX{ArrayLiteralExpr}}\\
+               & \VB   & \vterminal{new}\ \nt{Type}\ \vterminal{(}\ \nt{Expr}\ \vterminal{)} & \astmap{Represented as \ntaX{NewExpr}}\\
+               & \VB   & \terminal{int}\ \VB\ \terminal{string}\ \VB\ \vterminal{null} & \astmap{Represented as \ntaX{Constant}}\\
+               & \VB   & \terminal{id} & \astmap{Represented as \ntaX{IdUse}}\\
+    \\
+    \nta{actuals} & \Prod & \nt{Expr} \\
+                  & \VB   & \nt{Expr} \vterminal{,}\ \nt{actuals} \\
+    \\
+    \nta{binop} & \Prod &
+		\vterminal{+}
+                \ \VB\ \vterminal{-}
+                \ \VB\ \vterminal{*}
+                \ \VB\ \vterminal{/}
+                \ \VB\ \vterminal{\%}\\
+                & \VB& \vterminal{==}
+                \ \VB\ \vterminal{!=}
+                \ \VB\ \vterminal{$<$}
+                \ \VB\ \vterminal{$<=$}
+                \ \VB\ \vterminal{$>=$}
+                \ \VB\ \vterminal{$>$}
+                \\
+                & \VB& \vterminal{or}
+                \ \VB\ \vterminal{and}\\
+    \\
+    \nta{Stmt} & \Prod & \nt{VarDecl}  & \astmap{Represented as } \ntaX{VarDeclStmt}\\
+               & \VB   & \nt{Expr}\ \vterminal{;} & \astmap{Represented as } \ntaX{ExprStmt}\\
+               & \VB   & \nt{Expr}\ \vterminal{:=}\ \nt{Expr}\ \vterminal{;} & \astmap{Represented as } \ntaX{AssignStmt}\\
+               & \VB   & \nt{BlockStmt} \\
+               & \VB   & \vterminal{if}\ \nt{expr}\ \nt{block}\ \vterminal{else}\ \nt{block} & \astmap{Represented as } \ntaX{IfStmt}\\
+               & \VB   & \vterminal{if}\ \nt{expr}\ \nt{block}\ & \astmap{Represented as \ntaX{IfStmt} with \ntaX{SkipStmt}} \\
+               & \VB   & \vterminal{while}\ \nt{expr}\ \nt{block} & \astmap{Represented as } \ntaX{WhileStmt}\\
+               & \VB   & \vterminal{return}\ \nt{expr}\ \vterminal{;} & \astmap{Represented as } \ntaX{ReturnStmt}\\
+  \end{array}
+\]
+\caption{\label{fig:tealGrammar} The concrete and part of the abstract grammar of the \textsc{Teal} language.}
+\end{figure}
+
+
+\subsection{The \textsc{JastAdd} Metacompiler}
 \label{sec:jastadd}
-The JastAdd metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a tool for the construction of
-Reference Attribute Grammars. The JastAdd metacompiler is a Java-based tool that generates
+The \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a tool for the construction of
+Reference Attribute Grammars. The \textsc{JastAdd} metacompiler is a Java-based tool that generates
 Java code from a RAG. The generated code can be used to construct an AST and to perform
 analysis on the AST.
-The JastAdd metacompiler is based on the following components:
+The \textsc{JastAdd} metacompiler is based on the following components:
 \begin{itemize}
-    \item The JastAdd language: a language for the definition of RAGs.
-    The JastAdd language allow to specify the abstract grammar of a language, and,
+    \item The \textsc{JastAdd} language: a language for the definition of RAGs.
+    The \textsc{JastAdd} language allow to specify the abstract grammar of a language, and,
     with a java-like syntax, the attributes of the RAG.
-    \item The JastAdd compiler: a compiler that generates Java code from a RAG.
+    \item The \textsc{JastAdd} compiler: a compiler that generates Java code from a RAG.
 \end{itemize}
 In JastAdd, synthesized attributs are defined using the \code{syn} keyword followed
 by the type and the name of the attribute. Similarly, inherited attributes are defined
@@ -552,14 +630,14 @@ class B {
 \end{figure}
 
 
-JastAdd supports intertype declarations for the definition of attributes. An intertype declaration
+\textsc{JastAdd} supports intertype declarations for the definition of attributes. An intertype declaration
 of an attribute is a declaration that is performed into an aspect that, at compile time,
 is inlined in the class specified in the intertype declaration. The example in Figure~\ref{fig:interType}
 shows an intertype declaration of an attribute.
 The attributes \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrDecl}
 that is inlined in the classes \code{A} and \code{B} respectively.
 
-JastAdd supports not only synthesized and inherited attributes, but also:
+\textsc{JastAdd} supports not only synthesized and inherited attributes, but also:
 \begin{itemize}
     \item \emph{Parametrised Attribute}: the value of the attribute might depend
     not only on the AST node itself, but also on the value of the arguments supplied
