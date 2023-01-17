@@ -36,5 +36,15 @@ of \textsc{AST-Unrestricted} CFGs, which are CFGs whose shape is not restricted 
 The framework provides three interfaces, namely \code{CFGRoot}, \code{CFGNode}, and \code{CFGSupport},
 to be implemented by AST nodes. Each interface provides a set of attribute that are used to construct
 the CFGs.
- 
 
+The \code{CFGRoot} interface is the starting point of the CFG construction process.
+It is implemented by AST nodes that identify the subtree containing the entire method 
+or function. This interface is responsible for defining the entry and exit nodes of the CFG and 
+forwards a reference of the entry node to every \code{CFGNode}.
+
+
+The \code{CFGSupport} interface is implemented by nodes that are not part of the CFG,
+but define its shape. These nodes are used to provide additional information 
+about the structure of the CFG, such as the presence of loops or branches. 
+They are designed to be used as auxiliary nodes to support the CFG construction 
+process, and they do not participate directly in the control-flow.
