@@ -461,9 +461,7 @@ and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2 allows
 define their own types.
 For the sake of simplicity, we will use TEAL-0 and TEAL-1 to exemplyfy the use of RAGs 
 and the main results summarized in this thesis.
-\begin{figure}
-    
-
+\begin{figure}[H]
 \[\footnotesize
   \begin{array}[t]{lcl@{\hspace{0.4cm}}l}
     \nta{Program} & \Prod & \ntstar{Module} \\
@@ -537,10 +535,19 @@ and the main results summarized in this thesis.
 
 \subsection{The \textsc{JastAdd} Metacompiler}
 \label{sec:jastadd}
-The \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a tool for the construction of
-Reference Attribute Grammars. The \textsc{JastAdd} metacompiler is a Java-based tool that generates
+The  metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a powerful tool for the construction of
+Reference Attribute Grammars.
+\textsc{JastAdd} allow language designers to  handle complex language constructs in a modular and extensible
+manner through the use of the RAGs formalism.
+The \textsc{JastAdd} metacompiler is a Java-based tool that generates
 Java code from a RAG. The generated code can be used to construct an AST and to perform
 analysis on the AST.
+Another important aspect of \textsc{JastAdd} is its support for on-demand attribute evaluation. 
+Attribute evaluation is performed only when the corresponding 
+attribute is actually required and triggered by the program. This approach enables \textsc{JastAdd} to 
+avoid performing unnecessary computations, which can greatly improve the 
+performance of the generated code.
+
 The \textsc{JastAdd} metacompiler is based on the following components:
 \begin{itemize}
     \item The \textsc{JastAdd} language: a language for the definition of RAGs.
@@ -548,7 +555,7 @@ The \textsc{JastAdd} metacompiler is based on the following components:
     with a java-like syntax, the attributes of the RAG.
     \item The \textsc{JastAdd} compiler: a compiler that generates Java code from a RAG.
 \end{itemize}
-In JastAdd, synthesized attributs are defined using the \code{syn} keyword followed
+In \textsc{JastAdd}, synthesized attributs are defined using the \code{syn} keyword followed
 by the type and the name of the attribute. Similarly, inherited attributes are defined
 using the \code{inh} keyword. Let us reconsider the example depicted in Figure~\ref{fig:ragsExample}.
 The abstract grammar is defined in a \code{.ast} file with the following syntax:
@@ -630,8 +637,9 @@ class B {
 \end{figure}
 
 
-\textsc{JastAdd} supports intertype declarations for the definition of attributes. An intertype declaration
-of an attribute is a declaration that is performed into an aspect that, at compile time,
+Another key feature of \textsc{JastAdd}  is the support of intertype declarations for the definition of attributes. 
+An intertype declaration of an attribute is a declaration that is performed into
+an aspect that, at compile time,
 is inlined in the class specified in the intertype declaration. The example in Figure~\ref{fig:interType}
 shows an intertype declaration of an attribute.
 The attributes \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrDecl}
@@ -657,16 +665,15 @@ syn boolean Type.compatibleType(Type t){
     attributed and it can be used in the definition of other attributes. In JastAdd, HOAs
     are defined using the \code{nta} keyword. HOAs are widely used to reify information
     that are not explicit in the source-code and therefore, not present in the AST.
-    For example, when constructing a CFG of a method, is always useful to specify
-    a unique entry point and a unique exit point for the method. In JastAdd, this can be
-    achived using an HOA:
+    For example, we use HOAs to reify the entry and exit points of a method. In CFGs, it
+    is common to have a unique entry point and a unique exit point for each method.
     \begin{lstlisting}[language=JastAdd]
-syn nta Entry MethodDecl.entry() = new Entry();
-syn nta Exit MethodDecl.exit() = new Exit();
+syn nta Entry FunDecl.entry() = new Entry();
+syn nta Exit FunDecl.exit() = new Exit();
     \end{lstlisting}
-    We use the right-arrow symbol to denote HOAs, e.g.,  \Ahoa{MethodDecl}{entry} and \Ahoa{MethodDecl}{exit}.
+    We use the right-arrow symbol to denote HOAs, e.g.,  \Ahoa{FunDecl}{entry} and \Ahoa{FunDecl}{exit}.
     \item \emph{Circular Attribute}: an attribute which definition might depend direclty
-    or indirectly on itself. In JastaAdd, circular attributes are expressed using the \code{circular}
+    or indirectly on itself. In \textsc{JastaAdd}, circular attributes are expressed using the \code{circular}
     keyword. To guarantee termination, circular attributes are evaluated in a fixed-point
     computation, i.e., the attribute is evaluated until the value of the attribute does not change.
     The requirements, that are not checked by JastAdd, to guarantee termination are:
