@@ -448,7 +448,7 @@ program analysis\footnote{\url{https://fileadmin.cs.lth.se/cs/Education/EDAP15/2
 The goal of TEAL is to provide a language that allows students to
 focus on the challenges of performing program analysis on a real-world language
 without being overwhelmed by the details of a fully-featured language.
-The concrete and part of the abstract syntax of TEAL is shown in Figure~\ref{fig:tealGrammar}.
+The concrete and the abstract syntax of TEAL-0 are shown in Figure~\ref{fig:tealGrammar}\todo{Don't look at the colors of the abstract grammar. This can be fixed}.
 One of the key features of TEAL is that it is an object-oriented language,
 which means that it allows the creation of classes and objects that can inherit
 characteristics and behavior from one another. However, it does not have a dynamic
@@ -461,74 +461,129 @@ and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2 allows
 define their own types.
 For the sake of simplicity, we will use TEAL-0 and TEAL-1 to exemplyfy the use of RAGs 
 and the main results summarized in this thesis.
+\newsavebox{\mylistingbox}
+
 \begin{figure}[H]
-\[\footnotesize
-  \begin{array}[t]{lcl@{\hspace{0.4cm}}l}
-    \nta{Program} & \Prod & \ntstar{Module} \\
-    \\
-    \nta{Module} & \Prod & \ntstar{ImportDecl}\ \ntstar{Decl}\\
-    \\
-    \nta{ImportDecl} & \Prod & \vterminal{import}\ \nt{PackagePath}\ \vterminal{;}\\
-    \\
-    \nta{PackagePath} & \Prod & \terminal{id}\\
-                    & \VB   & \nt{PackagePath}\ \vterminal{::}\ \terminal{id} \\
-    \\
-    \nta{Decl} & \Prod & \nt{VarDecl}\ \\
-                 & \VB & \vterminal{fun}\ \terminal{id}\ \vterminal{(}\ \ntq{formals}\ \vterminal{)}\ \nt{optTyped}\ \vterminal{=}\ \nt{stmt}  & \astmap{Represented as } \ntaX{FunDecl} \\
-    \\
-    \nta{VarDecl} & \Prod & \vterminal{var}\ \terminal{id}\ \nt{optTyped} \\
-                  & \VB   & \vterminal{var}\ \terminal{id}\ \nt{optTyped}\ \vterminal{:=}\ \nt{Expr} \vterminal{;}\\
-    \\
-    \nta{formals} & \Prod & \terminal{id}\ \nt{optTyped} & \astmap{Formals represented as \ntaX{VarDecl}s} \\
-                  & \VB & \terminal{id}\ \nt{optTyped}\ \vterminal{,}\ \nt{formals}\\
-                \\
-    \nta{optTyped} & \Prod & \vterminal{:}\ \nt{Type}\\
-                  & \VB{} & \varepsilon \\
-    \\
-    \nta{Type} & \Prod & \Cty{int}\ \VB\ \Cty{string}\ \VB\ \Cty{any} & \astmap{Represented as \ntaX{Int}, \ntaX{String}, \ntaX{Any}}\\
-               & \VB   & \Cty{array}\ \Cty{[}\ \nt{Type}\ \Cty{]} & \astmap{Represented as \ntaX{Array}}\\
-    \\
-    \nta{BlockStmt} & \Prod & \vterminal{\{}\ \ntstar{Stmt}\ \vterminal{\}} \\
-    \\
-    \nta{Expr} & \Prod & \nt{Expr}\ \nt{binop}\ \nt{Expr} & \astmap{Represented as \ntaX{BinExpr}}\\
-               & \VB   & \vterminal{not}\ \nt{Expr} & \astmap{Represented as \ntaX{NotExpr}}\\
-               & \VB   & \vterminal{(}\ \nt{Expr}\ \nt{optTyped}\ \vterminal{)} & \astmap{Represented as \ntaX{TypedExpr}}\\
-               & \VB   & \nt{Expr}\ \vterminal{[}\ \nt{Expr}\ \vterminal{]} & \astmap{Represented as \ntaX{CallExpr}}\\
-               & \VB   & \terminal{id}\ \vterminal{(}\ \ntq{actuals}\ \vterminal{)} & \astmap{Represented as \ntaX{IndexExpr}}\\
-               & \VB   & \vterminal{[}\ \ntq{actuals}\ \vterminal{]} & \astmap{Represented as \ntaX{ArrayLiteralExpr}}\\
-               & \VB   & \vterminal{new}\ \nt{Type}\ \vterminal{(}\ \nt{Expr}\ \vterminal{)} & \astmap{Represented as \ntaX{NewExpr}}\\
-               & \VB   & \terminal{int}\ \VB\ \terminal{string}\ \VB\ \vterminal{null} & \astmap{Represented as \ntaX{Constant}}\\
-               & \VB   & \terminal{id} & \astmap{Represented as \ntaX{IdUse}}\\
-    \\
-    \nta{actuals} & \Prod & \nt{Expr} \\
-                  & \VB   & \nt{Expr} \vterminal{,}\ \nt{actuals} \\
-    \\
-    \nta{binop} & \Prod &
-		\vterminal{+}
-                \ \VB\ \vterminal{-}
-                \ \VB\ \vterminal{*}
-                \ \VB\ \vterminal{/}
-                \ \VB\ \vterminal{\%}\\
-                & \VB& \vterminal{==}
-                \ \VB\ \vterminal{!=}
-                \ \VB\ \vterminal{$<$}
-                \ \VB\ \vterminal{$<=$}
-                \ \VB\ \vterminal{$>=$}
-                \ \VB\ \vterminal{$>$}
-                \\
-                & \VB& \vterminal{or}
-                \ \VB\ \vterminal{and}\\
-    \\
-    \nta{Stmt} & \Prod & \nt{VarDecl}  & \astmap{Represented as } \ntaX{VarDeclStmt}\\
-               & \VB   & \nt{Expr}\ \vterminal{;} & \astmap{Represented as } \ntaX{ExprStmt}\\
-               & \VB   & \nt{Expr}\ \vterminal{:=}\ \nt{Expr}\ \vterminal{;} & \astmap{Represented as } \ntaX{AssignStmt}\\
-               & \VB   & \nt{BlockStmt} \\
-               & \VB   & \vterminal{if}\ \nt{expr}\ \nt{block}\ \vterminal{else}\ \nt{block} & \astmap{Represented as } \ntaX{IfStmt}\\
-               & \VB   & \vterminal{if}\ \nt{expr}\ \nt{block}\ & \astmap{Represented as \ntaX{IfStmt} with \ntaX{SkipStmt}} \\
-               & \VB   & \vterminal{while}\ \nt{expr}\ \nt{block} & \astmap{Represented as } \ntaX{WhileStmt}\\
-               & \VB   & \vterminal{return}\ \nt{expr}\ \vterminal{;} & \astmap{Represented as } \ntaX{ReturnStmt}\\
-  \end{array}
-\]
+    \hspace*{-1cm}
+    \begin{minipage}{0.5\textwidth}
+        \[\footnotesize
+        \begin{array}[t]{lcl@{\hspace{0.4cm}}}
+          \nta{Program} & \Prod & \ntstar{Decl} \\
+          \\
+          \nta{Decl} & \Prod & \nt{VarDecl}\ \\
+                       & \VB & \vterminal{fun}\ \terminal{id}\ \vterminal{(}\ \ntq{formals}\ \vterminal{)}\\ 
+                       &&  \nt{optTyped}\ \vterminal{=}\ \nt{stmt} \\
+          \\
+          \nta{VarDecl} & \Prod & \vterminal{var}\ \terminal{id}\ \nt{optTyped} \\
+                        & \VB   & \vterminal{var}\ \terminal{id}\ \nt{optTyped}\ \vterminal{:=}\ \nt{Expr} \vterminal{;}\\
+          \\
+          \nta{formals} & \Prod & \terminal{id}\ \nt{optTyped} \\
+                        & \VB & \terminal{id}\ \nt{optTyped}\ \vterminal{,}\ \nt{formals}\\
+                      \\
+          \nta{optTyped} & \Prod & \vterminal{:}\ \nt{Type}\\
+                        & \VB{} & \varepsilon \\
+          \\
+          \nta{Type} & \Prod & \Cty{int}\ \VB\ \Cty{string}\ \VB\ \Cty{any} \\
+                     & \VB   & \Cty{array}\ \Cty{[}\ \nt{Type}\ \Cty{]} \\
+          \\
+          \nta{Block} & \Prod & \vterminal{\{}\ \ntstar{Stmt}\ \vterminal{\}} \\
+          \\
+          \nta{Expr} & \Prod & \nt{Expr}\ \nt{binop}\ \nt{Expr} \\
+                     & \VB   & \vterminal{not}\ \nt{Expr} \\
+                     & \VB   & \vterminal{(}\ \nt{Expr}\ \nt{optTyped}\ \vterminal{)} \\
+                     & \VB   & \nt{Expr}\ \vterminal{[}\ \nt{Expr}\ \vterminal{]} \\
+                     & \VB   & \terminal{id}\ \vterminal{(}\ \ntq{actuals}\ \vterminal{)} \\
+                     & \VB   & \vterminal{[}\ \ntq{actuals}\ \vterminal{]} \\
+                     & \VB   & \vterminal{new}\ \nt{Type}\ \vterminal{(}\ \nt{Expr}\ \vterminal{)} \\
+                     & \VB   & \terminal{int}\ \VB\ \terminal{string}\ \VB\ \vterminal{null} \\
+                     & \VB   & \terminal{id} \\
+          \\
+          \nta{actuals} & \Prod & \nt{Expr} \\
+                        & \VB   & \nt{Expr} \vterminal{,}\ \nt{actuals} \\
+          \\
+          \nta{binop} & \Prod &
+              \vterminal{+}
+                      \ \VB\ \vterminal{-}
+                      \ \VB\ \vterminal{*}
+                      \ \VB\ \vterminal{/}
+                      \ \VB\ \vterminal{\%}\\
+                      & \VB& \vterminal{==}
+                      \ \VB\ \vterminal{!=}\\
+                      & \VB&  \vterminal{$<$}
+                      \ \VB\ \vterminal{$<=$}
+                      \ \VB\ \vterminal{$>=$}
+                      \ \VB\ \vterminal{$>$}
+                      \\
+                      & \VB& \vterminal{or}
+                      \ \VB\ \vterminal{and}\\
+          \\
+          \nta{Stmt} & \Prod & \nt{VarDecl} \\
+                     & \VB   & \nt{Expr}\ \vterminal{;} \\
+                     & \VB   & \nt{Expr}\ \vterminal{:=}\ \nt{Expr}\ \vterminal{;}\\
+                     & \VB   & \nt{Block} \\
+                     & \VB   & \vterminal{if}\ \nt{expr}\ \nt{block}\ \vterminal{else}\ \nt{block} \\
+                     & \VB   & \vterminal{if}\ \nt{expr}\ \nt{block} \\
+                     & \VB   & \vterminal{while}\ \nt{expr}\ \nt{block} \\
+                     & \VB   & \vterminal{return}\ \nt{expr}\ \vterminal{;}\\
+        \end{array}
+      \]
+        \end{minipage}%
+        \begin{minipage}{0.8\textwidth}
+            \hfill
+\begin{lrbox}{\mylistingbox}
+        \begin{lstlisting}[language=JastAdd]
+    Program ::= Decl*;
+
+    abstract Decl;
+    VarDecl : Decl ::= IdDecl [DeclaredType:Type] [Initializer:Expr];
+    FunDecl : Decl ::= IdDecl [DeclaredReturnType:Type] Formal:VarDecl* [Body:Stmt];
+
+    abstract Expr;
+    abstract BinExpr : Expr ::= Left:Expr Right:Expr;
+    AddExpr : BinExpr;
+    SubExpr : BinExpr;
+    MulExpr : BinExpr;
+    DivExpr : BinExpr;
+    ModExpr : BinExpr;
+    EQExpr : BinExpr;
+    NEQExpr : BinExpr;
+    LTExpr : BinExpr;
+    GTExpr : BinExpr;
+    LEQExpr : BinExpr;
+    GEQExpr : BinExpr;
+    OrExpr : BinExpr;
+    AndExpr : BinExpr;
+    CallExpr : Expr ::= IdUse Actual:Expr*;
+    Null : Expr;
+    ArrayLiteralExpr : Expr ::= Expr*;
+    IndexExpr : Expr ::= Base:Expr Index:Expr;
+    NotExpr : Expr ::= Expr;
+    TypedExpr : Expr ::= Expr DeclType:Type;
+    NewExpr : Expr ::= Type Actual:Expr*; 
+    Access : Expr ::= IdUse ;
+    
+
+    abstract Constant : Expr;
+    IntConstant : Constant ::= <Value:Long>;
+    StringConstant : Constant ::= <Value:String>;
+   
+    abstract Stmt;
+    VarDeclStmt : Stmt ::= VarDecl;
+    ExprStmt : Stmt ::= Expr;
+    AssignStmt : Stmt ::= LValue:Expr RValue:Expr;
+    Block : Stmt ::= Stmt*;
+    IfStmt : Stmt ::= Cond:Expr Then:Stmt Else:Stmt;
+    WhileStmt : Stmt ::= Cond:Expr Body:Stmt;
+    ReturnStmt : Stmt ::= Expr;
+    SkipStmt : Stmt;
+    
+    IdUse ::= <Identifier>;
+    IdDecl ::= <Identifier>;
+        \end{lstlisting}
+\end{lrbox}
+\scalebox{0.7}{\usebox{\mylistingbox}}
+
+        \end{minipage}
 \caption{\label{fig:tealGrammar} The concrete and part of the abstract grammar of the \textsc{Teal} language.}
 \end{figure}
 
