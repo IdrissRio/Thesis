@@ -1,5 +1,40 @@
 \section{Contribution}
 \label{sec:contribution}
+In this Thesis, we present two major contributions to the field of programming 
+language analysis and software engineering. 
+The first significant contribution of this thesis is the formalisation of \textsc{IntraCFG},
+a language-agnostic RAG-based framework for constructing control-flow graphs (CFGs) 
+on top of the abstract syntax tree (AST). \textsc{IntraCFG}, is a highly flexible
+framework that enables the construction of light-weight and precise the control-flow graphs
+of a program. To exemplify the applicability of \textsc{IntraCFG}, we instantiate it for the TEAL language.
+
+The second contribution is a Java feature extractor called \textsc{JFeature}.
+This tool is designed to assist researchers in selecting the appropriate corpora
+for their experiments by extracting relevant features from Java programs. 
+\textsc{JFeature} is able to extract a wide range of features, 
+including syntactic, e.g., use of keywords, and semantic features, e.g.,
+the number of method calls.
 
 
+\subsection{\textsc{IntraCFG}: A Precise Framework for Source-level Control-flow Analysis}
+The field of control-flow graph (CFG) construction has seen significant advancements
+in recent years, with various frameworks being proposed to aid in the construction 
+of precise intraprocedural CFGs~\cite{smits2020flowspec,10.1016/j.scico.2012.02.002}.
+We contributed to the state-of-the-art introducing \textsc{IntraCFG}, a declarative, RAG-based,
+and language-independent framework for constructing precise intraprocedural CFGs.
+
+Unlike most other frameworks, which build CFGs on an Intermediate Representation (IR) level,
+such as bytecode, \textsc{IntraCFG}'s approach is unique in that it superimposes the CFGs 
+on the Abstract Syntax Tree (AST). This allows for a more accurate client analysis,
+as the CFGs are constructed directly on the source code level, rather than an
+intermediate representation. Additionally, this approach also enables the construction 
+of \textsc{AST-Unrestricted} CFGs, which are CFGs whose shape is not restricted to the AST structure.
+
+\subsubsection*{Design and Implementation}
+\textsc{IntraCFG} is written within the \textsc{JastAdd} ecosystem.
+
+The framework provides three interfaces, namely \code{CFGRoot}, \code{CFGNode}, and \code{CFGSupport},
+to be implemented by AST nodes. Each interface provides a set of attribute that are used to construct
+the CFGs.
+ 
 
