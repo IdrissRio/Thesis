@@ -2,8 +2,9 @@
 \label{sec:background}
 This Section provides an overview of the research that 
 underlies the main results of the thesis. Specifically, in this Section we will explore
-the concepts of dataflow analysis, control-flow analysis, attribute grammars, 
-and their implementation through the \textsc{JastAdd} framework.
+the concepts of dataflow analysis~\cite{aho2007compilers,Nielson2010Principles}, 
+control-flow analysis~\cite{allen1970control}, (Reference) attribute grammars~\cite{knuth1968semantics, DBLP:journals/informaticaSI/Hedin00}, 
+and their implementation through the \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01}.
 
 Dataflow analysis is a technique used to determine the values that are used and 
 defined within a program. It is a fundamental concept in the field of compiler 
@@ -14,9 +15,9 @@ all possible paths that a program can take.
 Attribute grammars are a formalism for describing the structure of a program, 
 and for specifying properties of the program. They are used in the implementation 
 of compilers, and program analysis tools.
-Reference Attribute Grammars (RAGs) is a particular kind of attribute grammars 
-where the attribute values are defined in terms of references to the attributes 
-of other elements in the grammar. \textsc{JastAdd} which is used in our work is a meta-compiler 
+Reference Attribute Grammars (RAGs) is an extension of the attribute grammars formalism, 
+where the attribute values can be defined in terms of references to the attributes 
+of other elements in the grammar. \textsc{JastAdd} which is used in our work, is a meta-compiler 
 for implementing compilers and other language tools, e.g., static analysers, using RAGs.
 
 The main results of this thesis are \textsc{IntraCFG} and \textsc{JFeature}. 
@@ -34,35 +35,58 @@ demonstrate the effectiveness of the proposed methods.
 
 % Here we can use different styles to distinguish between the different types of nodes
 % Everything is already set up, we just need to use the right style
+\usetikzlibrary{backgrounds}
 \begin{figure}[h]
     \centering
     \scalebox{0.8}{
 \begin{tikzpicture}[ 
     node distance=2.5cm,
-    results/.style={rectangle,draw=black,text width=2cm,text centered},
+    concept/.style={rectangle,draw=black,text width=2cm,text centered},
     rags/.style={rectangle,draw=black,text width=2cm,text centered},
     analysis/.style={rectangle,draw=black,text width=2cm,text centered},
-    teal/.style={rectangle,draw=black,text width=2cm,text centered}]
-    \node[analysis] (dataflow) {Dataflow Analysis};
-    \node[analysis, below of = dataflow] (cfa) {Control-flow Analysis};
-    \node[results, right of = dataflow] (intracfg) {\textsc{IntraCFG}};
-    \node[teal, below of = intracfg] (teal) {TEAL};
-	\node[rags, right of = teal] (jastadd) {JastAdd};
-    \node[rags, below of = jastadd] (rags) {Reference Attribute Grammars (RAGs)};
-	\node[rags, below of = rags] (ags) {Attribute Grammars};
-    \node[results, above of = intracfg] (intrateal) {\textsc{IntraTeal}};
-    \path[->] (dataflow) edge (cfa);
-    \path[->] (jastadd) edge (rags);
-    \path[->] (rags) edge (ags);
-    \path[->] (intracfg) edge (cfa);
-    \path[->] (intracfg) edge (teal);
-    \path[->] (intracfg) edge (jastadd);
-    \path[->] (intrateal) edge (dataflow);
-    \path[->] (intrateal) edge (intracfg);
+    teal/.style={rectangle,draw=black,text width=2cm,text centered},
+    contribution/.style={rectangle,draw=black,text width=2cm,text centered, dashed, fill=blue!10},
+    staticanalysis/.style={rectangle,draw=black,text width=2cm,text centered, dashed, fill=red!10},
+    ag/.style={rectangle,draw=black,text width=2cm,text centered, dashed, fill=green!10}
+    ]
+    \node[concept] (dataflow) {\phantom{Dataflow} \phantom{Analysis}};
+    \node[concept, below of = dataflow] (cfa) {\phantom{Control-flow} \phantom{Analysis}};
+    \node[concept, right of = dataflow] (intracfg) {\phantom{\textsc{IntraCFG}}};
+    \node[concept, below of = intracfg] (teal) {TEAL};
+	\node[concept, right of = teal] (jastadd) {JastAdd};
+    \node[concept, below of = jastadd] (rags) {Reference Attribute Grammars (RAGs)};
+	\node[concept, below of = rags] (ags) {Attribute Grammars};
+    \node[concept, above of = intracfg] (intrateal) {\phantom{\textsc{IntraTeal}}};
+    \draw[contribution] ($(intrateal.north west)+(-0.10,0.10)$) rectangle ($(intracfg.south east)+(0.10,-0.10)$);
+    \node[concept, right of = dataflow] (intracfg) {\textsc{IntraCFG}};
+    \node[concept, above of = intracfg] (intrateal) {\textsc{IntraTeal}};
+    \draw[staticanalysis] ($(dataflow.north west)+(-0.10,0.10)$) rectangle ($(cfa.south east)+(0.10,-0.10)$);
+    \node[concept] (dataflow) {Dataflow Analysis};
+    \node[concept, below of = dataflow] (cfa) {Control-flow Analysis};
+    \draw[ag] ($(jastadd.north west)+(-0.10,0.10)$) rectangle ($(ags.south east)+(0.10,-0.10)$);
+    \node[concept, right of = teal] (jastadd) {JastAdd};
+    \node[concept, below of = jastadd] (rags) {Reference Attribute Grammars (RAGs)};
+	\node[concept, below of = rags] (ags) {Attribute Grammars};
+    \path[->,-latex] (dataflow) edge (cfa);
+    \path[->,-latex] (jastadd) edge (rags);
+    \path[->,-latex] (rags) edge (ags);
+    \path[->,-latex] (intracfg) edge (cfa);
+    \path[->,-latex] (intracfg) edge (teal);
+    \path[->,-latex] (intracfg) edge (jastadd);
+    \path[->,-latex] (intrateal) edge (dataflow);
+    \path[->,-latex] (intrateal) edge (intracfg);
+    \matrix [draw, above left = -000pt and 150pt,inner sep=1ex,cells={nodes={font=\sffamily,anchor=west}},ampersand replacement=\&] at (ags) {
+        \node [concept, text width=0.1cm] {}; \& \node{Topic}; \\
+        \node [contribution, text width=0.1cm] {}; \& \node{New contribution}; \\
+        \node [staticanalysis,text width=0.1cm] {};  \& \node{Static Analysis};\\
+        \node [ag,text width=0.1cm] {}; \& \node{Attribute Grammars}; \\
+        \draw[-latex,color=black](0,0) -- ++ (0.4,0); \& \node{Contribution};\\
+      };
   \end{tikzpicture}}
-  \caption{Dependency graph of the concepts discussed in this Section.}
+  \caption{\label{fig:dependencygraph}Dependency graph of the concepts discussed in this Section.}
 \end{figure}
-
+The dependency graph in Figure~\ref{fig:dependencygraph} shows the relationship between 
+the concepts discussed in this Section.
 
 \subsection{Control-flow analysis}
 
