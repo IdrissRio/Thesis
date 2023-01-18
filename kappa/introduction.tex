@@ -1,13 +1,13 @@
 \chapter{Introduction}
 \section{Introduction}
 
-Static program analysis (static analysis for short) is 
-\emph{the art of reasoning about a program's behaviour without executing it}~\cite{spa}.
+Static program analysis (\emph{static analysis} for short) is 
+\emph{``the art of reasoning about a program's behaviour without executing it''}~\cite{spa}.
 It is an essential tool for improving the quality and reliability of software
 systems and has been widely used in various applications such
 as safety~\cite{cousot2005astree,Blanchet2002} and security~\cite{piskachev2021secucheck,flowDroid,ayewah2008using,dura2021javadl,fink2012wala},
 performance optimization~\cite{aho2007compilers,appel2004modern}, and software maintenance.
-Static program analysis aims to identify potential errors, bugs, or vulnerabilities
+Static analysis aims to identify potential errors, bugs, or vulnerabilities
 in a program before it is executed, thus avoiding costly and time-consuming 
 debugging processes. By examining the source code of a program, static program 
 analysis can provide a detailed and precise understanding of its behaviour, including
@@ -15,7 +15,7 @@ its control flow~\cite{allen1970control}, dataflow~\cite{kam1977monotone}, and p
 
 
 
-One of the key techniques used in static program analysis is dataflow analysis,
+One of the key techniques used in static analysis is \emph{dataflow analysis},
 which focuses on the flow of data through a program. Dataflow analysis applications are used to identify
 potential sources of errors, such as uninitialised variables or null pointers dereference~\cite{riouak2021precise,10.1016/j.scico.2012.02.002}, 
 and to optimise the program's performance by identifying opportunities for 
@@ -25,13 +25,13 @@ which are based on the idea of explicitly specifying \emph{how} the analysis sho
 performed. 
 However, more recently, there has been a growing interest in using 
 declarative paradigms for dataflow analysis, which are based on specifying \emph{what}
-the analysis should accomplish rather than \emph{how} it should be performed.
-
-In this thesis, we will explore the use of declarative paradigms for dataflow 
+the analysis should compute rather than \emph{how} it should be performed.
+In this Thesis, we will explore the use of declarative paradigms for dataflow 
 analysis~\cite{smits2020flowspec,madsen2016programming}, focusing on developing new underlying framework for constructing 
 efficient control-flow graphs for performing dataflow 
 analysis more effectively and efficiently.
-This thesis aims to contribute to the field of static program analysis 
+
+This Thesis aims to contribute to the field of static program analysis 
 by enhancing the state-of-the-art in dataflow analysis using the declarative paradigm. 
 By doing so, we hope to enable researchers and developers to understand and 
 analyse complex programs' behaviour and develop more effective tools for 
@@ -44,22 +44,23 @@ identifying and fixing errors in software.
 The contributions of this thesis are summarised by the following two papers:
 
 \begin{itemize}
-	\item \paperIref.
-	This paper presents a new framework for precise source-level control-flow 
-	analysis, called \textsc{IntraCFG}. This framework is based on the idea of 
+	\item \paperIref
+	This paper presents a new framework for precise and light-weight construction of source-level control-flow 
+	graphs, called \textsc{IntraCFG}. This framework is based on the idea of 
 	representing a program's control flow at the source code level, instead of 
 	the traditional intermediate representation level. This allows for more 
 	precise analysis, as it captures the exact control flow of the original program.
-    We also implemented IntraJ, an instance of \textsc{IntraCFG} for the Java programming 
+    We also implemented \textsc{IntraJ}, an instance of \textsc{IntraCFG} for the Java programming 
 	language, and demonstrated its effectiveness (performance and precision) in 
 	two study cases.
 
-	\item \paperIIref.
+	\item \paperIIref
 	This paper introduces \textsc{JFeature}, an extensible tool for automatically extracting and summarising
 	the key features of a corpus (i.e., collection) of Java programs. \textsc{JFeature} 
-	allows researchers to quickly gain an understanding of the characteristics of a codebase, 
+	allows researchers to gain an understanding of the characteristics, for example,
+	use of different Java feature for different Java versions, of a codebase, 
 	which can be used to evaluate the effectiveness of their tools and techniques.
-	In addition, in this paper, we also present a case study of using \textsc{JFeature} to
+	In addition, in this paper, we present a case study of using \textsc{JFeature} to
 	identify the key features of four popular open-source corpora, providing a
 	baseline for future research.
 \end{itemize}
