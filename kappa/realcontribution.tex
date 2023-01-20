@@ -39,12 +39,89 @@ analysis being performed.
 
 Additionally, language-specific dataflow analysis, such as NullPointerException or
 IndexOutOfBound detection, can be built on top of the framework.
+
+
+
+
+
 \subsection{\textsc{IntraCFG} for Java}
+To demonstrate \textsc{IntraCFG} applicability in a specific programming language, we developed
+\textsc{IntraJ}, an instance of the framework for the Java programming language.
+We built \textsc{IntraJ} as an extension of the ExtendJ extensible Java compiler~\cite{DBLP:conf/oopsla/EkmanH07}.
+The complete architecture of \textsc{IntraJ} is shown in Figure~\ref{fig:intraJ}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{kappa/img/architecturejava.pdf}
 	\caption{\label{fig:intraJ} Overall architecture of \textsc{IntraCFG} instansiated for the Java language.}
 \end{figure}
+
+%Discussing modularity
+We designed \textsc{IntraJ}, following a  modular approach, and we separately 
+instansiated the framework for different versions of Java such as Java 4, 
+Java 5, Java 7 and Java 8. Each version of Java is implemented as a separate
+aspect of the compiler. This approach allows us and the users of \textsc{IntraJ}
+to easily extend the framework to support new versions of Java.
+
+% Discussing precision
+The degree of precision in creating CFGs using \textsc{IntraCFG} can differ in order
+to meet the requirements of a given application.
+This flexibility allows us to optimize the efficiency of the analysis by selectively 
+excluding certain nodes from the CFG, such as \texttt{WhileStmt}, which do not
+provide any information relevant to the analyses. This leads in the reduction of
+unnecessary complexity and with an overall improvement in the analysis's performance.
+On the other hand, we can increase the precision of the CFGs by including more nodes
+synthethizing new nodes and new subtrees. 
+For instance, we designed \textsc{IntraJ} to compute an exception-sensitive 
+control-flow analysis, i.e., new AST subtrees are synthesized for each exceptional path. 
+The resulting CFGs are more precise, but they are also more complex, resulting 
+in a higher memory consumption and a longer analysis time.
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.08]{kappa/img/exampleAST.png}
+	\caption{\label{fig:CFG} CFG of the \texttt{foo} Java method.}
+\end{figure}
+The example in Figure~\ref{fig:CFG} is a visual representation of the AST and CFG of the 
+\texttt{foo} Java method. The figure illustrates the ability of the framework to tailor the CFG
+to the specific requirements of the analysis and eliminate unnecessary complexity for improved performance.
+In this example, the \texttt{IfStmt} and \texttt{WhileStmt} and \texttt{AssignStmt} nodes are not included in the CFG,
+resulting in a more concise but precise representation of the control flow of the program.
+
+
+In \textsc{IntraJ}, we implemented five different dataflow analyses. The analyses 
+relie on the result of the control-flow analysis. To the analysis are exposed 
+the entry and exit nodes of the CFG, as well as the successor and predecessor
+nodes of each node. 
+Each analysis is implemented as a separate aspect of the compiler. Nevertheless,
+the result of some analyses is used as input for other analyses. For instance,
+the result of \emph{Live Variable Analysis} is used as input for the \emph{Dead Assignment Analysis}.
+Similarly, the result of Dead Assignment Analysis is used to detect implicit dead assignments, i.e.,
+assignments that are not dead but their use always flow to a dead assignment.
+
+The analyses are implemented as instances of the Monotone Frameworks.
+Each analysis defines its abstract domain, transfer function and \emph{in} and 
+\emph{out}\footnote{Sometimes can be named \emph{gen} and \emph{kill}.} attributes.
+The language dependency of the dataflow analysis arises from the fact that the
+transfer function, which defines the relationship between the \emph{in} and \emph{out},
+is modeled as an attribute. This transfer function attribute is 
+define for each AST node in the CFG in order to capture the semantic of passing 
+through that node.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{\textsc{IntraCFG} for TEAL}
 \begin{figure}[H]
@@ -67,39 +144,39 @@ IndexOutOfBound detection, can be built on top of the framework.
 
 
 \label{sec:contribution}
-In this Thesis, we present two major contributions to the field of programming 
-language analysis and software engineering. 
-The first significant contribution of this thesis is the formalisation of \textsc{IntraCFG},
-a language-agnostic RAG-based framework for constructing control-flow graphs (CFGs) 
-on top of the abstract syntax tree (AST). \textsc{IntraCFG}, is a highly flexible
-framework that enables the construction of light-weight and precise the control-flow graphs
-of a program. To exemplify the applicability of \textsc{IntraCFG}, we instantiate it for the TEAL language.
+% In this Thesis, we present two major contributions to the field of programming 
+% language analysis and software engineering. 
+% The first significant contribution of this thesis is the formalisation of \textsc{IntraCFG},
+% a language-agnostic RAG-based framework for constructing control-flow graphs (CFGs) 
+% on top of the abstract syntax tree (AST). \textsc{IntraCFG}, is a highly flexible
+% framework that enables the construction of light-weight and precise the control-flow graphs
+% of a program. To exemplify the applicability of \textsc{IntraCFG}, we instantiate it for the TEAL language.
 
-The second contribution is a Java feature extractor called \textsc{JFeature}.
-This tool is designed to assist researchers in selecting the appropriate corpora
-for their experiments by extracting relevant features from Java programs. 
-\textsc{JFeature} is able to extract a wide range of features, 
-including syntactic, e.g., use of keywords, and semantic features, e.g.,
-the number of method calls.
-
-
-\subsection{\textsc{IntraCFG}: A Precise Framework for Source-level Control-flow Analysis}
-
-\subsubsection*{Design and Implementation}
-\textsc{IntraCFG} is written within the \textsc{JastAdd} ecosystem.
-
-The framework provides three interfaces, namely \code{CFGRoot}, \code{CFGNode}, and \code{CFGSupport},
-to be implemented by AST nodes. Each interface provides a set of attribute that are used to construct
-the CFGs.
-
-The \code{CFGRoot} interface is the starting point of the CFG construction process.
-It is implemented by AST nodes that identify the subtree containing the entire method 
-or function. This interface is responsible for defining the entry and exit nodes of the CFG and 
-forwards a reference of the entry node to every \code{CFGNode}.
+% The second contribution is a Java feature extractor called \textsc{JFeature}.
+% This tool is designed to assist researchers in selecting the appropriate corpora
+% for their experiments by extracting relevant features from Java programs. 
+% \textsc{JFeature} is able to extract a wide range of features, 
+% including syntactic, e.g., use of keywords, and semantic features, e.g.,
+% the number of method calls.
 
 
-The \code{CFGSupport} interface is implemented by nodes that are not part of the CFG,
-but define its shape. These nodes are used to provide additional information 
-about the structure of the CFG, such as the presence of loops or branches. 
-They are designed to be used as auxiliary nodes to support the CFG construction 
-process, and they do not participate directly in the control-flow.
+% \subsection{\textsc{IntraCFG}: A Precise Framework for Source-level Control-flow Analysis}
+
+% \subsubsection*{Design and Implementation}
+% \textsc{IntraCFG} is written within the \textsc{JastAdd} ecosystem.
+
+% The framework provides three interfaces, namely \code{CFGRoot}, \code{CFGNode}, and \code{CFGSupport},
+% to be implemented by AST nodes. Each interface provides a set of attribute that are used to construct
+% the CFGs.
+
+% The \code{CFGRoot} interface is the starting point of the CFG construction process.
+% It is implemented by AST nodes that identify the subtree containing the entire method 
+% or function. This interface is responsible for defining the entry and exit nodes of the CFG and 
+% forwards a reference of the entry node to every \code{CFGNode}.
+
+
+% The \code{CFGSupport} interface is implemented by nodes that are not part of the CFG,
+% but define its shape. These nodes are used to provide additional information 
+% about the structure of the CFG, such as the presence of loops or branches. 
+% They are designed to be used as auxiliary nodes to support the CFG construction 
+% process, and they do not participate directly in the control-flow.
