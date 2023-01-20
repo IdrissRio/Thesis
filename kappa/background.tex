@@ -1,36 +1,36 @@
 \section{Background}
 \label{sec:background}
-This Section provides an overview of the research that 
+This Section provides an overview of the research that
 underlies the main results of the thesis. Specifically, in this Section we will explore
-the concepts of dataflow analysis~\cite{aho2007compilers,Nielson2010Principles}, 
-control-flow analysis~\cite{allen1970control}, (Reference) attribute grammars~\cite{knuth1968semantics, DBLP:journals/informaticaSI/Hedin00}, 
+the concepts of dataflow analysis~\cite{aho2007compilers,Nielson2010Principles},
+control-flow analysis~\cite{allen1970control}, (Reference) attribute grammars~\cite{knuth1968semantics, DBLP:journals/informaticaSI/Hedin00},
 and their implementation through the \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01}.
 
-Dataflow analysis is a technique used to determine the values that are used and 
-defined within a program. It is a fundamental concept in the field of compiler 
-construction, and it is used in the field of code optimisation, security vulnerabilities, and bugs detection. 
+Dataflow analysis is a technique used to determine the values that are used and
+defined within a program. It is a fundamental concept in the field of compiler
+construction, and it is used in the field of code optimisation, security vulnerabilities, and bugs detection.
 Dataflow analysis depends on control-flow analysis, which computes an overapproxiamation of
 all possible paths that a program can take.
 
-Attribute grammars are a formalism for describing the structure of a program, 
-and for specifying properties of the program. They are used in the implementation 
+Attribute grammars are a formalism for describing the structure of a program,
+and for specifying properties of the program. They are used in the implementation
 of compilers, and program analysis tools.
-Reference Attribute Grammars (RAGs) is an extension of the attribute grammars formalism, 
-where the attribute values can be defined in terms of references to the attributes 
-of other elements in the grammar. \textsc{JastAdd} which is used in our work, is a meta-compiler 
+Reference Attribute Grammars (RAGs) is an extension of the attribute grammars formalism,
+where the attribute values can be defined in terms of references to the attributes
+of other elements in the grammar. \textsc{JastAdd} which is used in our work, is a meta-compiler
 for implementing compilers and other language tools, e.g., static analysers, using RAGs.
 
-The main results of this thesis are \textsc{IntraCFG} and \textsc{JFeature}. 
-\textsc{IntraCFG} is a language-independent framework for implementing control-flow graphs 
+The main results of this thesis are \textsc{IntraCFG} and \textsc{JFeature}.
+\textsc{IntraCFG} is a language-independent framework for implementing control-flow graphs
 on the source code level.
 It is based on \textsc{JastAdd} and Control-flow analysis theory. \textsc{IntraTeal} is a instance
 of \textsc{IntraCFG} on the TEAL language that we will use to demonstrate the effectiveness
 of the framework. We also designed \textsc{JFeature}, a fact extractor for Java programs,
-with the aim of presenting a more comprehensive overview of a Java program by 
-taking into account the utilisation of various features and constructs specific 
+with the aim of presenting a more comprehensive overview of a Java program by
+taking into account the utilisation of various features and constructs specific
 to the Java language across different Java versions. The objective of \textsc{JFeature} is
 to assist researchers and developers in the process of selecting benchmarks.
-Throughout this Section, these concepts will be discussed in more detail and used to 
+Throughout this Section, these concepts will be discussed in more detail and used to
 demonstrate the effectiveness of the proposed methods.
 
 % Here we can use different styles to distinguish between the different types of nodes
@@ -39,7 +39,7 @@ demonstrate the effectiveness of the proposed methods.
 \begin{figure}[h]
     \centering
     \scalebox{0.8}{
-\begin{tikzpicture}[ 
+\begin{tikzpicture}[
     node distance=2.5cm,
     concept/.style={rectangle,draw=black,text width=2cm,text centered},
     rags/.style={rectangle,draw=black,text width=2cm,text centered},
@@ -64,7 +64,7 @@ demonstrate the effectiveness of the proposed methods.
     \node[concept] (dataflow) {Dataflow Analysis};
     \node[concept, below of = dataflow] (cfa) {Control-flow Analysis};
     \draw[ag] ($(jastadd.north west)+(-0.10,0.10)$) rectangle ($(ags.south east)+(0.10,-0.10)$);
-    \node[concept, right of = teal] (jastadd) {JastAdd};
+    \node[concept, right of = teal] (jastadd) {\textsc{JastAdd}};
     \node[concept, below of = jastadd] (rags) {Reference Attribute Grammars (RAGs)};
 	\node[concept, below of = rags] (ags) {Attribute Grammars};
     \path[->,-latex] (dataflow) edge (cfa);
@@ -80,27 +80,27 @@ demonstrate the effectiveness of the proposed methods.
         \node [contribution, text width=0.1cm] {}; \& \node{New contribution}; \\
         \node [staticanalysis,text width=0.1cm] {};  \& \node{Static Analysis};\\
         \node [ag,text width=0.1cm] {}; \& \node{Attribute Grammars}; \\
-        \draw[-latex,color=black](0,0) -- ++ (0.4,0); \& \node{Contribution};\\
+        \draw[-latex,color=black](0,0) -- ++ (0.4,0); \& \node{Depends on relation};\\
       };
   \end{tikzpicture}}
   \caption{\label{fig:dependencygraph}Dependency graph of the concepts discussed in this Section.}
 \end{figure}
-The dependency graph in Figure~\ref{fig:dependencygraph} shows the relationship between 
+The dependency graph in Figure~\ref{fig:dependencygraph} shows the relationship between
 the concepts discussed in this Section.
 
 \subsection{Control-flow analysis}
 
 Control-flow analysis involves analysing the control flow of the program, which refers
 to the execution order and evaluation order of the program's statements and expressions.
-It aids in comprehending the logical structure of a program and recognising potential flaws,
-such as uninitialized variables and infinite loops. Control-flow analysis
+Control-flow analysis
 can provide valuable insights into the structure and behaviour of a program,
 which can help with program understanding and maintenance.
-The main result of control-flow analysis is the control-flow graph (CFG), $G = (V, E)$,
+The main result of control-flow analysis is a control-flow graph (CFG), $G = (V, E)$,
 which is a directed graph where each node $v \in V$ represents a basic block
 and each edge $e \in E$ represents a control-flow edge. A basic block is a sequence of
-statements that are executed in order, and that are always executed together, 
-wheras a control-flow edge is an edge that represents a control-flow dependency between two basic blocks.
+statements that are executed in order, and that are always executed together, meaning
+that there is no control-flow edge that enters or exits the basic block in the middle of the sequence.
+A control-flow edge is an edge that represents a control-flow dependency between two basic blocks.
 
 % However, it is not always possible to establish the exact control flow of a program
 % due to the Rice-Turing theorem, which is a key limitation of control-flow analysis.
@@ -120,13 +120,13 @@ Another advantage of constructing the CFG on the source level is that it does no
 require the generation of an intermediate representation (IR). This can make the
 analysis faster and more efficient, as it avoids the overhead of IR generation.
 In addition, constructing the CFG on the source level can work with semantically
-and syntactically broken code, which can be useful for analysing programs with
+and syntactically invalid code, which can be useful for analysing programs with
 errors or inconsistencies.
 Furthermore, in situations where the IR must be generated in real-time,
 for instance, when the analysis is performed in an integrated development environment (IDE),
 the overhead of code generation and optimization may make this process too expensive,
 causing latency in the IDE and frustration in the developer~\cite{piskachev2022far}.
-In such cases, constructing the control-flow graph (CFG) on the source level
+In such cases, constructing the control-flow graph on the source level
 may be a more efficient option.
 
 However, there are also some disadvantages to constructing the CFG on the source level.
@@ -252,26 +252,27 @@ exploited by attackers.
 
 
 \subsubsection*{Monotone Frameworks}
-Monotone framework~\cite{kam1977monotone} is a teoretical framework for reasoning about program dataflow properties.
+Monotone framework~\cite{kam1977monotone} is a teoretical framework for reasoning
+about program dataflow properties.
 These frameworks provide a flexible and generic framework for expressing and solving
-dataflow equations, which can be used to reason about a wide range of dataflow 
+dataflow equations, which can be used to reason about a wide range of dataflow
 properties, such as live variables, reaching definitions, and available expressions analyses.
-Monotone frameworks are built on the concept of lattice~\cite{Donnellan1968,Birkhoff1967,cousot1977ai}. 
-A lattice is a partially ordered set in which any two elements have a unique least 
-upper bound (also known as a join or a supremum) and a unique greatest lower bound 
-(also known as a meet or an infimum). Meaning that, for any elements $a$ and $b$ in 
-the lattice, there exists a unique element denoted as  $a \vee b$  (or  $a \cup b$ ) 
-such that  $a \leq a \vee b$  and  $ b \leq a \vee b$ , and  $a \wedge b$  
-(or  $ a\cap b$ ) such that  $ a\wedge b\leq a$  and  $a \wedge b\leq b$.
+Monotone frameworks are built on the concept of lattice~\cite{Donnellan1968,Birkhoff1967,cousot1977ai}.
+A lattice is a partially ordered set in which any two elements have a unique least
+upper bound (also known as a join or a supremum) and a unique greatest lower bound
+(also known as a meet or an infimum). Meaning that, for any elements $a$ and $b$ in
+the lattice, there exists a unique element denoted as  $a \vee b$  (or  $a \cup b$)
+such that  $a \leq a \vee b$  and  $ b \leq a \vee b$ , and  $a \wedge b$
+(or  $ a\cap b$) such that  $ a\wedge b\leq a$  and  $a \wedge b\leq b$.
 
-A well-formed lattice has a unique least element, commonly denoted as $\bot$, 
-and a unique greatest element, commonly denoted as $\top$. These elements satisfy 
+A well-formed lattice has a unique least element, commonly denoted as $\bot$,
+and a unique greatest element, commonly denoted as $\top$. These elements satisfy
 the properties that for any element $x$ in the lattice, $\bot \leq x$ and x $\leq \top$.
 The diagram in Figure~\ref{fig:lattice} shows the lattice of sets over the set
 $S = \{s_1, s_2, s_3\}$, where the partial ordering is defined by set inclusion
 and the least upper bound and greatest lower bound are set union and set intersection
 respectively. The least element in this lattice is the empty set $\emptyset$ and the
-greatest element is the set $S$ itself. 
+greatest element is the set $S$ itself.
 
 A forward monotone framework consist of two equations and a transfer function $f$.
 For each node $n$ in the control-flow graph, we define the following two equations:
@@ -279,9 +280,9 @@ $$\text{in}(n) = \bigcup\limits_{p \in \text{pred}(n)} \text{out}(p)$$
 
 $$\text{out}(n) = f(\text{in}(n), n)$$
 
-where $f:C \mapsto L$ is a monotone transfer function, also called transfer function. 
-The transfer function $f$ maps each element $c$ in the set $C$ (i.e., concrete domain) 
-to an element $f(c)$ in the \emph{finite} lattice $L$ (i.e., abstract domain). The sets $pred(n)$ and $succ(n)$ 
+where $f:C \mapsto L$ is a monotone transfer function, also called transfer function.
+The transfer function $f$ maps each element $c$ in the set $C$ (i.e., concrete domain)
+to an element $f(c)$ in the \emph{finite} lattice $L$ (i.e., abstract domain). The sets $pred(n)$ and $succ(n)$
 denote the set of predecessors and successors of node $n$, respectively.
 
 A backward monotone framework is similar to a forward framework, except that the equations are reversed:
@@ -292,12 +293,10 @@ $$\text{in}(n) = f(\text{out}(n), n).$$
 The framework defines a mutual dependency between the $in$ and $out$ sets of a node.
 This circular dependency is solved through a fix point computation that is
 a mathematical technique that finds a stable state, or fix point, in a system.
-In the context of the Monotone frameworks, this 
-refers to finding a state where the $in$ and $out$ sets of all nodes in the CFG have reached a 
+In the context of the Monotone frameworks, this
+refers to finding a state where the $in$ and $out$ sets of all nodes in the CFG have reached a
 stable value, and no further changes will occur. The fix point is guarantee to exist
 because the transfer function $f$ is monotone~\cite{Knaster1929}.
-
-
 
 
 \begin{figure}[h]
@@ -337,7 +336,7 @@ parse a program into its abstract syntax tree, and the attribute evaluation func
 is used to compute the values of the attributes associated with each element
 of the tree.
 
-Attribute grammars enable the description of the 
+Attribute grammars enable the description of the
 interdependence of syntactic and semantic elements of a programming language.
 For instance, the type of a variable may be determined by its declaration,
 but the type of an expression may be determined by the types of its subexpressions.
@@ -483,7 +482,7 @@ upon the features of the previous one. TEAL-0 is the most basic version and incl
 support for variable declarations and use, procedures, and basic control structures such as if
 and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2 allows users to
 define their own types.
-For the sake of simplicity, we will use TEAL-0 and TEAL-1 to exemplyfy the use of RAGs 
+For the sake of simplicity, we will use TEAL-0 and TEAL-1 to exemplyfy the use of RAGs
 and the main results summarized in this thesis.
 \newsavebox{\mylistingbox}
 
@@ -495,7 +494,7 @@ and the main results summarized in this thesis.
           \nta{Program} & \Prod & \ntstar{Decl} \\
           \\
           \nta{Decl} & \Prod & \nt{VarDecl}\ \\
-                       & \VB & \vterminal{fun}\ \terminal{id}\ \vterminal{(}\ \ntq{formals}\ \vterminal{)}\\ 
+                       & \VB & \vterminal{fun}\ \terminal{id}\ \vterminal{(}\ \ntq{formals}\ \vterminal{)}\\
                        &&  \nt{optTyped}\ \vterminal{=}\ \nt{stmt} \\
           \\
           \nta{VarDecl} & \Prod & \vterminal{var}\ \terminal{id}\ \nt{optTyped} \\
@@ -583,14 +582,14 @@ and the main results summarized in this thesis.
     IndexExpr : Expr ::= Base:Expr Index:Expr;
     NotExpr : Expr ::= Expr;
     TypedExpr : Expr ::= Expr DeclType:Type;
-    NewExpr : Expr ::= Type Actual:Expr*; 
+    NewExpr : Expr ::= Type Actual:Expr*;
     Access : Expr ::= IdUse ;
-    
+
 
     abstract Constant : Expr;
     IntConstant : Constant ::= <Value:Long>;
     StringConstant : Constant ::= <Value:String>;
-   
+
     abstract Stmt;
     VarDeclStmt : Stmt ::= VarDecl;
     ExprStmt : Stmt ::= Expr;
@@ -600,7 +599,7 @@ and the main results summarized in this thesis.
     WhileStmt : Stmt ::= Cond:Expr Body:Stmt;
     ReturnStmt : Stmt ::= Expr;
     SkipStmt : Stmt;
-    
+
     IdUse ::= <Identifier>;
     IdDecl ::= <Identifier>;
         \end{lstlisting}
@@ -621,10 +620,10 @@ manner through the use of the RAGs formalism.
 The \textsc{JastAdd} metacompiler is a Java-based tool that generates
 Java code from a RAG. The generated code can be used to construct an AST and to perform
 analysis on the AST.
-Another important aspect of \textsc{JastAdd} is its support for on-demand attribute evaluation. 
-Attribute evaluation is performed only when the corresponding 
-attribute is actually required and triggered by the program. This approach enables \textsc{JastAdd} to 
-avoid performing unnecessary computations, which can greatly improve the 
+Another important aspect of \textsc{JastAdd} is its support for on-demand attribute evaluation.
+Attribute evaluation is performed only when the corresponding
+attribute is actually required and triggered by the program. This approach enables \textsc{JastAdd} to
+avoid performing unnecessary computations, which can greatly improve the
 performance of the generated code.
 
 The \textsc{JastAdd} metacompiler is based on the following components:
@@ -716,7 +715,7 @@ class B {
 \end{figure}
 
 
-Another key feature of \textsc{JastAdd}  is the support of intertype declarations for the definition of attributes. 
+Another key feature of \textsc{JastAdd}  is the support of intertype declarations for the definition of attributes.
 An intertype declaration of an attribute is a declaration that is performed into
 an aspect that, at compile time,
 is inlined in the class specified in the intertype declaration. The example in Figure~\ref{fig:interType}
