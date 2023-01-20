@@ -39,11 +39,19 @@ analysis being performed.
 
 Additionally, language-specific dataflow analysis, such as NullPointerException or
 IndexOutOfBound detection, can be built on top of the framework.
-
 \subsection{\textsc{IntraCFG} for Java}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{kappa/img/architecturejava.pdf}
+	\caption{\label{fig:intraJ} Overall architecture of \textsc{IntraCFG} instansiated for the Java language.}
+\end{figure}
 
 \subsection{\textsc{IntraCFG} for TEAL}
-
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.65]{kappa/img/architectureteal.pdf}
+	\caption{\label{fig:IntraTeal} Overall architecture of \textsc{IntraCFG} instansiated for the Teal language.}
+\end{figure}
 \subsection{IDE Integration}
 \subsubsection{LSP support via MagpieBridge: showing results and fixes}
 
