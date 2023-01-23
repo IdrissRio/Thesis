@@ -172,8 +172,9 @@ in the \emph{then} branch and null in the \emph{else} branch.
 This information is used to improve the precision of the analysis and provide 
 more accurate results without affecting the performance of the analysis.
 
-We also asked students to use the \texttt{ControlTrue} and \texttt{ControlFalse} HOAs to improve the precision of the interval analysis.
-The example in Listing~\ref{lst:control-interval} shows how the \texttt{ControlTrue} and \texttt{ControlFalse}
+We also asked students to use the \texttt{ControlTrue} and \texttt{ControlFalse} 
+HOAs to improve the precision of the interval analysis. The example in
+Listing~\ref{lst:control-interval} shows how the \texttt{ControlTrue} and \texttt{ControlFalse}
 HOAs are used to keep track of the information that the object \texttt{x} is in the interval $[5,6]$.
 \begin{figure}
 	\centering
@@ -204,6 +205,49 @@ analysis is enhanced by considering implicit assignments in the control flow of
 the program. Specifically, the transfer function for the \texttt{ControlTrue} HOA
 takes into account that the object \texttt{x} is null when it is printed within 
 the \emph{then} branch of the \texttt{if} statement.
+
+
+The task assigned to the students, which was an extension of the \texttt{NullPointerException}
+analysis, was to implement an \texttt{IndexOutOfBound} analysis on the interval domain. 
+The interval domain, being an infinite domain, poses a significant challenge for
+dataflow analysis due to the inherent nature of infinite domains. In particular,
+the iterative nature of dataflow analysis algorithms, which rely on the computation
+of a sequence of approximations, may not terminate when applied to an infinite domain.
+This can result in an excessive consumption of computational resources and ultimately
+lead to a failure of the analysis. Additionally, the use of infinite domains can also
+lead to the presence of non-converging sequences, resulting in an analysis that does
+not converge to a stable solution. The example in Figure~\ref{fig:nonConverging}
+illustrates a non-converging program.
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+		\node (a) at (3.5,0) {\includegraphics[scale=1]{kappa/img/non-convergin.pdf}};
+		\node[scale=1] (b) at (-2,0) {
+			\begin{lstlisting}[language=JastAdd]
+fun foo(x) = {
+  x := 0;
+  while (true) {
+    x = x + 1;
+  }
+}
+			\end{lstlisting}
+		};
+	\end{tikzpicture}
+	\caption{\label{fig:nonConverging} Trivial example of non-converging program.}
+\end{figure}
+
+To ensure the termination of the analysis, the students were required to 
+define their own widening operator.
+However, \textsc{JastAdd} circular attributes, which are used to implement dataflow 
+analysis, do not natively support widening operators, as they are designed 
+to work only on finite lattices. To overcome this limitation, an ad-hoc solution 
+solution was implemented to trigger the widening operator after a certain 
+number of steps.
+
+This experience highlights the need for native support for widening and narrowing 
+operators in \textsc{JastAdd}, to allow static analysis developers to effectively deal with 
+infinite lattices. In the future, we plan to investigate the implementation of this 
+feature in \textsc{JastAdd} to facilitate developers of static analysis tools.
 
 
 \subsection{IDE Integration}
