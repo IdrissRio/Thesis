@@ -17,9 +17,9 @@ ecosystem\todo{Not sure about the word ecosystem} is shown in Figure~\ref{fig:in
 The framework provides the skeleton and default behaviour for construction of CFGs,
 which can be instantiated for specific languages\footnote{\textbf{\texttt{IntraX}} in the diagram.}, e.g., Java or Teal. 
 \begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.7]{kappa/img/architecture.pdf}
-	\caption{\label{fig:intraCFG} Overall architecture of \textsc{IntraCFG} and its ecosystem.}
+    \centering
+    \includegraphics[scale=0.7]{kappa/img/architecture.pdf}
+    \caption{\label{fig:intraCFG} Overall architecture of \textsc{IntraCFG} and its ecosystem.}
 \end{figure}
 
 The framework consists of several key components, including interfaces
@@ -37,8 +37,8 @@ for a high degree of flexibility in the CFG construction process,
 enabling the customization of the CFG to fit the specific needs of the 
 analysis being performed.
 
-Additionally, language-specific dataflow analysis, such as NullPointerException or
-IndexOutOfBound detection, can be built on top of the framework.
+Additionally, language-specific dataflow analysis, such as \texttt{NullPointerException} or
+\texttt{IndexOutOfBound} detection, can be built on top of the framework.
 
 
 
@@ -50,9 +50,9 @@ To demonstrate \textsc{IntraCFG} applicability in a specific programming languag
 We built \textsc{IntraJ} as an extension of the ExtendJ extensible Java compiler~\cite{DBLP:conf/oopsla/EkmanH07}.
 The complete architecture of \textsc{IntraJ} is shown in Figure~\ref{fig:intraJ}.
 \begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.5]{kappa/img/architecturejava.pdf}
-	\caption{\label{fig:intraJ} Overall architecture of \textsc{IntraCFG} instansiated for the Java language.}
+    \centering
+    \includegraphics[scale=0.5]{kappa/img/architecturejava.pdf}
+    \caption{\label{fig:intraJ} Overall architecture of \textsc{IntraCFG} instansiated for the Java language.}
 \end{figure}
 
 %Discussing modularity
@@ -76,9 +76,9 @@ control-flow analysis, i.e., new AST subtrees are synthesized for each exception
 The resulting CFGs are more precise, but they are also more complex, resulting 
 in a higher memory consumption and a longer analysis time.
 \begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.08]{kappa/img/exampleAST.png}
-	\caption{\label{fig:CFG} CFG of the \texttt{foo} Java method.}
+    \centering
+    \includegraphics[scale=0.08]{kappa/img/exampleAST.png}
+    \caption{\label{fig:CFG} CFG of the \texttt{foo} Java method.}
 \end{figure}
 The example in Figure~\ref{fig:CFG} is a visual representation of the AST and CFG of the 
 \texttt{foo} Java method. The figure illustrates the ability of the framework to tailor the CFG
@@ -125,10 +125,87 @@ through that node.
 
 \subsection{\textsc{IntraCFG} for TEAL}
 \begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.65]{kappa/img/architectureteal.pdf}
-	\caption{\label{fig:IntraTeal} Overall architecture of \textsc{IntraCFG} instansiated for the Teal language.}
+    \centering
+    \includegraphics[scale=0.65]{kappa/img/architectureteal.pdf}
+    \caption{\label{fig:IntraTeal} Overall architecture of \textsc{IntraCFG} instansiated for the Teal language.}
 \end{figure}
+As a further demonstration of the applicability of \textsc{IntraCFG},
+we developed \textsc{IntraTeal}, an implementation of the framework for the Teal programming language.
+The teal programming language is used for teaching purposes 
+and provides a simple and easy-to-learn syntax for students to understand the 
+concepts of static program analysis.
+We made available to students, as part of the course, the complete source code of \textsc{IntraTeal}, 
+with instructions and guidelines on how to use the API to implement their own analyses.
+We also made available a reference implmentation of the 
+\texttt{NullPointerException} analysis. We then asked students, as a way of 
+extending their understanding and skills, to implement an \texttt{IndexOutOfBound} 
+analysis on the interval abstract domain. This exercise provided the 
+students with an opportunity to apply the concepts they had learned in a practical 
+setting and gain a deeper understanding of dataflow analysis.
+
+One of the key features of the \textsc{IntraTeal} implementation is that it 
+constructs control-sensitive CFGs. Control-sensitive CFGs
+are a more precise representation of the control flow of a program, as they take 
+into account the specific control flow behavior of a program. This is achieved by
+synthesizing  two new AST nodes, i.e., \texttt{ControlTrue} and \texttt{ControlFalse} for each
+comparison operator, e.g.,  ``$\le$'', ``$==$'', ``$!=$'', inside a conditional statement.
+These HOAs are used to represent the control flow of the program and the information that ca be inferred from 
+it. \\
+%
+\begin{minipage}{0.45\textwidth}
+    \begin{lstlisting}[language=JastAdd,caption={Control-sensitivity to improve null pointer analysis.}, label={lst:control-null}]
+if(x!=null){
+  //x is not null here
+}
+    \end{lstlisting}
+    \end{minipage}\hfill%
+    \begin{minipage}{0.45\textwidth}
+    \begin{lstlisting}[language=JastAdd,caption={Control-sensitivity to improve interval analysis.}, label={lst:control-interval}]
+if(x > 4 and x <= 6){
+    //x is [5,6] here
+}
+    \end{lstlisting}
+\end{minipage}\\
+The example in Listing~\ref{lst:control-null} shows how the \texttt{ControlTrue} and \texttt{ControlFalse}
+HOAs are used to keep track of the information that the object \texttt{x} is not null 
+in the \emph{then} branch and null in the \emph{else} branch.
+This information is used to improve the precision of the analysis and provide 
+more accurate results without affecting the performance of the analysis.
+
+We also asked students to use the \texttt{ControlTrue} and \texttt{ControlFalse} HOAs to improve the precision of the interval analysis.
+The example in Listing~\ref{lst:control-interval} shows how the \texttt{ControlTrue} and \texttt{ControlFalse}
+HOAs are used to keep track of the information that the object \texttt{x} is in the interval $[5,6]$.
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+		\node (a) at (0,0) {\includegraphics[scale=0.55]{kappa/img/TEALExample.pdf}};
+		\node[scale=0.7] (b) at (3.5,0) {
+			\begin{lstlisting}[language=JastAdd]
+fun foo(x) = {
+  if(x==null){
+    print(x);
+  }
+}
+			\end{lstlisting}
+		};
+	\end{tikzpicture}
+	\caption{\label{fig:ExampleTEAL} Example of control-sensitivity in \textsc{IntraTeal}.}
+\end{figure}
+\begin{lstlisting}[language=JastAdd,label={lst:ControlTrueEq}, caption={Transfer function for \texttt{ControlTrue} HOA.}]
+eq ControlTrue.nullnessTransfer(NullDomain lattice) {
+  NullDomain result = new NullDomain(lattice);
+  NullDomain assignment = getCond().getImplicitAssignment();
+  return result.join(assignment);
+}
+\end{lstlisting}
+The example presented in Figure~\ref{fig:ExampleTEAL} along with the code snippet
+provided in Listing~\ref{lst:ControlTrueEq} illustrates how the precision of the
+analysis is enhanced by considering implicit assignments in the control flow of 
+the program. Specifically, the transfer function for the \texttt{ControlTrue} HOA
+takes into account that the object \texttt{x} is null when it is printed within 
+the \emph{then} branch of the \texttt{if} statement.
+
+
 \subsection{IDE Integration}
 \subsubsection{LSP support via MagpieBridge: showing results and fixes}
 
