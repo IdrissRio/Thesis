@@ -1,7 +1,7 @@
 \section{Background}
 \label{sec:background}
-This Section provides an overview of the research that
-underlies the main results of the thesis. Specifically, in this Section we will explore
+This section provides an overview of the research that
+underlies the main results of this thesis. Specifically, in this section we will delve into
 the concepts of dataflow analysis~\cite{aho2007compilers,Nielson2010Principles},
 control-flow analysis~\cite{allen1970control}, (Reference) attribute grammars~\cite{knuth1968semantics, DBLP:journals/informaticaSI/Hedin00},
 and their implementation through the \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01}.
@@ -91,7 +91,7 @@ the concepts discussed in this Section.
 \subsection{Control-flow analysis}
 
 Control-flow analysis involves analysing the control flow of the program, which refers
-to the execution order and evaluation order of the program's statements and expressions.
+to the execution and evaluation order of the program's statements and expressions.
 Control-flow analysis
 can provide valuable insights into the structure and behaviour of a program,
 which can help with program understanding and maintenance.
@@ -104,21 +104,21 @@ A control-flow edge is an edge that represents a control-flow dependency between
 
 % However, it is not always possible to establish the exact control flow of a program
 % due to the Rice-Turing theorem, which is a key limitation of control-flow analysis.
-We can distinguish two main approaches to constructing the control-flow graph (CFG) for a program:
-on the source-level and on the intermediate representation. The source-level approach
-involves analysing the source code of a program and constructing the control-flow graph
-directly from the source code on top of the abstract syntax tree. The intermediate representation approach involves
-first converting the source code into an intermediate representation, e.g., bytecode,
-and then constructing the control-flow graph from the intermediate representation.
+We can distinguish two main approaches to constructing the CFG for a program:
+on the source-level and on the intermediate representation (IR). The source-level approach
+involves analysing the source code of a program and constructing the CFG
+directly from the source code on top of the abstract syntax tree. The IR approach involves
+first converting the source code into an IR, e.g., bytecode,
+and then constructing the CFG from the IR.
 
-Constructing the control-flow graph on the source level has several advantages.
+Constructing the CFG on the source level has several advantages.
 One of the main benefits is that it allows for the analysis to be performed directly
 on the source code of the program, which can be more easily understood by humans.
 This can be particularly useful for debugging and program understanding tasks,
 as it allows the analysis to be performed in the context of the original program.
 Another advantage of constructing the CFG on the source level is that it does not
-require the generation of an intermediate representation (IR). This can make the
-analysis faster and more efficient, as it avoids the overhead of IR generation.
+require the generation of the IR enabling faster and more efficient analysis, 
+as it avoids the overhead of IR generation.
 In addition, constructing the CFG on the source level can work with semantically
 and syntactically invalid code, which can be useful for analysing programs with
 errors or inconsistencies.
@@ -126,14 +126,14 @@ Furthermore, in situations where the IR must be generated in real-time,
 for instance, when the analysis is performed in an integrated development environment (IDE),
 the overhead of code generation and optimization may make this process too expensive,
 causing latency in the IDE and frustration in the developer~\cite{piskachev2022far}.
-In such cases, constructing the control-flow graph on the source level
+In such cases, constructing the CFG on the source level
 may be a more efficient option.
 
 However, there are also some disadvantages to constructing the CFG on the source level.
 One of the main limitations is that it can be more difficult to accurately capture the
 control-flow of a program when working with the source code containing unsugared \todo{Not sure if it's clear} constructs,
 such as macros and preprocessor directives, that
-can complicate the analysis. In addition, the source code may be written in a variety
+can complicate the analysis specification. In addition, the source code may be written in a variety
 of languages with different syntax and semantics, which can make it challenging to
 design a single analysis that works across all languages.
 The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the control-flow
@@ -225,13 +225,11 @@ void foo(){
 Dataflow analysis is a technique used in computer science to analyse the flow of
 data through a program. It has its roots in the field of program optimization,
 where it was originally used to identify opportunities for improving the performance
-of programs by removing unnecessary computations e.g., Very Busy Expression or Available Expression analyses~\cite{aho2007compilers,vallee-rai10soot,falconer2007deepweaver,sagiv1996ide,kildall1973dataflow}.
-Dataflow analysis involves tracking the flow of data through a program by
-identifying the variables that are defined and used at each point in the program's
-control flow. This information can be used to optimize the program by eliminating
-unnecessary computations and improving the use of available resources (e.g., registers optimisation).
-One of the primary advantages of dataflow analysis is its ability to handle programs
-with complex control flow, such as those with nested loops, jumps (e.g., break) and exceptions.
+of programs by tracking variable defintions and uses. This information can be used to optimize the program by eliminating
+unnecessary computations (e.g., Very Busy Expression or Available Expression 
+analyses~\cite{aho2007compilers,vallee-rai10soot,falconer2007deepweaver,sagiv1996ide,kildall1973dataflow}) and improving 
+the use of available resources (e.g., registers optimisation).
+
 
 In the context of bug detection~\cite{spoon, fink2012wala}, dataflow analysis can be used to identify
 potential sources of errors in a program by tracking the flow of data through
@@ -239,16 +237,15 @@ the program and identifying points where data may be used in unexpected or
 incorrect ways. This can be particularly useful in identifying bugs that may
 not be immediately apparent, such as those that only occur under certain
 conditions or when certain combinations of input data are used (e.g., \texttt{IndexOutOfBound} exception).
-Many tools for static analysis of Java programs, such as FindBugs~\cite{findbugs},
-SpotBugs~\cite{spotbugs}, and PMD~\cite{copeland2005pmd}, use dataflow analysis to identify
+Many tools for static analysis of Java programs, such as \textsc{FindBugs}~\cite{findbugs},
+\textsc{SpotBugs}~\cite{spotbugs}, and \textsc{PMD}~\cite{copeland2005pmd}, use dataflow analysis to identify
 potential bugs in Java programs.
 % I looked here how they cited pmd, findbugs and spotbugs. https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8103456
 
-Dataflow analysis can also be used to identify potential security vulnerabilities
-in software~\cite{flowDroid,piskachev2021secucheck,lawall10coccinelle}. By tracking the flow of sensitive data through a program and
-identifying points where it may be exposed to unauthorized access or manipulation,
-dataflow analysis can help to identify potential vulnerabilities that could be
-exploited by attackers.
+Dataflow analysis is also widely used to identify potential security vulnerabilities
+in software~\cite{flowDroid,piskachev2021secucheck,lawall10coccinelle} 
+by tracking the flow of sensitive data through a program and
+identifying points where it may be exposed to unauthorized access or manipulation. 
 
 
 \subsubsection*{Monotone Frameworks}
@@ -357,7 +354,7 @@ in a programming language may be a synthesized attribute that is computed based
 on the types of the subexpressions in the expression. For instance, if a variable is initialized
 with the expression ``3 + 4'', the type of the variable would be determined to
 be integer based on the types of the operands in the expression.
-
+We denote a synthesized attribute as follows:
 \begin{equation*}
   \Asyn{A}{x} = e
   \end{equation*}
@@ -414,8 +411,8 @@ indicates that the attribute is defined and broadcasted to all children of \astn
     \caption{\label{fig:ragsExample} Graphical representation of the attribute grammar example.}
 \end{figure}
 
-Let us consider the following abstract grammar:
-
+To better explain the concept of attribute grammars, we present the following
+example with the following abstract grammar:
     \begin{align*}
         A& ::= B \quad C \\
         B& \\
@@ -450,7 +447,7 @@ resulting in \Ainh{C}{y} = 8. Figure~\ref{fig:ragsExample} depicts the described
 \subsection{Reference Attribute Grammars}
 \label{sec:rag}
 Reference Attribute Grammars (RAGs) where introduced in~\cite{DBLP:journals/informaticaSI/Hedin00}
-and are an extension of Attribute Grammars to Object-Oriented languages. While attributes in Attribute Grammars
+and are an extension of AGs to Object-Oriented languages. While attributes in AGs
 can only refer to terminal values, RAGs allow attributes to refer to non-terminals i.e., node in the AST.
 RAGs are well-suited for the analysis of object-oriented languages, since they enable
 the definition of relation between AST nodes. Attributes that refer to
@@ -473,7 +470,7 @@ program analysis\footnote{\url{https://fileadmin.cs.lth.se/cs/Education/EDAP15/2
 The goal of TEAL is to provide a language that allows students to
 focus on the challenges of performing program analysis on a real-world language
 without being overwhelmed by the details of a fully-featured language.
-The concrete and the abstract syntax of TEAL-0 are shown in Figure~\ref{fig:tealGrammar}\todo{Don't look at the colors of the abstract grammar. This can be fixed}.
+The concrete and the abstract syntax of TEAL-0 are shown in Figure~\ref{fig:tealGrammar}.
 One of the key features of TEAL is that it is an object-oriented language,
 which means that it allows the creation of classes and objects that can inherit
 characteristics and behavior from one another. However, it does not have a dynamic
