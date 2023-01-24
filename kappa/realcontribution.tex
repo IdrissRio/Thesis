@@ -6,9 +6,9 @@ of precise intraprocedural CFGs~\cite{smits2020flowspec,10.1016/j.scico.2012.02.
 We contributed to the state-of-the-art introducing \textsc{IntraCFG}, a declarative, RAG-based,
 and language-independent framework for constructing precise intraprocedural CFGs.
 
-Unlike most other frameworks, which build CFGs on an Intermediate Representation (IR) level,
-such as bytecode, \textsc{IntraCFG}'s approach is unique in that it superimposes the CFGs 
-on the Abstract Syntax Tree (AST). This allows for a more accurate client analysis,
+Unlike most other frameworks, which build CFGs on the IR level,
+e.g.,  bytecode, \textsc{IntraCFG}'s approach superimposes the CFGs 
+on the AST. This allows for a more accurate client analysis,
 as the CFGs are constructed directly on the source code level, rather than an
 intermediate representation. Additionally, this approach also enables the construction 
 of \textsc{AST-Unrestricted} CFGs, which are CFGs whose shape is not restricted to the AST structure.
@@ -24,7 +24,7 @@ which can be instantiated for specific languages\footnote{\textbf{\texttt{IntraX
 \end{figure}
 
 The framework consists of several key components, including interfaces
-(e.g., CFGRoot, CFGSupport, and CFGNode), attribute equations that define the
+(e.g., \textsc{CFGRoot}, \textsc{CFGSupport}, and \textsc{CFGNode}), attribute equations that define the
 default behavior, and user APIs. The interfaces provide the structure for the
 CFG and the attribute equations define the default behavior for the CFG
 construction. Language specific AST nodes implement the different interfaces 
@@ -38,15 +38,15 @@ for a high degree of flexibility in the CFG construction process,
 enabling the customization of the CFG to fit the specific needs of the 
 analysis being performed.
 
-Additionally, language-specific dataflow analysis, such as \texttt{NullPointerException} or
-\texttt{IndexOutOfBound} detection, can be built on top of the framework.
+% Additionally, language-specific dataflow analysis, such as \texttt{NullPointerException} or
+% \texttt{IndexOutOfBound} detection, can be built on top of the framework.
 
 
 
 
 
 \subsection{\textsc{IntraCFG} for Java}
-To demonstrate \textsc{IntraCFG} applicability in a specific programming language, we developed
+To demonstrate \textsc{IntraCFG} applicability, we developed
 \textsc{IntraJ}, an instance of the framework for the Java programming language.
 We built \textsc{IntraJ} as an extension of the ExtendJ extensible Java compiler~\cite{DBLP:conf/oopsla/EkmanH07}.
 The complete architecture of \textsc{IntraJ} is shown in Figure~\ref{fig:intraJ}.
@@ -70,12 +70,6 @@ This flexibility allows us to optimize the efficiency of the analysis by selecti
 excluding certain nodes from the CFG, such as \texttt{WhileStmt}, which do not
 provide any information relevant to the analyses. This leads in the reduction of
 unnecessary complexity and with an overall improvement in the analysis's performance.
-On the other hand, we can increase the precision of the CFGs by including more nodes
-synthethizing new nodes and new subtrees. 
-For instance, we designed \textsc{IntraJ} to compute an exception-sensitive 
-control-flow analysis, i.e., new AST subtrees are synthesized for each exceptional path. 
-The resulting CFGs are more precise, but they are also more complex, resulting 
-in a higher memory consumption and a longer analysis time.
 \begin{figure}[H]
 	\centering
 	\begin{tikzpicture}
@@ -98,21 +92,33 @@ void foo(boolean b){
 The example in Figure~\ref{fig:CFG} is a visual representation of the AST and CFG of the 
 \texttt{foo} Java method. The figure illustrates the ability of the framework to tailor the CFG
 to the specific requirements of the analysis and eliminate unnecessary complexity for improved performance.
-In this example, the \texttt{IfStmt} and \texttt{WhileStmt} and \texttt{AssignStmt} nodes are not included in the CFG,
+In this example, nodes like \texttt{IfStmt} or \texttt{Dot} are not included in the CFG,
 resulting in a more concise but precise representation of the control flow of the program.
+On the other hand, the precision of the CFGs can be improved by synthethizing new nodes and new subtrees. 
+For instance, we designed \textsc{IntraJ} to compute an exception-sensitive 
+control-flow analysis, i.e., new AST subtrees are synthesized for each possible exceptional path. 
+The resulting CFGs are more precise, but they are also more complex, resulting 
+in a higher memory consumption and a longer analysis time.
 
 
-In \textsc{IntraJ}, we implemented five different dataflow analyses. The analyses 
-relie on the result of the control-flow analysis. To the analysis are exposed 
+
+In \textsc{IntraJ}, we implemented five different dataflow analyses:
+\begin{itemize}
+  \item \emph{Live Variable Analysis}: This analysis computes the set of variables that are live at each program point.
+  \item \emph{Reaching Definition}: computes the set of definitions that reach each program point.
+  \item \emph{Null Pointer Analysis}: detects possible null pointer dereferences.
+  \item \emph{Dead Assignment Analysis}: detects assignments to l-values that are never used from that point on.
+  \item \emph{Indirect Dead Assignment Analysis}: detects assignments to l-values which uses always flow to a dead assignment.
+\end{itemize}
+All the analyses relie on the result of the control-flow analysis. To the analysis are exposed 
 the entry and exit nodes of the CFG, as well as the successor and predecessor
 nodes of each node. 
 Each analysis is implemented as a separate aspect of the compiler. Nevertheless,
 the result of some analyses is used as input for other analyses. For instance,
-the result of \emph{Live Variable Analysis} is used as input for the \emph{Dead Assignment Analysis}.
-Similarly, the result of Dead Assignment Analysis is used to detect implicit dead assignments, i.e.,
-assignments that are not dead but their use always flow to a dead assignment.
+the result of Live Variable Analysis is used as input for the Dead Assignment Analysis.
+Similarly, the result of Dead Assignment Analysis is used to compute Indirect Dead Assignment Analysis.
 
-The analyses are implemented as instances of the Monotone Frameworks (see Section~\ref{sec:monotoneframeworks}).
+The implemented analyses are instances of the monotone frameworks (see Section~\ref{sec:monotoneframeworks}).
 Each analysis defines its abstract domain, transfer function and \emph{in} and 
 \emph{out}\footnote{Sometimes can be named \emph{gen} and \emph{kill}.} attributes.
 The language dependency of the dataflow analysis arises from the fact that the
@@ -158,11 +164,11 @@ analysis on the interval abstract domain. This exercise provided the
 students with an opportunity to apply the concepts they had learned in a practical 
 setting and gain a deeper understanding of dataflow analysis.
 
-One of the key features of the \textsc{IntraTeal} implementation is that it 
-constructs control-sensitive CFGs. Control-sensitive CFGs
+Another key aspect of both, \textsc{IntraTeal} and \textsc{IntraJ} implementations, is that they 
+construct enhanced control-sensitive CFGs. Control-sensitive CFGs
 are a more precise representation of the control flow of a program, as they take 
 into account the specific control flow behavior of a program. This is achieved by
-synthesizing  two new AST nodes, i.e., \texttt{ControlTrue} and \texttt{ControlFalse} for each
+synthesizing two AST nodes, i.e., \texttt{ControlTrue} and \texttt{ControlFalse} for each
 comparison operator, e.g.,  ``$\le$'', ``$==$'', ``$!=$'', inside a conditional statement.
 These HOAs are used to represent the control flow of the program and the information that ca be inferred from 
 it. \\
@@ -252,7 +258,7 @@ fun foo(x) = {
 \end{figure}
 
 To ensure the termination of the analysis, the students were required to 
-define their own widening operator.
+define their own widening operator~\cite{Bagnara2003Widening}.
 However, \textsc{JastAdd} circular attributes, which are used to implement dataflow 
 analysis, do not natively support widening operators, as they are designed 
 to work only on finite lattices. To overcome this limitation, an ad-hoc solution 
