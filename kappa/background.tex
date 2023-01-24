@@ -481,7 +481,7 @@ upon the features of the previous one. TEAL-0 is the most basic version and incl
 support for variable declarations and use, procedures, and basic control structures such as if
 and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2 allows users to
 define their own types.
-For the sake of simplicity, we will use TEAL-0 and TEAL-1 to exemplyfy the use of RAGs
+For the sake of simplicity, we will use TEAL-0 and TEAL-1 to exemplify the use of RAGs
 and the main results summarized in this thesis.
 \newsavebox{\mylistingbox}
 
@@ -612,18 +612,18 @@ and the main results summarized in this thesis.
 
 \subsection{The \textsc{JastAdd} Metacompiler}
 \label{sec:jastadd}
-The  metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a powerful tool for the construction of
-Reference Attribute Grammars.
+The \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a powerful tool for the construction of
+RAGs.
 \textsc{JastAdd} allow language designers to  handle complex language constructs in a modular and extensible
 manner through the use of the RAGs formalism.
 The \textsc{JastAdd} metacompiler is a Java-based tool that generates
-Java code from a RAG. The generated code can be used to construct an AST and to perform
+Java code from a RAG specification. The generated code can be used to construct an AST and to perform
 analysis on the AST.
 Another important aspect of \textsc{JastAdd} is its support for on-demand attribute evaluation.
 Attribute evaluation is performed only when the corresponding
 attribute is actually required and triggered by the program. This approach enables \textsc{JastAdd} to
-avoid performing unnecessary computations, which can greatly improve the
-performance of the generated code.
+avoid performing unnecessary computations, which can improve the run-time 
+performance of the generated program.
 
 The \textsc{JastAdd} metacompiler is based on the following components:
 \begin{itemize}
@@ -635,14 +635,14 @@ The \textsc{JastAdd} metacompiler is based on the following components:
 In \textsc{JastAdd}, synthesized attributs are defined using the \code{syn} keyword followed
 by the type and the name of the attribute. Similarly, inherited attributes are defined
 using the \code{inh} keyword. Let us reconsider the example depicted in Figure~\ref{fig:ragsExample}.
-The abstract grammar is defined in a \code{.ast} file with the following syntax:
+The abstract grammar is defined in a ``\code{.ast}'' file with the following syntax:
     \begin{lstlisting}[language=JastAdd]
         A ::= B C;
         B;
         C;
     \end{lstlisting}
 where each line defines a non-terminal, i.e., a node in the AST.
-The attributes are defined in a \code{.jrag} file with the following syntax:
+The attributes are defined in a ``\code{.jrag}'' file with the following syntax:
     \begin{lstlisting}[language=JastAdd]
         syn int A.z() = B.x() + 1;
         syn int B.x() = 2;
@@ -650,7 +650,7 @@ The attributes are defined in a \code{.jrag} file with the following syntax:
         inh int C.y();
         eq A.C.y() = A.z() + C.v();
     \end{lstlisting}
-The last line is an equation that defines the value of the inherited attribute \Ainh{C}{y} for each child of type \astnode{C}.
+The last line is the equation that defines the value of the inherited attribute \Ainh{C}{y} for each child of type \astnode{C}.
 \begin{figure}
     \begin{center}
         \begin{tikzpicture}
@@ -714,13 +714,13 @@ class B {
 \end{figure}
 
 
-Another key feature of \textsc{JastAdd}  is the support of intertype declarations for the definition of attributes.
+Another key feature of \textsc{JastAdd}  is the support of \emph{intertype declarations} for the definition of attributes.
 An intertype declaration of an attribute is a declaration that is performed into
 an aspect that, at compile time,
 is inlined in the class specified in the intertype declaration. The example in Figure~\ref{fig:interType}
 shows an intertype declaration of an attribute.
 The attributes \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrDecl}
-that is inlined in the classes \code{A} and \code{B} respectively.
+that is inlined in the classes \code{A} and \code{B}, respectively.
 
 \textsc{JastAdd} supports not only synthesized and inherited attributes, but also:
 \begin{itemize}
@@ -764,20 +764,25 @@ syn nta Exit FunDecl.exit() = new Exit();
     \end{itemize}
     We use the symbol \AcircSyn{A}{x} to denote a circular synthesized attribute.
 
-    \item \emph{Collection Attribute}: have no equations, but contributions. The
-    result of a collection attribute is the aggreatation of contributions that can
-    come frome anywhere else in the AST. A contribution clause is associated with
+    \item \emph{Collection Attribute}: these attribute have no equations, but contributions. The
+    result of a collection attribute is the aggreagation of contributions that can
+    come frome anywhere in the AST. A contribution clause is associated with
     an AST node type and describes information to be included in a collection
     attribute, possibly under certain conditions. Collection attributes, are expecially
     useful in compiler construction, to collect all the semantic errors in a program
-    from anywhere in the AST. In JastAdd, collection attributes are defined using the
-    \code{coll} keyword. For example, the following collection attribute collects all
-    the type errors in a program:
+    from anywhere in the AST. In \textsc{JastAdd}, collection attributes are defined using the
+    \code{coll} keyword.
+    
+    An example of collection attribute is the following
     \begin{lstlisting}[language=JastAdd]
 coll Set<Errors> Program.errors();
-Expr contributes  when type.compatibleType(expectedType()) to Program.errors();
+Expr contributes this when type.compatible(expectedType()) to Program.errors();
     \end{lstlisting}
-    We use the following notation to denote the collection attribute \code{errors}: \Acoll{Program}{errors}.
+    The collection attribute, \texttt{Program.errors()}, that we denote with \Acoll{Program}{errors},
+    is used to collect all the semantic errors in the program. The contribution clause
+    states that the expression \texttt{this} contributes to the collection
+     when the type of the expression is not compatible with
+    the expected type.
 \end{itemize}
 
 
