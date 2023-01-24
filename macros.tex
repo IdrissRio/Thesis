@@ -120,19 +120,19 @@
 \definecolor{lightgreen}{HTML}{669900}		%#669900
 \lstdefinelanguage{JastAdd}{
   %keyword1&2&6
-  morekeywords = [1]{aspect, abstract, class, continue, default, enum, extends, false, final, finally, implements, import, instanceof, interface, native, new, null, package, private, protected, public, static, strictfp, throws, transient, true, void, volatile, length, assert, case, return, super, this, throw, catch, do, if, else, switch, synchronized, while, try, ?},
+  morekeywords = [1]{aspect, abstract,fun, class, continue, default, enum, extends, false, final, finally, implements, import, instanceof, interface, native, new, null, package, private, protected, public, static, strictfp, throws, transient, true, volatile, length, assert, case, return, super, this, throw, catch, do, if, else, switch, synchronized, while, try, ?},
   %keyword3
-  morekeywords = [2]{inh, syn, coll, with, eq, NTA, contributes, to, for, each, circular, with}, %JASTADD keywords
+  morekeywords = [2]{inh, syn, coll, with, eq, NTA, contributes, to, for, each, circular, with, nta, when, }, %JASTADD keywords
   %keyword4
   morekeywords = [3]{CFGNode, Assignments, Assign,AssignBitwiseExpr, TrueLiteral, Entry,ConstructorDecl,UnceckedException, TryWithResorucesStmt, NTAFinallyBlock,ClassDecl, CloseListNTA, BreakStmt,ThrowStmt,TryStmt,ReturnStmt, ContinueStmt, Exit, Expr, AssignShiftExpr, AssignMultiplicativeExpr, IntegerLiteral, AssignAdditiveExpr, UnaryIncDec,DoStmt,VariableDeclarator, NumericLiteral, ParameterDeclaration, FieldDeclarator, PostfixExpr, PreIncExpr, PreDecExpr, ReachedLVal, Variable,EQOp,CFGSupport, ForStmt, EmptyStmt,FunDecl, MethodDecl, ExprStmt, AssignStmt, IfStmt, AndOp, LessOp, WhileStmt, Block, AssignExpr, PostUnaryInc, PostUnaryDec, Entry, Exit, EQExpr, VarAccess, CFGRoot }, %ASTnode typess
   %keyword5
-  morekeywords = [4]{Array, ArrayList, Boolean, Byte, Object, BitSet, BufferedReader,Collections, Character, Class, Double, Float, Gamma, AbsDomain, NULL, NOTNULL, TOP,Integer, HashMap, PrintWriter, String, StringBuffer, StringBuilder, Thread, boolean, byte, char, color, double, float, int,Type, long, short, FloatDict, FloatList, IntDict, IntList, JSONArray, JSONObject, PFont, PGraphics, PImage, PShader, PShape, PVector, StringDict, StringList, Table, TableRow, XML, Set, HashSet},
+  morekeywords = [4]{void,Array, ArrayList, Boolean, Byte, Object, BitSet, BufferedReader,Collections, Character, Class, Double, Float, Gamma, AbsDomain, NULL, NOTNULL, TOP,Integer, HashMap, PrintWriter, String, StringBuffer, StringBuilder, Thread, boolean, byte, char, color, double, float, int,Type, long, short, FloatDict, FloatList, IntDict, IntList, JSONArray, JSONObject, PFont, PGraphics, PImage, PShader, PShape, PVector, StringDict, StringList, Table, TableRow, XML, Set, HashSet},
   %keywordstyle = [1]\color{lightblue},
   %keywordstyle = [2]\color{lightgreen},
   keywordstyle = [1]\bfseries,
   keywordstyle = [2]\bfseries,
   keywordstyle = [3]\astnodestyle,
-  keywordstyle = [4]\color{orange},
+  keywordstyle = [4]\color{lightblue},
   sensitive = true,
   morecomment = [l]{//},
   morecomment = [s]{/*}{*/},
@@ -143,6 +143,41 @@
   stringstyle = \color{purple},
   frame=none
 }
+
+
+\lstdefinelanguage{ASTGrammar}{
+  %keyword1&2&6
+  morekeywords = [1]{::=,:,<,>, abstract},
+  %keyword3
+  morekeywords = [2]{IntConstant, Constant, StringConstant,BinExpr, Expr, IdUse, Actual, AddExpr, SubExpr, MulExpr, DivExpr, EQExpr,ModExpr, NEQExpr, LTExpr, GTExpr, LEQExpr, GEQExpr, OrExpr, AndExpr, CallExpr, Null, ArrayLiteralExpr, IndexExpr, NotExpr, TypedExpr, NewExpr, Access, Expr*}, %Expr keywords
+  %keyword4
+  morekeywords = [3]{Stmt, VarDeclStmt, ExprStmt, AssignStmt, Block, IfStmt, WhileStmt, ReturnStmt, SkipStmt}, %Stmt types
+  %keyword5
+  morekeywords = [4]{VarDecl, FunDecl, IdDecl, Decl, Program}, %Decls
+  morekeywords = [6]{DeclaredType, Initializer, DeclaredReturnType, Formal, Body, Left, Right, Base, Index, DeclType, Value, LValue, RValue, Cond, Then, Else,Identifier},
+  morekeywords = [7]{Type, Long, String},
+  % keywordstyle = [1]\color{lightblue},
+  %keywordstyle = [2]\color{lightgreen},
+  keywordstyle = [1]\bfseries\color{lightgreen},
+  keywordstyle = [2]\bfseries\color{lightblue},
+  keywordstyle = [3]\astnodestyle,
+  keywordstyle = [4]\color{orange},
+  keywordstyle = [6]\color{CadetBlue},
+  keywordstyle = [7]\color{Blue},
+  sensitive = true,
+  morecomment = [l]{//},
+  morecomment = [s]{/*}{*/},
+  morecomment = [s]{/**}{*/},
+  commentstyle = \color{gray},
+  morestring = [b]",
+  morestring = [b]',
+  stringstyle = \color{purple},
+  frame=none,
+  literate     = 
+  {::=}{{{\color{lightblue}::= }}}1
+  % {:}{{{\color{lightblue}:}}}2
+}
+
 \lstset{
   basicstyle=\listingsfontsize\ttfamily,
   identifierstyle={\listingsfontsize},

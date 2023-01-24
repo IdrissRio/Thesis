@@ -1,4 +1,5 @@
 \section{\textsc{IntraCFG}: Intraprocedural Framework for Source-Level Control-Flow Analysis}
+\label{sec:IntraCFG}
 The techniques of CFGs construction has seen significant advancements
 in recent years, with various frameworks being proposed to aid in the construction 
 of precise intraprocedural CFGs~\cite{smits2020flowspec,10.1016/j.scico.2012.02.002}.
@@ -51,7 +52,7 @@ We built \textsc{IntraJ} as an extension of the ExtendJ extensible Java compiler
 The complete architecture of \textsc{IntraJ} is shown in Figure~\ref{fig:intraJ}.
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5]{kappa/img/architecturejava.pdf}
+    \includegraphics[scale=0.52]{kappa/img/architecturejava.pdf}
     \caption{\label{fig:intraJ} Overall architecture of \textsc{IntraCFG} instansiated for the Java language.}
 \end{figure}
 
@@ -76,10 +77,24 @@ control-flow analysis, i.e., new AST subtrees are synthesized for each exception
 The resulting CFGs are more precise, but they are also more complex, resulting 
 in a higher memory consumption and a longer analysis time.
 \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.08]{kappa/img/exampleAST.png}
-    \caption{\label{fig:CFG} CFG of the \texttt{foo} Java method.}
+	\centering
+	\begin{tikzpicture}
+		\node (a) at (3.5,0) {\includegraphics[scale=0.55]{kappa/img/exampleAST.pdf}};
+		\node[scale=0.65] (b) at (-0.6,0.7) {
+			\begin{lstlisting}[language=JastAdd]
+void foo(boolean b){
+  String x = null;
+  if(b) {
+    x = "Hello World";
+  }
+  x.toString();
+}
+			\end{lstlisting}
+		};
+	\end{tikzpicture}
+	\caption{\label{fig:CFG} CFG of the \texttt{foo} Java method.}
 \end{figure}
+
 The example in Figure~\ref{fig:CFG} is a visual representation of the AST and CFG of the 
 \texttt{foo} Java method. The figure illustrates the ability of the framework to tailor the CFG
 to the specific requirements of the analysis and eliminate unnecessary complexity for improved performance.
@@ -97,7 +112,7 @@ the result of \emph{Live Variable Analysis} is used as input for the \emph{Dead 
 Similarly, the result of Dead Assignment Analysis is used to detect implicit dead assignments, i.e.,
 assignments that are not dead but their use always flow to a dead assignment.
 
-The analyses are implemented as instances of the Monotone Frameworks.
+The analyses are implemented as instances of the Monotone Frameworks (see Section~\ref{sec:monotoneframeworks}).
 Each analysis defines its abstract domain, transfer function and \emph{in} and 
 \emph{out}\footnote{Sometimes can be named \emph{gen} and \emph{kill}.} attributes.
 The language dependency of the dataflow analysis arises from the fact that the
@@ -133,7 +148,7 @@ As a further demonstration of the applicability of \textsc{IntraCFG},
 we developed \textsc{IntraTeal}, an implementation of the framework for the Teal programming language.
 The teal programming language is used for teaching purposes 
 and provides a simple and easy-to-learn syntax for students to understand the 
-concepts of static program analysis.
+concepts of static program analysis (see Section~\ref{sec:teal}).
 We made available to students, as part of the course, the complete source code of \textsc{IntraTeal}, 
 with instructions and guidelines on how to use the API to implement their own analyses.
 We also made available a reference implmentation of the 
@@ -180,7 +195,7 @@ HOAs are used to keep track of the information that the object \texttt{x} is in 
 	\centering
 	\begin{tikzpicture}
 		\node (a) at (0,0) {\includegraphics[scale=0.55]{kappa/img/TEALExample.pdf}};
-		\node[scale=0.7] (b) at (3.5,0) {
+		\node[scale=0.7] (b) at (3.5,0.45) {
 			\begin{lstlisting}[language=JastAdd]
 fun foo(x) = {
   if(x==null){
@@ -222,7 +237,7 @@ illustrates a non-converging program.
 	\centering
 	\begin{tikzpicture}
 		\node (a) at (3.5,0) {\includegraphics[scale=1]{kappa/img/non-convergin.pdf}};
-		\node[scale=1] (b) at (-2,0) {
+		\node[scale=1] (b) at (-0.2,0) {
 			\begin{lstlisting}[language=JastAdd]
 fun foo(x) = {
   x := 0;
@@ -264,40 +279,4 @@ feature in \textsc{JastAdd} to facilitate developers of static analysis tools.
 
 
 
-\label{sec:contribution}
-% In this Thesis, we present two major contributions to the field of programming 
-% language analysis and software engineering. 
-% The first significant contribution of this thesis is the formalisation of \textsc{IntraCFG},
-% a language-agnostic RAG-based framework for constructing control-flow graphs (CFGs) 
-% on top of the abstract syntax tree (AST). \textsc{IntraCFG}, is a highly flexible
-% framework that enables the construction of light-weight and precise the control-flow graphs
-% of a program. To exemplify the applicability of \textsc{IntraCFG}, we instantiate it for the TEAL language.
 
-% The second contribution is a Java feature extractor called \textsc{JFeature}.
-% This tool is designed to assist researchers in selecting the appropriate corpora
-% for their experiments by extracting relevant features from Java programs. 
-% \textsc{JFeature} is able to extract a wide range of features, 
-% including syntactic, e.g., use of keywords, and semantic features, e.g.,
-% the number of method calls.
-
-
-% \subsection{\textsc{IntraCFG}: A Precise Framework for Source-level Control-flow Analysis}
-
-% \subsubsection*{Design and Implementation}
-% \textsc{IntraCFG} is written within the \textsc{JastAdd} ecosystem.
-
-% The framework provides three interfaces, namely \code{CFGRoot}, \code{CFGNode}, and \code{CFGSupport},
-% to be implemented by AST nodes. Each interface provides a set of attribute that are used to construct
-% the CFGs.
-
-% The \code{CFGRoot} interface is the starting point of the CFG construction process.
-% It is implemented by AST nodes that identify the subtree containing the entire method 
-% or function. This interface is responsible for defining the entry and exit nodes of the CFG and 
-% forwards a reference of the entry node to every \code{CFGNode}.
-
-
-% The \code{CFGSupport} interface is implemented by nodes that are not part of the CFG,
-% but define its shape. These nodes are used to provide additional information 
-% about the structure of the CFG, such as the presence of loops or branches. 
-% They are designed to be used as auxiliary nodes to support the CFG construction 
-% process, and they do not participate directly in the control-flow.

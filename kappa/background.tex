@@ -252,6 +252,7 @@ exploited by attackers.
 
 
 \subsubsection*{Monotone Frameworks}
+\label{sec:monotoneframeworks}
 Monotone framework~\cite{kam1977monotone} is a teoretical framework for reasoning
 about program dataflow properties.
 These frameworks provide a flexible and generic framework for expressing and solving
@@ -466,6 +467,7 @@ Examples of the relations that can be constructed using RAGs are:
 \end{itemize}
 
 \subsection{The TEAL Programming Language}
+\label{sec:teal}
 TEAL v0.4 (Typed Easily Analysable Language) is a programming language designed by Christoph Reichenbach, and  used in the
 program analysis\footnote{\url{https://fileadmin.cs.lth.se/cs/Education/EDAP15/2022/web/index.html}} course at Lund University.
 The goal of TEAL is to provide a language that allows students to
@@ -554,7 +556,7 @@ and the main results summarized in this thesis.
         \begin{minipage}{0.8\textwidth}
             \hfill
 \begin{lrbox}{\mylistingbox}
-        \begin{lstlisting}[language=JastAdd]
+        \begin{lstlisting}[language=ASTGrammar]
     Program ::= Decl*;
 
     abstract Decl;
