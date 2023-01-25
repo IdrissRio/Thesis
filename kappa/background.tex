@@ -567,13 +567,13 @@ and the main results summarized in this thesis.
     MulExpr : BinExpr;
     DivExpr : BinExpr;
     ModExpr : BinExpr;
-    EQExpr : BinExpr;
+    EQExpr  : BinExpr;
     NEQExpr : BinExpr;
-    LTExpr : BinExpr;
-    GTExpr : BinExpr;
+    LTExpr  : BinExpr;
+    GTExpr  : BinExpr;
     LEQExpr : BinExpr;
     GEQExpr : BinExpr;
-    OrExpr : BinExpr;
+    OrExpr  : BinExpr;
     AndExpr : BinExpr;
     CallExpr : Expr ::= IdUse Actual:Expr*;
     Null : Expr;
@@ -583,7 +583,6 @@ and the main results summarized in this thesis.
     TypedExpr : Expr ::= Expr DeclType:Type;
     NewExpr : Expr ::= Type Actual:Expr*;
     Access : Expr ::= IdUse ;
-
 
     abstract Constant : Expr;
     IntConstant : Constant ::= <Value:Long>;
