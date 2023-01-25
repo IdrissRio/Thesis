@@ -285,6 +285,11 @@ However, it was developed as an application of the research and methods previous
 described in these papers, and was carried out subsequently.
 
 \subsubsection{LSP support via MagpieBridge: warnings, quick-fixes and bug explanations}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.92\textwidth]{kappa/img/IDEIntegration.pdf}
+  \caption{\label{fig:IDEIntegration} Integration of \textsc{IntraJ} with IDEs through the use of the \textsc{MagpieBridge} framework.}
+\end{figure}
 Initially, \textsc{IntraJ} was developed as a command-line tool, which performance was competitive
 compared to existing industrial tools. However, we recognized the potential
 for further improvement, by exploting the on-demand evaluation feature of \textsc{JastAdd}.
@@ -293,12 +298,6 @@ on methods within open files, as opposed to the entire codebase. This approach
 allows for user-centric, real-time feedback on complex bugs, providing developers
 with instantaneous insights and facilitating efficient debugging and troubleshooting
 processes.
-\begin{figure}
-  \centering
-  \includegraphics[width=0.92\textwidth]{kappa/img/IDEIntegration.pdf}
-  \caption{\label{fig:IDEIntegration} Integration of \textsc{IntraJ} with IDEs through the use of the \textsc{MagpieBridge} framework.}
-\end{figure}
-
 To achieve this, we used the \textsc{MagpieBridge} framework, which facilitates the integration
 of static analysers with IDEs that support the LSP. \textsc{MagpieBridge} provides an
 abstraction layer between the IDE and the static analysis tool, simplifying the
@@ -320,24 +319,40 @@ such as the save command or opening of a file, to the \textsc{IntraJ} tool.
 The results of the analysis are then sent back to the \textsc{MagpieBridge}, which subsequently
 forwards them to the editor, displaying warnings, quick-fixes, and explanations
 to the developer.
-
-To enable a better user experience, we extended the functionality of the existing analysis.
-Specifically, we enhanced the \texttt{NullPointerException} analysis to not only detect issues
-but also provide developers with quick fixes and explanations, allowing them to address
-the problems more efficiently. Additionally, we enhanced the \texttt{(Indirect) Dead Assignment} analysis
-to provide explanations, giving developers a deeper understanding of the issues detected.
 \begin{figure}
   \centering
   \includegraphics[width=0.92\textwidth]{kappa/img/IDEExample.pdf}
   \caption{\label{fig:IDEExample} Bug detection and quick-fix in \textsc{Visual Studio Code} using \textsc{IntraJ}.}
 \end{figure}
+To enable a better user experience, we extended the functionality of the existing analysis.
+Specifically, we enhanced the \texttt{NullPointerException} analysis to not only detect issues
+but also provide developers with quick fixes and explanations, allowing them to address
+the problems more efficiently. Additionally, we enhanced the \texttt{(Indirect) Dead Assignment} analysis
+to provide explanations, giving developers a deeper understanding of the issues detected.
 Figure~\ref{fig:IDEExample} illustrates an example of interaction between \textsc{IntraJ} and
-\textsc{Visual Studio Code}. The figure illustrates an instance of a \texttt{NullPointerException} 
+\textsc{Visual Studio Code}. More specifically, illustrates an instance of a \texttt{NullPointerException} 
 detected by \textsc{IntraJ} and its representation within the IDE. 
 The \includegraphics[height=8pt]{kappa/img/bulb.png}  icon indicates that an quick-fix is available,
 which can be applied by clicking on the icon.
 
-\subsubsection{Visualisation and debugging via Codeprober}
+\subsubsection{Visualisation via \textsc{CodeProber}}
+In this section, we describe the integration of \textsc{IntraJ} and \textsc{IntraTeal}
+with \textsc{CodeProber}, a tool for visualizing and 
+exploring the results of compilers and static analysers. \textsc{CodeProber} 
+allows developers to interact with the results of the analysis in a visual and intuitive 
+manner, providing a deeper understanding of the issues detected. It 
+allows for real-time interaction with the ASTNode's attributes and the source code, 
+enabling analyses developers to explore results and partial results in an easier way, making 
+debugging and troubleshooting more efficient with respect the traditional debugging
+approaches. The integration of \textsc{IntraJ} and 
+Additionally, the integration allows for the visual representation of the results of the
+analysis, not only in the form of a warning, but also, e.g., in the form of a graph,
+or other visual representation. 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.92\textwidth]{kappa/img/CP.pdf}
+  \caption{\label{fig:CodeProber} Interaction of \textsc{IntraTeal} in \textsc{CodeProber}.}
+\end{figure}
 
 
 
