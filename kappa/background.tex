@@ -38,51 +38,7 @@ demonstrate the effectiveness of the proposed methods.
 \usetikzlibrary{backgrounds}
 \begin{figure}[h]
     \centering
-    \scalebox{0.8}{
-\begin{tikzpicture}[
-    node distance=2.5cm,
-    concept/.style={rectangle,draw=black,text width=2cm,text centered},
-    rags/.style={rectangle,draw=black,text width=2cm,text centered},
-    analysis/.style={rectangle,draw=black,text width=2cm,text centered},
-    teal/.style={rectangle,draw=black,text width=2cm,text centered},
-    contribution/.style={rectangle,draw=black,text width=2cm,text centered, dashed, fill=blue!10},
-    staticanalysis/.style={rectangle,draw=black,text width=2cm,text centered, dashed, fill=red!10},
-    ag/.style={rectangle,draw=black,text width=2cm,text centered, dashed, fill=green!10}
-    ]
-    \node[concept] (dataflow) {\phantom{Dataflow} \phantom{Analysis}};
-    \node[concept, below of = dataflow] (cfa) {\phantom{Control-flow} \phantom{Analysis}};
-    \node[concept, right of = dataflow] (intracfg) {\phantom{\textsc{IntraCFG}}};
-    \node[concept, below of = intracfg] (teal) {TEAL};
-	\node[concept, right of = teal] (jastadd) {JastAdd};
-    \node[concept, below of = jastadd] (rags) {Reference Attribute Grammars (RAGs)};
-	\node[concept, below of = rags] (ags) {Attribute Grammars};
-    \node[concept, above of = intracfg] (intrateal) {\phantom{\textsc{IntraTeal}}};
-    \draw[contribution] ($(intrateal.north west)+(-0.10,0.10)$) rectangle ($(intracfg.south east)+(0.10,-0.10)$);
-    \node[concept, right of = dataflow] (intracfg) {\textsc{IntraCFG}};
-    \node[concept, above of = intracfg] (intrateal) {\textsc{IntraTeal}};
-    \draw[staticanalysis] ($(dataflow.north west)+(-0.10,0.10)$) rectangle ($(cfa.south east)+(0.10,-0.10)$);
-    \node[concept] (dataflow) {Dataflow Analysis};
-    \node[concept, below of = dataflow] (cfa) {Control-flow Analysis};
-    \draw[ag] ($(jastadd.north west)+(-0.10,0.10)$) rectangle ($(ags.south east)+(0.10,-0.10)$);
-    \node[concept, right of = teal] (jastadd) {\textsc{JastAdd}};
-    \node[concept, below of = jastadd] (rags) {Reference Attribute Grammars (RAGs)};
-	\node[concept, below of = rags] (ags) {Attribute Grammars};
-    \path[->,-latex] (dataflow) edge (cfa);
-    \path[->,-latex] (jastadd) edge (rags);
-    \path[->,-latex] (rags) edge (ags);
-    \path[->,-latex] (intracfg) edge (cfa);
-    \path[->,-latex] (intracfg) edge (teal);
-    \path[->,-latex] (intracfg) edge (jastadd);
-    \path[->,-latex] (intrateal) edge (dataflow);
-    \path[->,-latex] (intrateal) edge (intracfg);
-    \matrix [draw, above left = -000pt and 150pt,inner sep=1ex,cells={nodes={font=\sffamily,anchor=west}},ampersand replacement=\&] at (ags) {
-        \node [concept, text width=0.1cm] {}; \& \node{Topic}; \\
-        \node [contribution, text width=0.1cm] {}; \& \node{New contribution}; \\
-        \node [staticanalysis,text width=0.1cm] {};  \& \node{Static Analysis};\\
-        \node [ag,text width=0.1cm] {}; \& \node{Attribute Grammars}; \\
-        \draw[-latex,color=black](0,0) -- ++ (0.4,0); \& \node{Depends on relation};\\
-      };
-  \end{tikzpicture}}
+    \includegraphics[width=0.9\textwidth]{kappa/img/Dependencies.pdf}
   \caption{\label{fig:dependencygraph}Dependency graph of the concepts discussed in this Section.}
 \end{figure}
 The dependency graph in Figure~\ref{fig:dependencygraph} shows the relationship between
