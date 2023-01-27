@@ -1,2 +1,43 @@
 \section{Conclusions and Future Work}%
 \label{sec:kappa:conclusions}%
+In this thesis, we have explored the use of declarative paradigms for
+dataflow analysis in static program analysis. Our main contributions include the
+development of a new framework for precise and light-weight construction of source-level
+control-flow graphs, called \textsc{IntraCFG}, and two case studies that demonstrate
+its effectiveness, namely \textsc{IntraJ} and \textsc{IntraTeal}. 
+We have demonstrated the potential of IntraJ as a precise and light-weight tool
+for detecting complex dataflow analysis, such as \textsc{NullPointerExceptions} and \textsc{DeadAssignements},
+through its integration in IDEs. Additionally, we have shown the use of \textsc{IntraTeal}
+for educational purposes, in combination with the visualisation tool \textsc{CodeProber},
+resulting in an effective tool for students to learn about dataflow analysis. 
+Furthermore, we presented  \textsc{JFeature}, an extensible tool for automatically 
+extracting and summarising the key features of a corpus of Java programs. 
+\textsc{JFeature} allows developers to gain a deeper understanding of the composition and 
+suitability of software corpora for their particular research or development needs. 
+By applying \textsc{JFeature} to four widely-used corpora in the program analysis area, 
+we demonstrated its potential for use in corpus evaluation, the creation of new 
+corpora, and longitudinal studies of individual Java projects. 
+Together, these contributions provide frameworks and practiva tools practical tools 
+for improving the development and maintenance of software systems.
+
+
+In future, we plan to investigate the application of interprocedural analysis
+to \textsc{IntraCFG}. Interprocedural analysis refers to the process of analyzing 
+the interactions and dependencies between different procedures or functions within a
+program. One of the main challenges in this area is the computation of call graphs,
+which are diagrams that depict the relationships between the various functions and 
+procedures in a program.
+To achieve this, we plan to investigate the use of point-to analysis, which is a 
+technique used to determine the memory locations that a given variable may point to. 
+This is a crucial step in interprocedural analysis, as it allows us to determine 
+the flow of data between different procedures and functions. However, since we aim 
+to run these analyses within IDEs, we want to investigate how to compute and refine 
+the results of point-to analysis incrementally, rather than over the entire codebase.
+
+Additionally, we plan to explore the use of on-demand evaluation, which is becoming a popular 
+technique in compilers, e.g., \texttt{rustc}~\cite{Rust_Query_Guide}. This approach allows for the 
+evaluation of code only when it is needed, rather than statically analyzing the 
+entire program. Furthermore, we plan to add native support for widening and narrowing 
+operators in Jastadd's circular attributes, which would enable an easier implementation
+of analysis over infinite lattices. Finally, we aim to explore the application of \textsc{IntraCFG} to 
+dynamically typed languages such as JavaScript and Python.
