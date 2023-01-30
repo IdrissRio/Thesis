@@ -3,7 +3,7 @@
 The techniques of CFGs construction has seen significant advancements
 in recent years, with various frameworks being proposed to aid in the construction
 of precise intraprocedural CFGs~\cite{smits2020flowspec,10.1016/j.scico.2012.02.002}.
-We contributed to the state-of-the-art introducing \textsc{IntraCFG}, a declarative, RAG-based,
+We contribute to the state-of-the-art by introducing \textsc{IntraCFG}, a declarative, RAG-based,
 and language-independent framework for constructing precise intraprocedural CFGs.
 
 Unlike most other frameworks, which build CFGs on the IR level,
@@ -29,8 +29,8 @@ default behavior, and user APIs. The interfaces provide the structure for the
 CFG and the attribute equations define the default behavior for the CFG
 construction. Language specific AST nodes implement the different interfaces
 according to the level of precision desired for the CFG.
-The APIs expose the CFG to the client analysis, and they are used to query the CFG
-for information, such as the entry and exit nodes, or to traverse the CFG.
+The framework expose the CFG to the client analysis through APIs, that can be used
+to query the CFG for information, such as the entry and exit nodes, or to traverse the CFG.
 The language-independent nature of \textsc{IntraCFG} allows for easy integration
 with various programming languages and enables the construction of precise CFGs
 for those languages. The use of attribute equations and interfaces also allows
@@ -68,8 +68,7 @@ The degree of precision in creating CFGs using \textsc{IntraCFG} can differ in o
 to meet the requirements of a given application.
 This flexibility allows us to optimize the efficiency of the analysis by selectively
 excluding certain nodes from the CFG, such as \texttt{WhileStmt}, which do not
-provide any information relevant to the analyses. This leads in the reduction of
-unnecessary complexity and with an overall improvement in the analysis's performance.
+provide any information relevant to the analyses.
 \begin{figure}[H]
 	\centering
 	\begin{tikzpicture}
@@ -140,9 +139,9 @@ we developed \textsc{IntraTeal}, an implementation of the framework for the Teal
 The teal programming language is used for teaching purposes
 and provides a simple and easy-to-learn syntax for students to understand the
 concepts of static program analysis (see Section~\ref{sec:teal}).
-We made available to students, as part of the course, the complete source code of \textsc{IntraTeal},
-with instructions and guidelines on how to use the API to implement their own analyses.
-We also made available a reference implmentation of the
+As part of the course, the complete source code of \textsc{IntraTeal} was provided to students along with
+instructions and guidelines for utilizing the API to implement their own analyses.
+We also made available a reference implementation of the
 \texttt{NullPointerException} analysis. We then asked students, as a way of
 extending their understanding and skills, to implement an \texttt{IndexOutOfBound}
 analysis on the interval abstract domain. This exercise provided the
@@ -207,7 +206,7 @@ eq ControlTrue.nullnessTransfer(NullDomain lattice) {
 \end{lstlisting}
 The example presented in Figure~\ref{fig:ExampleTEAL} along with the code snippet
 provided in Listing~\ref{lst:ControlTrueEq} illustrates how the precision of the
-analysis is enhanced by considering implicit assignments in the control flow of
+analysis is enhanced by considering implicit assignments~\cite{spa} in the control flow of
 the program. Specifically, the transfer function for the \texttt{ControlTrue} HOA
 takes into account that the object \texttt{x} is null when it is printed within
 the \emph{then} branch of the \texttt{if} statement.
