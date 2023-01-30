@@ -4,26 +4,52 @@ We used JFeature to analyse four widely used corpora, to investigate to what ext
 
 \newcolumntype{?}{!{\vrule width 1.5pt}} %Make some vertical lines thicker
 \newcommand*\rot{\rotatebox{90}}
-\setlength\tabcolsep{3.5pt}
+
+
+\setlength\tabcolsep{2.4pt}
 \begin{table*}
 \centering
 \caption{\label{tbl:corpusAnalysis} Corpora Analysis. Each entry represents the total number of projects utilising the respective feature.}
-\begin{adjustbox}{angle=90}
-\begin{tabular}{|l?c|c|c|c?c|c|c|c|c|c|c|c|c|c|c|c|c?c|c|c|c?c|c|c|c|c?}
+\begin{adjustbox}{angle=0}
+\begin{tabular}{|l?c|c|c|c?c|c|c|c|c|c|c|c|c|c|c|c|c?}
 \hline
-\multirow{3}{*}{\begin{tabular}[c]{@{}c@{}} \\ \\ \\ \\ \textsc{Corpus} \\ ($\#$ \textsc{Projects})\end{tabular}} & \multicolumn{4}{c?}{\textsc{JAVA 1.1 - 4}} & \multicolumn{13}{c?}{\textsc{JAVA 5}}    & \multicolumn{4}{c?}{\textsc{JAVA 7}}& \multicolumn{5}{c?}{\textsc{JAVA 8}}\\
-\cline{2-27}
-           & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Inner Class\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{java.lang.reflect.*\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rotatebox{90}{Strictfp\quad}}} & \multicolumn{1}{c?}{\multirow{2}{*}{\rotatebox{90}{Assert Stmt\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Annotated CU\quad}}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}} \\  \\ Annotation\end{tabular}}  &\multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}} \\  \\ Enum\end{tabular}} & \multicolumn{4}{c|}{\begin{tabular}[c]{@{}c@{}} \\  \\ Generics\end{tabular}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Enhanced For\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{VarArgs\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Static Import\quad}}} & \multicolumn{1}{c?}{\multirow{2}{*}{\rot{java.util.concurrent.*}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Diamond Operator\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{String in Switch\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Try w/ Resources\quad}}} & \multicolumn{1}{c?}{\multirow{2}{*}{\rot{Multi Catch\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Lambda Expression\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Constructor Reference\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Method Reference\quad}}}  & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Intersection Cast\quad}}}& \multicolumn{1}{c?}{\multirow{2}{*}{\rot{Default Method\quad}}} \\[30pt]
+\multirow{3}{*}{\begin{tabular}[c]{@{}c@{}} \\ \\ \\ \\ \textsc{Corpus} \\ ($\#$ \textsc{Projects})\end{tabular}} & \multicolumn{4}{c?}{\textsc{JAVA 1.1 - 4}} & \multicolumn{13}{c?}{\textsc{JAVA 5}}\\
+\cline{2-18}
+           & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Inner Class\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{java.lang.reflect.*\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rotatebox{90}{Strictfp\quad}}} & \multicolumn{1}{c?}{\multirow{2}{*}{\rotatebox{90}{Assert Stmt\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Annotated CU\quad}}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}} \\  \\ Annot.\end{tabular}}  &\multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}} \\  \\ Enum\end{tabular}} & \multicolumn{4}{c|}{\begin{tabular}[c]{@{}c@{}} \\  \\ Generics\end{tabular}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Enhanced For\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{VarArgs\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Static Import\quad}}} & \multicolumn{1}{c?}{\multirow{2}{*}{\rot{java.util.concurrent.*}}}\\[30pt]
 \cline{7-14}
-           & \multicolumn{1}{c|}{}    & \multicolumn{1}{c|}{}   & \multicolumn{1}{c|}{} & \multicolumn{1}{c?}{} & \multicolumn{1}{c|}{} &  \multicolumn{1}{c|}{\begin{sideways}Use\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Decl\end{sideways}} &  \multicolumn{1}{c|}{\begin{sideways}Use\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Decl\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Method\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Constructor \phantom{..}\end{sideways}} &  \multicolumn{1}{c|}{\begin{sideways}Class \phantom{..}\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Interface\end{sideways}} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{}& \multicolumn{1}{c|}{}& \multicolumn{1}{c?}{} & \multicolumn{1}{c|}{}& \multicolumn{1}{c|}{}    & \multicolumn{1}{c|}{}    & \multicolumn{1}{c?}{}    & \multicolumn{1}{c|}{}    & \multicolumn{1}{c|}{}   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{}& \multicolumn{1}{c?}{}   \\
+           & \multicolumn{1}{c|}{}    & \multicolumn{1}{c|}{}   & \multicolumn{1}{c|}{} & \multicolumn{1}{c?}{} & \multicolumn{1}{c|}{} &  \multicolumn{1}{c|}{\begin{sideways}Use\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Decl\end{sideways}} &  \multicolumn{1}{c|}{\begin{sideways}Use\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Decl\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Method\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Constructor \phantom{..}\end{sideways}} &  \multicolumn{1}{c|}{\begin{sideways}Class \phantom{..}\end{sideways}} & \multicolumn{1}{c|}{\begin{sideways}Interface\end{sideways}} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{}& \multicolumn{1}{c|}{}& \multicolumn{1}{c?}{} \\
 \hline
-\textsc{DaCapo} \hfill(15)      & 15   & 12  & 2 & 5  & 0            & 8& 4                     & 14  & 8& 6  & 2 & 7& 4& 8& 7& 5 & 7 & 2& 1    & 3    & 2    & 2    & 0   & 2 &0 &0 \\
+\textsc{DaCapo} \hfill(15)      & 15   & 12  & 2 & 5  & 0& 8& 4& 14  & 8& 6  & 2 & 7& 4& 8& 7& 5 & 7 \\
 \hline
-\textsc{Defects4J} \hfill(16)  & 16  & 15  & 1 & 8  & 0            &15  &  7                     & 16   & 14& 13 & 3 & 12& 10 & 15    & 13    & 14& 14& 14    & 7    & 13   & 10    & 10    & 5   & 8 &1&1 \\
+\textsc{Defects4J} \hfill(16)  & 16  & 15  & 1 & 8  & 0&15  &  7& 16   & 14& 13 & 3 & 12& 10 & 15& 13& 14& 14 \\
 \hline
-\textsc{Qualitas} \hfill (112)    & 109  & 100  & 4 & 51  & 9    &67 & 35       & 109   &45     & 55 & 7& 59 &41   & 68    & 49    & 46 & 50& 1& 1    & 1    & 1    & 0    & 0   & 0&0 &0  \\
+\textsc{Qualitas} \hfill (112)    & 109  & 100  & 4 & 51  & 9&67 & 35& 109&45& 55 & 7& 59 &41& 68& 49& 46 & 50 \\
 \hline
-\textsc{XCorpus} \hfill (76)     & 74   & 65  & 4 & 28  & 3     &39  & 21            & 74    & 32    & 31 & 4&35 & 22   & 39    & 28    & 25 & 27& 4& 2    & 3    & 3    & 2    & 1   & 2  &0 &0\\
+\textsc{XCorpus} \hfill (76)     & 74   & 65  & 4 & 28  & 3&39  & 21& 74& 32& 31 & 4&35 & 22& 39& 28& 25 & 27\\
+\hline
+\end{tabular}
+\end{adjustbox}
+\end{table*}
+
+
+\setlength\tabcolsep{3.5pt}
+\begin{table*}
+\centering
+\caption{\label{tbl:corpusAnalysis2} Corpora Analysis. Each entry represents the total number of projects utilising the respective feature.}
+\begin{adjustbox}{angle=00}
+\begin{tabular}{|l?c|c|c|c?c|c|c|c|c?}
+\hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}} \\ \\ \\ \\ \textsc{Corpus} \\ ($\#$ \textsc{Projects})\end{tabular}}  & \multicolumn{4}{c?}{\textsc{JAVA 7}}& \multicolumn{5}{c?}{\textsc{JAVA 8}}\\
+\cline{2-10}
+    & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Diamond Operator\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{String in Switch\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Try w/ Resources\quad}}} & \multicolumn{1}{c?}{\multirow{2}{*}{\rot{Multi Catch\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Lambda Expression\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Constructor Reference\quad}}} & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Method Reference\quad}}}  & \multicolumn{1}{c|}{\multirow{2}{*}{\rot{Intersection Cast\quad}}}& \multicolumn{1}{c?}{\multirow{2}{*}{\rot{Default Method\quad}}} \\[100pt]
+\hline
+\textsc{DaCapo} \hfill(15)      &  2& 1    & 3    & 2    & 2    & 0   & 2 &0 &0 \\
+\hline
+\textsc{Defects4J} \hfill(16)  & 14    & 7    & 13   & 10    & 10    & 5   & 8 &1&1 \\
+\hline
+\textsc{Qualitas} \hfill (112)    & 1& 1    & 1    & 1    & 0    & 0   & 0&0 &0  \\
+\hline
+\textsc{XCorpus} \hfill (76)     & 4& 2    & 3    & 3    & 2    & 1   & 2  &0 &0\\
 \hline
 \end{tabular}
 \end{adjustbox}
@@ -60,12 +86,12 @@ For evaluation, we used the release from 2017.
 To compute complete semantic analysis with JFeature and ExtendJ, all dependent libraries and the classpath are needed for each analysed project. Unfortunately, different projects use different conventions and build systems, making automatic extraction of this information difficult.
 Therefore, for our study of the full corpora, we decided to extract features depending only on the language constructs and the standard library, but that did not require analysis of the project dependencies. This way, we could run JFeature on these projects without any classpath (except for the default standard library).
 
-Table~\ref{tbl:corpusAnalysis} shows an overview of the results of the analysis. For each corpus, we report the number of projects that use a particular feature from Table~\ref{tbl:features}. More detailed results, including the results for all 26 features, and counts for each individual project, are available at \url{https://github.com/lu-cs-sde/JFeature/blob/main/features.xlsx}.
+Table~\ref{tbl:corpusAnalysis} and Table~\ref{tbl:corpusAnalysis2} show an overview of the results of the analysis. For each corpus, we report the number of projects that use a particular feature from Table~\ref{tbl:features}. More detailed results, including the results for all 26 features, and counts for each individual project, are available at \url{https://github.com/lu-cs-sde/JFeature/blob/main/features.xlsx}.
 
 For standard libraries, like \code{ java.lang.reflect.*} and \code{java.util.concurrent.*}, we count all variable accesses, variable declarations, and method calls whose type is hosted in the respective package.
 
 While ExtendJ mostly complies to the JLS version 8, its Java 8 type inference support diverges from the specification in several corner cases.
-As Table~\ref{tbl:corpusAnalysis} shows, these limitations did not affect DaCapo, but they did surface in 43 method calls in 9 projects (2 projects in Defects4J that we manually inspected to validate our findings.
+As Table~\ref{tbl:corpusAnalysis} and Table~\ref{tbl:corpusAnalysis2}  show, these limitations did not affect DaCapo, but they did surface in 43 method calls in 9 projects (2 projects in Defects4J that we manually inspected to validate our findings).
 
 %\todo[inline]{Should analyze all projects by tweaking the ones that break, but without changing the feature results. Could either exclude some files that break, or tweak some lines of code to make them not break. Could then rewrite the above paragraph something like: The current version of ExtendJ has some limitations for Java 8. We have therefore had to modify some of the projects slightly to be able to analyze them fully. As shown in the table, we were able to examine all 15 projects included in DaCapo, but had to modify a total of X lines of code in Y projects (Y1 projects in Defects4J, Y2 in Qualitas Corpus, and Y3 in XCorpus.}
 
