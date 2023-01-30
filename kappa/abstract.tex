@@ -1,7 +1,35 @@
 \chapter{Abstract}
 
-\subsubsection*{Background:}
-\subsubsection*{Aim:}
-\subsubsection*{Result:}
-\subsubsection*{Conclusion:}
-\subsubsection*{Future work:}
+
+Static program analysis plays a crucial role in ensuring the quality and security of 
+software applications by detecting and fixing bugs, vulnerabilities, 
+and potential security risks in the code. The utilization of declarative paradigms
+in dataflow analysis as part of this process has become increasingly popular in recent years.
+
+The aim of this thesis is to examine the benefits and limitations of implementing 
+declarative paradigms in static program analysis through dataflow analysis, specifically 
+by computing the analysis directly on the source code rather than on an intermediate representation using
+Reference Attibute Grammars.
+
+The focus of this work is on our language-agnostic framework, called \textsc{IntraCFG}, 
+that enables more efficient and effective dataflow analysis by constructing precise,
+lightweight source-level control-flow graphs. This framework superimposes control-flow 
+graphs on the abstract syntax tree of the program, allowing for more accurate analysis 
+on the source code level. The effectiveness of the \textsc{IntraCFG} framework is 
+demonstrated through two case studies, \textsc{IntraJ} and \textsc{IntraTeal}, that 
+show the potential and the flexibility of \textsc{IntraCFG} in different contexts,
+such as, bug detection and teaching. 
+\textsc{IntraJ}, has proven to be both faster and precise as well-known 
+industrial tools. Its precision and performance, combined with 
+on-demand evaluation, make \textsc{IntraJ} an ideal tool for use in 
+Integrated Development Environments. 
+Additionally, the thesis presents \textsc{JFeature}, a tool for automatically extracting 
+and summarising the key features of a corpus of Java programs. \textsc{JFeature} allows 
+researcher and developers to gain a deeper understanding of the characteristics of a codebase and 
+can be used to evaluate the effectiveness of their tools and techniques.
+
+
+
+
+
+
