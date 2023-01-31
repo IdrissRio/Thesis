@@ -16,6 +16,9 @@
 \usepackage{booktabs}
 \usepackage{todonotes}
 
+\newcounter{rtaskno}
+\newcommand{\paper}[1]{\refstepcounter{rtaskno}\label{#1}}
+
 % ---- START Packages used for IntraJ ----
 \usepackage{multirow}
 \usepackage{booktabs}
@@ -98,11 +101,6 @@
   \uline{\phantom{#1}}%
   \llap{\contour{white}{#1}}%
 }
-
-
-
-
-
 % ---- END Packages used for Teal ----
 
 % Bibliography setting and style
