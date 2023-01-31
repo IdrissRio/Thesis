@@ -17,11 +17,11 @@ suitability of software corpora for their particular research or development nee
 By applying \textsc{JFeature} to four widely-used corpora in the program analysis area,
 we demonstrated its potential for use in corpus evaluation, the creation of new
 corpora, and longitudinal studies of individual Java projects.
-Together, these contributions provide frameworks and practical tools practical tools
+Together, these contributions provide frameworks and practical tools
 for improving the development and maintenance of software systems.
 
 
-In future, we plan to investigate the application of interprocedural analysis
+In future, we plan to investigate the support of interprocedural analysis
 to \textsc{IntraCFG}. Interprocedural analysis refers to the process of analysing
 the interactions and dependencies between different procedures or functions within a
 program. One of the main challenges in this area is the computation of call graphs,
@@ -32,12 +32,12 @@ technique used to determine the memory locations that a given variable may point
 This is a crucial step in interprocedural analysis, as it allows us to determine
 the flow of data between different procedures and functions. However, since we aim
 to run these analyses within IDEs, we want to investigate how to compute and refine
-the results of point-to analysis incrementally, rather than over the entire codebase.
+the results of point-to analysis incrementally, rather than analysing the entire codebase.
 
 Additionally, we plan to explore the use of on-demand evaluation, which is becoming a popular
 technique in compilers, e.g., \texttt{rustc}~\cite{Rust_Query_Guide}. This approach allows for the
-evaluation of code only when it is needed, rather than statically analysing the
-entire program. Furthermore, we plan to add native support for widening and narrowing
+evaluation of code only when it is needed, rather than computing the results for the entire codebase.
+Furthermore, we plan to add native support for widening and narrowing
 operators in \textsc{JastAdd}'s circular attributes, which would enable an easier implementation
 of analysis over infinite lattices. Finally, we aim to explore the application of \textsc{IntraCFG} to
 dynamically typed languages such as JavaScript and Python.

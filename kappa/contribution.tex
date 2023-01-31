@@ -8,10 +8,12 @@ and language-independent framework for constructing precise intraprocedural CFGs
 
 Unlike most other frameworks, which build CFGs on the IR level,
 e.g.,  bytecode, \textsc{IntraCFG}'s approach superimposes the CFGs
-on the AST. This allows for a more accurate client analysis,
+on the AST. This allows for accurate client analysis,
 as the CFGs are constructed directly on the source code level, rather than an
-intermediate representation. Additionally, this approach also enables the construction
-of \textsc{AST-Unrestricted} CFGs, which are CFGs whose shape is not restricted to the AST structure.
+intermediate representation. 
+Diffrently from the existing RAG-based framework~\cite{j.scico.2012.02.002}, 
+\textsc{IntraCFG} enables the construction of \textsc{AST-Unrestricted} CFGs,
+which are CFGs whose shape is not restricted to the AST structure.
 \subsection{Overall Architecture}
 The overall architecture of our proposed framework, \textsc{IntraCFG}, and its
 ecosystem\todo{Not sure about the word ecosystem} is shown in Figure~\ref{fig:intraCFG}.
@@ -48,8 +50,8 @@ analysis being performed.
 \subsection{\textsc{IntraCFG} for Java}
 To demonstrate \textsc{IntraCFG} applicability, we developed
 \textsc{IntraJ}, an instance of the framework for the Java programming language.
-We built \textsc{IntraJ} as an extension of the \textsc{ExtendJ} extensible Java compiler~\cite{DBLP:conf/oopsla/EkmanH07}.
-The complete architecture of \textsc{IntraJ} is shown in Figure~\ref{fig:intraJ}.
+We built \textsc{IntraJ} upon the \textsc{ExtendJ} extensible Java compiler~\cite{DBLP:conf/oopsla/EkmanH07}.
+% The complete architecture of \textsc{IntraJ} is shown in Figure~\ref{fig:intraJ}.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.52]{kappa/img/architecturejava.pdf}
@@ -57,7 +59,8 @@ The complete architecture of \textsc{IntraJ} is shown in Figure~\ref{fig:intraJ}
 \end{figure}
 
 %Discussing modularity
-We designed \textsc{IntraJ}, following a  modular approach, and we separately
+As can be seen in Figure~\ref{fig:intraJ}, we designed \textsc{IntraJ}
+following a  modular approach, and we separately
 instantiated the framework for different versions of Java such as Java 4,
 Java 5, Java 7 and Java 8. Each version of Java is implemented as a separate
 aspect of the compiler. This approach allows us and the users of \textsc{IntraJ}
@@ -66,9 +69,11 @@ to easily extend the framework to support new versions of Java.
 % Discussing precision
 The degree of precision in creating CFGs using \textsc{IntraCFG} can differ in order
 to meet the requirements of a given application.
-This flexibility allows us to optimize the efficiency of the analysis by selectively
-excluding certain nodes from the CFG, such as \texttt{WhileStmt}, which do not
-provide any information relevant to the analyses.
+This flexibility allows the users of the framework to optimize the efficiency of the analysis by selectively
+excluding/including certain nodes from the CF.
+For example, nodes such as \astnode{WhileStmt}, which are essential for the 
+construction of CFGs, as they are used to define the shape of CFGs, can be excluded 
+from the CFGs as they do not provide any information relevant to the analysis.
 \begin{figure}[H]
 	\centering
 	\begin{tikzpicture}
@@ -91,7 +96,7 @@ void foo(boolean b){
 The example in Figure~\ref{fig:CFG} is a visual representation of the AST and CFG of the
 \texttt{foo} Java method. The figure illustrates the ability of the framework to tailor the CFG
 to the specific requirements of the analysis and eliminate unnecessary complexity for improved performance.
-In this example, nodes like \texttt{IfStmt} or \texttt{Dot} are not included in the CFG,
+In this example, nodes like \astnode{IfStmt} or \astnode{Dot} are not included in the CFG,
 resulting in a more concise but precise representation of the control flow of the program.
 On the other hand, the precision of the CFGs can be improved by synthesising new nodes and new subtrees.
 For instance, we designed \textsc{IntraJ} to compute an exception-sensitive
@@ -110,16 +115,16 @@ In \textsc{IntraJ}, we implemented five different dataflow analyses:
   \item \emph{Indirect Dead Assignment Analysis}: detects assignments to l-values which uses always flow to a dead assignment.
 \end{itemize}
 All the analyses rely on the result of the control-flow analysis. To the analysis are exposed
-the entry and exit nodes of the CFG, as well as the successor and predecessor
-nodes of each node.
-Each analysis is implemented as a separate aspect of the compiler. Nevertheless,
-the result of some analyses is used as input for other analyses. For instance,
+the \Ahoa{CFGRoot}{entry} and \Ahoa{CFGRoot}{exit} attributes of the CFG, as well as the \Asyn{CFGNode}{succ} and \Asyn{CFGNode}{pred}
+attributes of each node.
+Each analysis is implemented as a separate aspect of the compiler. 
+Still, some analyses' results are used as input for other analyses. For instance,
 the result of Live Variable Analysis is used as input for the Dead Assignment Analysis.
 Similarly, the result of Dead Assignment Analysis is used to compute Indirect Dead Assignment Analysis.
 
 The implemented analyses are instances of the monotone frameworks (see Section~\ref{sec:monotoneframeworks}).
 Each analysis defines its abstract domain, transfer function and \emph{in} and
-\emph{out}\footnote{Sometimes can be named \emph{gen} and \emph{kill}.} attributes.
+\emph{out}\footnote{Or \emph{kill} and \emph{gen}.} circular attributes for each \astnode{CFGNode} (i.e., \AcircSyn{CFGRoot}{in} and  \AcircSyn{CFGRoot}{out}).
 The language dependency of the dataflow analysis arises from the fact that the
 transfer function, which defines the relationship between the \emph{in} and \emph{out},
 is modelled as an attribute. This transfer function attribute is
@@ -157,7 +162,7 @@ and structure, making it easily accessible and reusable by other researchers.
 
 Our artifact was well documented, with a clear and concise README.md, and was easy to
 use, with a self-contained script that enabled reviewers to easily reproduce the
-results presented in our paper. These factors helped to demonstrate the practicality
+results presented in Paper~\ref{paper:intraj}. These factors helped to demonstrate the practicality
 and reliability of our work, and allowed other researchers to build upon our findings.
 
 
@@ -185,8 +190,8 @@ Another key aspect of both, \textsc{IntraTeal} and \textsc{IntraJ} implementatio
 construct enhanced control-sensitive CFGs. Control-sensitive CFGs
 are a more precise representation of the control flow of a program, as they take
 into account the specific control flow behaviour of a program. This is achieved by
-synthesizing two AST nodes, i.e., \texttt{ControlTrue} and \texttt{ControlFalse} for each
-comparison operator, e.g.,  ``$\le$'', ``$==$'', ``$!=$'', inside a conditional statement.
+synthesizing two AST nodes, i.e., \astnode{ControlTrue} and \astnode{ControlFalse} for each
+comparison operator, e.g.,  ``$\le$'', ``$==$'', ``$!=$'', inside a conditional expression.
 These HOAs are used to represent the control flow of the program and the information that ca be inferred from
 it. \\
 %
@@ -204,15 +209,15 @@ if(x > 4 and x <= 6){
 }
     \end{lstlisting}
 \end{minipage}\\
-The example in Listing~\ref{lst:control-null} shows how the \texttt{ControlTrue} and \texttt{ControlFalse}
+The example in Listing~\ref{lst:control-null} shows how the \astnode{ControlTrue} and \astnode{ControlFalse}
 HOAs are used to keep track of the information that the object \texttt{x} is not null
 in the \emph{then} branch and null in the \emph{else} branch.
 This information is used to improve the precision of the analysis and provide
 more accurate results without affecting the performance of the analysis.
 
-We also asked students to use the \texttt{ControlTrue} and \texttt{ControlFalse}
+We also asked students to use the \astnode{ControlTrue} and \astnode{ControlFalse}
 HOAs to improve the precision of the interval analysis. The example in
-Listing~\ref{lst:control-interval} shows how the \texttt{ControlTrue} and \texttt{ControlFalse}
+Listing~\ref{lst:control-interval} shows how the \astnode{ControlTrue} and \astnode{ControlFalse}
 HOAs are used to keep track of the information that the object \texttt{x} is in the interval $[5,6]$.
 \begin{figure}
 	\centering
@@ -230,17 +235,17 @@ fun foo(x) = {
 	\end{tikzpicture}
 	\caption{\label{fig:ExampleTEAL} Example of control-sensitivity in \textsc{IntraTeal}.}
 \end{figure}
-\begin{lstlisting}[language=JastAdd,label={lst:ControlTrueEq}, caption={Transfer function for \texttt{ControlTrue} HOA.}]
+\begin{lstlisting}[language=JastAdd,label={lst:ControlTrueEq}, caption={Transfer function for \astnode{ControlTrue} HOA.}]
 eq ControlTrue.nullnessTransfer(NullDomain lattice) {
   NullDomain result = new NullDomain(lattice);
   NullDomain assignment = getCond().getImplicitAssignment();
   return result.join(assignment);
 }
 \end{lstlisting}
-The example presented in Figure~\ref{fig:ExampleTEAL} along with the code snippet
+The example presented in Figure~\ref{fig:ExampleTEAL} along with the \textsc{JastAdd} code
 provided in Listing~\ref{lst:ControlTrueEq} illustrates how the precision of the
 analysis is enhanced by considering implicit assignments~\cite{spa} in the control flow of
-the program. Specifically, the transfer function for the \texttt{ControlTrue} HOA
+the program. Specifically, the transfer function for the \astnode{ControlTrue} HOA
 takes into account that the object \texttt{x} is null when it is printed within
 the \emph{then} branch of the \texttt{if} statement.
 
@@ -292,7 +297,7 @@ feature in \textsc{JastAdd} to facilitate developers of static analysis tools.
 In this Section, we focus on the integration of \textsc{IntraJ} and \textsc{IntraTeal} with different
 IDEs and developers tools. We first describe the integration of \textsc{IntraJ} with
 IDEs that support the Language Server Protocol (LSP)~\cite{lsp}, such as
-\textsc{Visual Studio Code}~\cite{vscode}, \textsc{Emacs}~cite{emacs}, and \textsc{Vim}\cite{vim}, using
+\textsc{Visual Studio Code}~\cite{vscode}, \textsc{Emacs}~\cite{emacs}, and \textsc{Vim}\cite{vim}, using
 the MagpieBridge~\cite{luo_et_al:LIPIcs:2019:10813} framework. We then describe the
 integration of \textsc{IntraJ} and \textsc{IntraTeal} with \textsc{CodeProber}~\cite{risberg2022property},
 a tool for visualising and exploring the results of compilers and static analysis tools.
@@ -316,7 +321,7 @@ compared to existing industrial tools. However, we recognized the potential
 for further improvement, by exploiting the on-demand evaluation feature of \textsc{JastAdd}.
 On-demand evaluation enables the execution of dataflow analyses
 on methods within open files, as opposed to the entire codebase. This approach
-allows for user-centric, real-time feedback on complex bugs, providing developers
+allows for user-centric\todo{maybe ``localised'' is better?}, real-time feedback on complex bugs, providing developers
 with instantaneous insights and facilitating efficient debugging and troubleshooting
 processes.
 To achieve this, we used the \textsc{MagpieBridge} framework, which facilitates the integration
@@ -336,7 +341,7 @@ Figure~\ref{fig:IDEIntegration} illustrates the integration of \textsc{IntraJ} w
 different IDEs. \textsc{ServerAnalysis} is a component that we developed to handle the
 communication between \textsc{IntraJ} and the \textsc{MagpieBridge} Server. It is responsible
 for maintaining a record of the active analyses and forwarding events in the editor,
-such as the save command or opening of a file, to the \textsc{IntraJ} tool.
+such as the save command or opening of a file, to \textsc{IntraJ}.
 The results of the analysis are then sent back to the \textsc{MagpieBridge}, which subsequently
 forwards them to the editor, displaying warnings, quick-fixes, and explanations
 to the developer.
@@ -388,7 +393,7 @@ observe their progress and the outcomes of their analysis within a realistic IDE
 
 \section{\textsc{JFeature}: Java Feature Extractor}
 \label{sec:JFeature}
-\textsc{JFeature} is a static analysis tool for the Java programming language that extracts
+\textsc{JFeature} is a RAG-based static analysis tool for the Java programming language that extracts
 syntactic and semantic features from Java programs. The tool is designed to assist
 researcher and developers in selecting appropriate software corpora to better evaluate the robustness
 and performance of software tools, such as static analysers.
@@ -419,7 +424,8 @@ In Figure~\ref{fig:JFeature}, we show the architecture of \textsc{JFeature}.
 \end{figure}
 
 We conduced a case study, applying \textsc{JFeature} to four widely used corpora in the
-program analysis area: the \textsc{Da Capo Benchmark suite}, \textsc{Defects4J}~\cite{just2014defects4j}, \textsc{Qualitas Corpus}~\cite{QualitasCorpus:APSEC:2010}, and \textsc{XCorpus}~\cite{dietrich2017xcorpus}.
+program analysis area: the \textsc{Da Capo Benchmark suite}, \textsc{Defects4J}~\cite{just2014defects4j},
+\textsc{Qualitas Corpus}~\cite{QualitasCorpus:APSEC:2010}, and \textsc{XCorpus}~\cite{dietrich2017xcorpus}.
 The results showed that Java 1-5 features were predominant among the corpora,
 suggesting that some of the corpora may be less suited for the evaluation of
 tools that address features in Java 7 and 8.
