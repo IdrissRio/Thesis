@@ -47,7 +47,7 @@ analysis being performed.
 
 
 
-\subsection{\textsc{IntraCFG} for Java}
+\subsection{\textsc{IntraJ}: \textsc{IntraCFG} for Java}
 To demonstrate \textsc{IntraCFG} applicability, we developed
 \textsc{IntraJ}, an instance of the framework for the Java programming language.
 We built \textsc{IntraJ} upon the \textsc{ExtendJ} extensible Java compiler~\cite{DBLP:conf/oopsla/EkmanH07}.
@@ -166,7 +166,7 @@ results presented in Paper~\ref{paper:intraj}. These factors helped to demonstra
 and reliability of our work, and allowed other researchers to build upon our findings.
 
 
-\subsection{\textsc{IntraCFG} for TEAL}
+\subsection{\textsc{IntraTeal}: \textsc{IntraCFG} for TEAL}
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.65]{kappa/img/architectureteal.pdf}
@@ -250,8 +250,7 @@ takes into account that the object \texttt{x} is null when it is printed within
 the \emph{then} branch of the \texttt{if} statement.
 
 
-The task assigned to the students, which was an extension of the \texttt{NullPointerException}
-analysis, was to implement an \texttt{IndexOutOfBound} analysis on the interval domain.
+The task assigned to the students, was to implement an \texttt{IndexOutOfBound} analysis on the interval domain.
 The interval domain, being an infinite domain, poses a significant challenge for
 dataflow analysis due to the inherent nature of infinite domains. In particular,
 the iterative nature of dataflow analysis algorithms, which rely on the computation
@@ -276,7 +275,9 @@ fun foo(x) = {
 			\end{lstlisting}
 		};
 	\end{tikzpicture}
-	\caption{\label{fig:nonConverging} Trivial example of non-converging program.}
+	\caption{\label{fig:nonConverging} Trivial example of non-converging program. The {\color{red}red} path represents the
+  non-converging sequence. The {\color{ForestGreen}green} path represents the converging sequence using the widening operator.
+  }
 \end{figure}
 
 To ensure the termination of the analysis, the students were required to
