@@ -73,7 +73,7 @@ on the source code of the program, which can be more easily understood by humans
 This can be particularly useful for debugging and program understanding tasks,
 as it allows the analysis to be performed in the context of the original program.
 Another advantage of constructing the CFG on the source level is that it does not
-require the generation of the IR enabling faster and more efficient analysis, 
+require the generation of the IR enabling faster and more efficient analysis,
 as it avoids the overhead of IR generation.
 In addition, constructing the CFG on the source level can work with semantically
 and syntactically invalid code, which can be useful for analysing programs with
@@ -181,9 +181,9 @@ void foo(){
 Dataflow analysis is a technique used in computer science to analyse the flow of
 data through a program. It has its roots in the field of program optimization,
 where it was originally used to identify opportunities for improving the performance
-of programs by tracking variable defintions and uses. This information can be used to optimize the program by eliminating
-unnecessary computations (e.g., Very Busy Expression or Available Expression 
-analyses~\cite{aho2007compilers,vallee-rai10soot,falconer2007deepweaver,sagiv1996ide,kildall1973dataflow}) and improving 
+of programs by tracking variable definitions and uses. This information can be used to optimize the program by eliminating
+unnecessary computations (e.g., Very Busy Expression or Available Expression
+analyses~\cite{aho2007compilers,vallee-rai10soot,falconer2007deepweaver,sagiv1996ide,kildall1973dataflow}) and improving
 the use of available resources (e.g., registers optimisation).
 
 
@@ -199,14 +199,14 @@ potential bugs in Java programs.
 % I looked here how they cited pmd, findbugs and spotbugs. https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8103456
 
 Dataflow analysis is also widely used to identify potential security vulnerabilities
-in software~\cite{flowDroid,piskachev2021secucheck,lawall10coccinelle} 
+in software~\cite{flowDroid,piskachev2021secucheck,lawall10coccinelle}
 by tracking the flow of sensitive data through a program and
-identifying points where it may be exposed to unauthorized access or manipulation. 
+identifying points where it may be exposed to unauthorized access or manipulation.
 
 
 \subsubsection*{Monotone Frameworks}
 \label{sec:monotoneframeworks}
-Monotone framework~\cite{kam1977monotone} is a teoretical framework for reasoning
+Monotone framework~\cite{kam1977monotone} is a theoretical framework for reasoning
 about program dataflow properties.
 These frameworks provide a flexible and generic framework for expressing and solving
 dataflow equations, which can be used to reason about a wide range of dataflow
@@ -283,7 +283,7 @@ which are properties associated with the elements of a language's abstract synta
 Attribute grammars provide a powerful tool for specifying the behaviour of a programming
 language and for verifying the correctness of programs written in that language.
 %
-ARs are composed of two components: a context-free grammar~\cite{CREMERS197586},
+AGs are composed of two components: a context-free grammar~\cite{CREMERS197586},
 which defines the syntax of the language, and an attribute evaluation function,
 which defines the semantics of the language. The context-free grammar is used to
 parse a program into its abstract syntax tree, and the attribute evaluation function
@@ -293,7 +293,7 @@ of the tree.
 Attribute grammars enable the description of the
 interdependence of syntactic and semantic elements of a programming language.
 For instance, the type of a variable may be determined by its declaration,
-but the type of an expression may be determined by the types of its subexpressions.
+but the type of an expression may be determined by the types of its sub-expressions.
 Attribute grammars provide a way to specify these constraints.
 
 Attributes are define using equations. We can distinguish two types of
@@ -307,7 +307,7 @@ and the node's own attributes.
 A \emph{synthesized} attribute is a property of a non-terminal that is computed
 based on the attributes of its possible derivations. For example, the type of an expression
 in a programming language may be a synthesized attribute that is computed based
-on the types of the subexpressions in the expression. For instance, if a variable is initialized
+on the types of the sub-expressions in the expression. For instance, if a variable is initialized
 with the expression ``3 + 4'', the type of the variable would be determined to
 be integer based on the types of the operands in the expression.
 We denote a synthesized attribute as follows:
@@ -335,7 +335,7 @@ Inherited attributes are defined in two parts: a declaration and an equation.
 where \astnode{A} and \astnode{B} are node types.
 The first part of the equation declares the attribute \Ainh{A}{x} as inherited by \astnode{A},
 so that every node of type \astnode{A} has can access it. The second part of the
-equation defines the attribute for each child of \astnode{B}. The whildcard \astnode{*}
+equation defines the attribute for each child of \astnode{B}. The wildcard \astnode{*}
 indicates that the attribute is defined and broadcasted to all children of \astnode{B} with type \astnode{A}.
 
 \begin{figure}
@@ -429,7 +429,7 @@ without being overwhelmed by the details of a fully-featured language.
 The concrete and the abstract syntax of TEAL-0 are shown in Figure~\ref{fig:tealGrammar}.
 One of the key features of TEAL is that it is an object-oriented language,
 which means that it allows the creation of classes and objects that can inherit
-characteristics and behavior from one another. However, it does not have a dynamic
+characteristics and behaviour from one another. However, it does not have a dynamic
 dispatcher, which means that the method that is called for an object at runtime
 is determined at compile time based on the type of the object.
 TEAL was developed in an incremental manner, with each version building
@@ -577,17 +577,17 @@ analysis on the AST.
 Another important aspect of \textsc{JastAdd} is its support for on-demand attribute evaluation.
 Attribute evaluation is performed only when the corresponding
 attribute is actually required and triggered by the program. This approach enables \textsc{JastAdd} to
-avoid performing unnecessary computations, which can improve the run-time 
+avoid performing unnecessary computations, which can improve the run-time
 performance of the generated program.
 
 The \textsc{JastAdd} metacompiler is based on the following components:
 \begin{itemize}
     \item The \textsc{JastAdd} language: a language for the definition of RAGs.
     The \textsc{JastAdd} language allow to specify the abstract grammar of a language, and,
-    with a java-like syntax, the attributes of the RAG.
+    with a Java-like syntax, the attributes of the RAG.
     \item The \textsc{JastAdd} compiler: a compiler that generates Java code from a RAG.
 \end{itemize}
-In \textsc{JastAdd}, synthesized attributs are defined using the \code{syn} keyword followed
+In \textsc{JastAdd}, synthesized attributes are defined using the \code{syn} keyword followed
 by the type and the name of the attribute. Similarly, inherited attributes are defined
 using the \code{inh} keyword. Let us reconsider the example depicted in Figure~\ref{fig:ragsExample}.
 The abstract grammar is defined in a ``\code{.ast}'' file with the following syntax:
@@ -689,7 +689,6 @@ syn boolean Type.compatibleType(Type t){
 }
     \end{lstlisting}
 
-
     \item \emph{Higher-Order Attribute (HOA)}\footnote{Also known as \emph{Non-Terminal Attributes (NTA)}.}:
     the value of an HOA is a freshly new subtree. Are called \emph{Higher-Order Attributes}
     because are attribute and at the same time a non-terminal, therefore they can be attributed.
@@ -704,8 +703,8 @@ syn nta Entry FunDecl.entry() = new Entry();
 syn nta Exit FunDecl.exit() = new Exit();
     \end{lstlisting}
     We use the right-arrow symbol to denote HOAs, e.g.,  \Ahoa{FunDecl}{entry} and \Ahoa{FunDecl}{exit}.
-    \item \emph{Circular Attribute}: an attribute which definition might depend direclty
-    or indirectly on itself. In \textsc{JastaAdd}, circular attributes are expressed using the \code{circular}
+    \item \emph{Circular Attribute}: an attribute which definition might depend directly
+    or indirectly on itself. In \textsc{JastAdd}, circular attributes are expressed using the \code{circular}
     keyword. To guarantee termination, circular attributes are evaluated in a fixed-point
     computation, i.e., the attribute is evaluated until the value of the attribute does not change.
     The requirements, that are not checked by JastAdd, to guarantee termination are:
@@ -720,14 +719,14 @@ syn nta Exit FunDecl.exit() = new Exit();
     We use the symbol \AcircSyn{A}{x} to denote a circular synthesized attribute.
 
     \item \emph{Collection Attribute}: these attribute have no equations, but contributions. The
-    result of a collection attribute is the aggreagation of contributions that can
-    come frome anywhere in the AST. A contribution clause is associated with
+    result of a collection attribute is the aggregation of contributions that can
+    come from anywhere in the AST. A contribution clause is associated with
     an AST node type and describes information to be included in a collection
-    attribute, possibly under certain conditions. Collection attributes, are expecially
+    attribute, possibly under certain conditions. Collection attributes, are especially
     useful in compiler construction, to collect all the semantic errors in a program
     from anywhere in the AST. In \textsc{JastAdd}, collection attributes are defined using the
     \code{coll} keyword.
-    
+
     An example of collection attribute is the following
     \begin{lstlisting}[language=JastAdd]
 coll Set<Errors> Program.errors();

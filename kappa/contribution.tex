@@ -25,8 +25,8 @@ which can be instantiated for specific languages\footnote{\textbf{\texttt{IntraX
 
 The framework consists of several key components, including interfaces
 (e.g., \textsc{CFGRoot}, \textsc{CFGSupport}, and \textsc{CFGNode}), attribute equations that define the
-default behavior, and user APIs. The interfaces provide the structure for the
-CFG and the attribute equations define the default behavior for the CFG
+default behaviour, and user APIs. The interfaces provide the structure for the
+CFG and the attribute equations define the default behaviour for the CFG
 construction. Language specific AST nodes implement the different interfaces
 according to the level of precision desired for the CFG.
 The framework expose the CFG to the client analysis through APIs, that can be used
@@ -53,12 +53,12 @@ The complete architecture of \textsc{IntraJ} is shown in Figure~\ref{fig:intraJ}
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.52]{kappa/img/architecturejava.pdf}
-    \caption{\label{fig:intraJ} Overall architecture of \textsc{IntraCFG} instansiated for the Java language.}
+    \caption{\label{fig:intraJ} Overall architecture of \textsc{IntraCFG} instantiated for the Java language.}
 \end{figure}
 
 %Discussing modularity
 We designed \textsc{IntraJ}, following a  modular approach, and we separately
-instansiated the framework for different versions of Java such as Java 4,
+instantiated the framework for different versions of Java such as Java 4,
 Java 5, Java 7 and Java 8. Each version of Java is implemented as a separate
 aspect of the compiler. This approach allows us and the users of \textsc{IntraJ}
 to easily extend the framework to support new versions of Java.
@@ -93,7 +93,7 @@ The example in Figure~\ref{fig:CFG} is a visual representation of the AST and CF
 to the specific requirements of the analysis and eliminate unnecessary complexity for improved performance.
 In this example, nodes like \texttt{IfStmt} or \texttt{Dot} are not included in the CFG,
 resulting in a more concise but precise representation of the control flow of the program.
-On the other hand, the precision of the CFGs can be improved by synthethizing new nodes and new subtrees.
+On the other hand, the precision of the CFGs can be improved by synthesising new nodes and new subtrees.
 For instance, we designed \textsc{IntraJ} to compute an exception-sensitive
 control-flow analysis, i.e., new AST subtrees are synthesized for each possible exceptional path.
 The resulting CFGs are more precise, but they are also more complex, resulting
@@ -109,7 +109,7 @@ In \textsc{IntraJ}, we implemented five different dataflow analyses:
   \item \emph{Dead Assignment Analysis}: detects assignments to l-values that are never used from that point on.
   \item \emph{Indirect Dead Assignment Analysis}: detects assignments to l-values which uses always flow to a dead assignment.
 \end{itemize}
-All the analyses relie on the result of the control-flow analysis. To the analysis are exposed
+All the analyses rely on the result of the control-flow analysis. To the analysis are exposed
 the entry and exit nodes of the CFG, as well as the successor and predecessor
 nodes of each node.
 Each analysis is implemented as a separate aspect of the compiler. Nevertheless,
@@ -122,22 +122,22 @@ Each analysis defines its abstract domain, transfer function and \emph{in} and
 \emph{out}\footnote{Sometimes can be named \emph{gen} and \emph{kill}.} attributes.
 The language dependency of the dataflow analysis arises from the fact that the
 transfer function, which defines the relationship between the \emph{in} and \emph{out},
-is modeled as an attribute. This transfer function attribute is
+is modelled as an attribute. This transfer function attribute is
 define for each AST node in the CFG in order to capture the semantic of passing
 through that node.
 
 
 \subsubsection{\textsc{IntraJ} Artifact Evaluation}
-Artifact evaluation is an important part of the scientific process as it enables 
-researchers to demonstrate the reproducibility and practicality of their work. 
-It also allows other researchers to build upon and reuse the work in their own 
+Artifact evaluation is an important part of the scientific process as it enables
+researchers to demonstrate the reproducibility and practicality of their work.
+It also allows other researchers to build upon and reuse the work in their own
 studies, helping to advance the field as a whole.
 
-In this context, our artifact, \textsc{IntraJ}, was presented at the 
-ROSE\footnote{\textbf{R}ecognizing and Rewarding \textbf{O}pen Science in \textbf{SE}, 
-\url{https://icsme2021.github.io/cfp/AEandROSETrack.html}} Festival 2021, 
-co-located with ICSME2021 and SCAM2021. The artifact was awarded the \emph{Open Research Objects} 
-(ORO) and \emph{Research Objects Reviewed} (ROR) badges, which demonstrate its high level of documentation 
+In this context, our artifact, \textsc{IntraJ}, was presented at the
+ROSE\footnote{\textbf{R}ecognizing and Rewarding \textbf{O}pen Science in \textbf{SE},
+\url{https://icsme2021.github.io/cfp/AEandROSETrack.html}} Festival 2021,
+co-located with ICSME2021 and SCAM2021. The artifact was awarded the \emph{Open Research Objects}
+(ORO) and \emph{Research Objects Reviewed} (ROR) badges, which demonstrate its high level of documentation
 and structure, making it easily accessible and reusable by other researchers.
 \begin{figure}[htbp]
   \centering
@@ -155,9 +155,9 @@ and structure, making it easily accessible and reusable by other researchers.
   \label{fig:badges}
 \end{figure}
 
-Our artifact was well documented, with a clear and concise README.md, and was easy to 
-use, with a self-contained script that enabled reviewers to easily reproduce the 
-results presented in our paper. These factors helped to demonstrate the practicality 
+Our artifact was well documented, with a clear and concise README.md, and was easy to
+use, with a self-contained script that enabled reviewers to easily reproduce the
+results presented in our paper. These factors helped to demonstrate the practicality
 and reliability of our work, and allowed other researchers to build upon our findings.
 
 
@@ -165,7 +165,7 @@ and reliability of our work, and allowed other researchers to build upon our fin
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.65]{kappa/img/architectureteal.pdf}
-    \caption{\label{fig:IntraTeal} Overall architecture of \textsc{IntraCFG} instansiated for the Teal language.}
+    \caption{\label{fig:IntraTeal} Overall architecture of \textsc{IntraCFG} instantiated for the Teal language.}
 \end{figure}
 As a further demonstration of the applicability of \textsc{IntraCFG},
 we developed \textsc{IntraTeal}, an implementation of the framework for the Teal programming language.
@@ -184,7 +184,7 @@ setting and gain a deeper understanding of dataflow analysis.
 Another key aspect of both, \textsc{IntraTeal} and \textsc{IntraJ} implementations, is that they
 construct enhanced control-sensitive CFGs. Control-sensitive CFGs
 are a more precise representation of the control flow of a program, as they take
-into account the specific control flow behavior of a program. This is achieved by
+into account the specific control flow behaviour of a program. This is achieved by
 synthesizing two AST nodes, i.e., \texttt{ControlTrue} and \texttt{ControlFalse} for each
 comparison operator, e.g.,  ``$\le$'', ``$==$'', ``$!=$'', inside a conditional statement.
 These HOAs are used to represent the control flow of the program and the information that ca be inferred from
@@ -296,10 +296,10 @@ IDEs that support the Language Server Protocol (LSP)~\cite{lsp}, such as
 the MagpieBridge~\cite{luo_et_al:LIPIcs:2019:10813} framework. We then describe the
 integration of \textsc{IntraJ} and \textsc{IntraTeal} with \textsc{CodeProber}~\cite{risberg2022property},
 a tool for visualising and exploring the results of compilers and static analysis tools.
-Our work on integrating \textsc{IntraJ} with different IDEs via the \textsc{MagpieBridge} 
+Our work on integrating \textsc{IntraJ} with different IDEs via the \textsc{MagpieBridge}
 framework has gained attention from the \textsc{MagpieBridge} maintainer and resulted in an invitation
-to present at the \textsc{PRIDE}\footnote{\textbf{P}ractical \textbf{R}esearch \textbf{IDE}s.} workshop, held in conjunction with \textsc{ECOOP 2022}, with the 
-title \emph{``Source-Level Dataflow-Based Fixes: Experiences From Using Intraj and Magpiebridge''}. 
+to present at the \textsc{PRIDE}\footnote{\textbf{P}ractical \textbf{R}esearch \textbf{IDE}s.} workshop, held in conjunction with \textsc{ECOOP 2022}, with the
+title \emph{``Source-Level Dataflow-Based Fixes: Experiences From Using \textsc{IntraJ} and \textsc{MagpieBridge}''}.
 
 This integration process and evaluation are not covered in any of the paper included in this thesis.
 However, it was developed as an application of the research and methods previously
@@ -313,7 +313,7 @@ described in these papers, and was carried out subsequently.
 \end{figure}
 Initially, \textsc{IntraJ} was developed as a command-line tool, which performance was competitive
 compared to existing industrial tools. However, we recognized the potential
-for further improvement, by exploting the on-demand evaluation feature of \textsc{JastAdd}.
+for further improvement, by exploiting the on-demand evaluation feature of \textsc{JastAdd}.
 On-demand evaluation enables the execution of dataflow analyses
 on methods within open files, as opposed to the entire codebase. This approach
 allows for user-centric, real-time feedback on complex bugs, providing developers
@@ -322,7 +322,7 @@ processes.
 To achieve this, we used the \textsc{MagpieBridge} framework, which facilitates the integration
 of static analysers with IDEs that support the LSP. \textsc{MagpieBridge} provides an
 abstraction layer between the IDE and the static analysis tool, simplifying the
-integration process and allowing for the development of IDE plugins with minimal effort.
+integration process and allowing for the development of IDE plug-ins with minimal effort.
 \textsc{MagpieBridge} provides an abstraction layer between the IDE and the static
 analysis tool allowing the display of warnings, quick-fixes, and explanations
 for bugs within the IDE, providing developers with a immediate and convenient way to
@@ -351,21 +351,21 @@ but also provide developers with quick fixes and explanations, allowing them to 
 the problems more efficiently. Additionally, we enhanced the \texttt{(Indirect) Dead Assignment} analysis
 to provide explanations, giving developers a deeper understanding of the issues detected.
 Figure~\ref{fig:IDEExample} illustrates an example of interaction between \textsc{IntraJ} and
-\textsc{Visual Studio Code}. More specifically, illustrates an instance of a \texttt{NullPointerException} 
-detected by \textsc{IntraJ} and its representation within the IDE. 
+\textsc{Visual Studio Code}. More specifically, illustrates an instance of a \texttt{NullPointerException}
+detected by \textsc{IntraJ} and its representation within the IDE.
 The ``\includegraphics[height=8pt]{kappa/img/bulb.png}''  icon indicates that an quick-fix is available,
 which can be applied by clicking on the icon.
 
 \subsubsection{Visualisation via \textsc{CodeProber}}
 In this Section, we will give an overview of the integration of \textsc{IntraJ} and \textsc{IntraTeal}
-with \textsc{CodeProber}, a tool for visualizing and 
-exploring the results of compilers and static analysers. \textsc{CodeProber} 
-allows developers to interact with the results of the analysis in a visual and intuitive 
-manner. It enables real-time interaction with the AST node's attributes and the source code, 
-enabling analyses developers to explore results and partial results, making 
+with \textsc{CodeProber}, a tool for visualizing and
+exploring the results of compilers and static analysers. \textsc{CodeProber}
+allows developers to interact with the results of the analysis in a visual and intuitive
+manner. It enables real-time interaction with the AST node's attributes and the source code,
+enabling analyses developers to explore results and partial results, making
 debugging and troubleshooting more efficient with respect the traditional debugging
-approaches. As a browser-based tool that is not restricted to the Language Server Protocol, 
-\textsc{CodeProber} enables the visualisation of analysis results in different 
+approaches. As a browser-based tool that is not restricted to the Language Server Protocol,
+\textsc{CodeProber} enables the visualisation of analysis results in different
 formats, including, but not limited to, graph representation and other visual forms, beyond
 simply displaying warnings.
 \begin{figure}[H]
@@ -376,13 +376,13 @@ simply displaying warnings.
 The example in Figure~\ref{fig:CodeProber} shows the visual representation of the CFG on
 top of the source code. The CFG is generated by \textsc{IntraTeal} and visualized by
 \textsc{CodeProber}. The graph is rendered automatically at each change in the source code,
-allowing developers to understand the flow of the program and all the possibile execution paths of the
-analysis in real-time. 
+allowing developers to understand the flow of the program and all the possible execution paths of the
+analysis in real-time.
 
 We used the \textsc{IntraTeal} and \textsc{CodeProber} integration in the Program analysis
-course. Students were able to understand the CFG and the flow of the program and 
+course. Students were able to understand the CFG and the flow of the program and
 were asked to identify \textsc{IndexOutOfBound} exceptions. Students were able to
-observe their progress and the outcomes of thier analysis within a realistic IDE.
+observe their progress and the outcomes of their analysis within a realistic IDE.
 
 
 
@@ -391,12 +391,12 @@ observe their progress and the outcomes of thier analysis within a realistic IDE
 \textsc{JFeature} is a static analysis tool for the Java programming language that extracts
 syntactic and semantic features from Java programs. The tool is designed to assist
 researcher and developers in selecting appropriate software corpora to better evaluate the robustness
-and performance of software tools, such as static analyzers.
+and performance of software tools, such as static analysers.
 \textsc{JFeature} is implemented as an extension of the \textsc{ExtendJ} Java compiler. It is declarative
 and extensible, allowing for the easy addition of new queries.
 
 The need for \textsc{JFeature} arose during the evaluation of \textsc{IntraJ}.
-While analyzing Java projects from the \textsc{DaCapo Benchmark suite}~\cite{DaCapo:paper} corpus to evaluate the precision
+While analysing Java projects from the \textsc{DaCapo Benchmark suite}~\cite{DaCapo:paper} corpus to evaluate the precision
 of \textsc{IntraJ} on Java 8 projects, it became apparent that there were no Java 8 projects
 in the \textsc{Da Capo Benchmark suite}. Further investigation revealed that many
 commonly used software corpora in the field of static analysis were lacking
@@ -404,12 +404,12 @@ representation of Java 8 projects.
 
 To address this problem, we developed \textsc{JFeature}, a tool that extracts features from
 Java programs categorised by the Java version they were introduced in.
-The goal of \textsc{JFeature} is to provide insight and a comprehensive overview of 
-the composition of a Java project or corpus, specifically in terms of the different 
+The goal of \textsc{JFeature} is to provide insight and a comprehensive overview of
+the composition of a Java project or corpus, specifically in terms of the different
 Java features categorized by the Java version in use.
 \textsc{JFeature} comes with twenty-six predefined queries and can be easily extended
 with new ones. Since \textsc{JFeature} is built on top of the \textsc{ExtendJ} compiler, \textsc{JFeature} has access
-to all the information computed by the compiler, allowing the definition of complex 
+to all the information computed by the compiler, allowing the definition of complex
 queries.
 In Figure~\ref{fig:JFeature}, we show the architecture of \textsc{JFeature}.
 \begin{figure}[H]
@@ -421,11 +421,11 @@ In Figure~\ref{fig:JFeature}, we show the architecture of \textsc{JFeature}.
 We conduced a case study, applying \textsc{JFeature} to four widely used corpora in the
 program analysis area: the \textsc{Da Capo Benchmark suite}, \textsc{Defects4J}~\cite{just2014defects4j}, \textsc{Qualitas Corpus}~\cite{QualitasCorpus:APSEC:2010}, and \textsc{XCorpus}~\cite{dietrich2017xcorpus}.
 The results showed that Java 1-5 features were predominant among the corpora,
-suggesting that some of the corpora may be less suited for the evaluation of 
+suggesting that some of the corpora may be less suited for the evaluation of
 tools that address features in Java 7 and 8.
 In addition to evaluating corpora, we showed how \textsc{JFeature} could also be used for other
-applications such as longitudinal studies of individual Java projects and the creation 
-of new corpora. In Paper~\ref{paper:jfeature}, we aslo demonstrate a practical application of how \textsc{JFeature} can 
+applications such as longitudinal studies of individual Java projects and the creation
+of new corpora. In Paper~\ref{paper:jfeature}, we also demonstrate a practical application of how \textsc{JFeature} can
 be extended to capture more complex semantic features by writing queries using the RAGs formalism.
 
 
