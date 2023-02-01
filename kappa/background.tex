@@ -145,13 +145,17 @@ We recognize that the results of our analyses, while effective,
 may not be sound nor complete, and that the analysis may not be able to identify
 all the bugs or vulnerabilities in a program~\cite{livshits2015defense}.
 
+
+
+
+
 \subsection{Control-flow analysis}
 Control-flow analysis involves analysing the control flow of the program, which refers
 to the execution and evaluation order of the program's statements and expressions.
 Each possible evaluation order of a program is called a control-flow path.
-The main result of control-flow analysis is a control-flow graph (CFG), $G = (V, E)$, \todo{if not used in monotone framework. Delete the G(V,E) notation.}
-which is a directed graph where each node $v \in V$ represents a basic block
-and each edge $e \in E$ represents a control-flow edge. A basic block is a sequence of
+The main result of control-flow analysis is a control-flow graph (CFG),
+which is a directed graph where each node represents a basic block
+and each edge represents a control-flow edge. A basic block is a sequence of
 statements that are executed in order, and that are always executed together, meaning
 that there is no control-flow edge that enters or exits the basic block in the middle of the sequence.
 A control-flow edge is an edge that represents a control-flow dependency between two basic blocks.
