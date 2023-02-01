@@ -42,7 +42,7 @@ demonstrate the effectiveness of the proposed methods.
 The dependency graph in Figure~\ref{fig:dependencygraph} shows the relationship between
 the concepts and the contribution of this thesis.
 
-\subsection{Program Analysis}
+\subsection{Program Analysis: Motivation and Techniques}
 In the past few decades, software has become increasingly important in all types of systems.
 As our reliance on software increases, the repercussions of bugs can become more severe,
 resulting in huge financial losses and even loss of life.
@@ -59,14 +59,16 @@ or dynamically, by observing the program's behavior during execution.
 
 
 \subsection{Manual Inspection}
-Manual inspection is the simplest form of program analysis, where a human analyst 
+Manual inspection is the simplest form of program analysis, where a human expers 
 manually examines the code to identify potential problems. It is often performed
-by code reviewers or software testers to identify syntax errors, logical errors, 
-or performance bottlenecks. Although manual inspection can be effective, it can 
-be time-consuming and prone to human error, particularly for large and complex 
-software systems.
-
-
+by code reviewers or software testers to identify logical errors, 
+or performance bottlenecks. Manual inspection, while potentially effective, can 
+be time-consuming and error-prone. Additionally, it is not a scalable solution as it is unfeasible 
+to manually inspect all the code of a large software system.
+On the other hand, manual inspection remains necessary in some forms of program analysis. For instance,
+in \emph{Taint analysis}~\cite{arzt2014flowdroid}, an analysis that tracks the flow of data in a program 
+to identify potential security threats, manual inspection is required to identify
+potential \emph{sources} and \emph{sinks}.
 
 \subsection{Control-flow analysis}
 Control-flow analysis involves analysing the control flow of the program, which refers
