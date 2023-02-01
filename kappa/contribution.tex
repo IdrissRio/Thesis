@@ -108,8 +108,8 @@ in a higher memory consumption and a longer analysis time.
 
 In \textsc{IntraJ}, we implemented five different dataflow analyses:
 \begin{itemize}
-  \item \emph{Live Variable Analysis}: This analysis computes the set of variables that are live at each program point.
-  \item \emph{Reaching Definition}: computes the set of definitions that reach each program point.
+  \item \emph{Live Variable Analysis}: computes the set of variables that are live at each point in the program.
+  \item \emph{Reaching Definition}: computes the set of definitions that reach each point in the program.
   \item \emph{Null Pointer Analysis}: detects possible null pointer dereferences.
   \item \emph{Dead Assignment Analysis}: detects assignments to l-values that are never used from that point on.
   \item \emph{Indirect Dead Assignment Analysis}: detects assignments to l-values which uses always flow to a dead assignment.
