@@ -10,8 +10,8 @@ Unlike most other frameworks, which build CFGs on the IR level,
 e.g.,  bytecode, \textsc{IntraCFG}'s approach superimposes the CFGs
 on the AST. This allows for accurate client analysis,
 as the CFGs are constructed directly on the source code level, rather than an
-intermediate representation. 
-Diffrently from the existing RAG-based framework~\cite{10.1016/j.scico.2012.02.002}, 
+intermediate representation.
+Diffrently from the existing RAG-based framework~\cite{10.1016/j.scico.2012.02.002},
 \textsc{IntraCFG} enables the construction of \textsc{AST-Unrestricted} CFGs,
 which are CFGs whose shape is not restricted to the AST structure.
 \subsection{Overall Architecture}
@@ -71,8 +71,8 @@ The degree of precision in creating CFGs using \textsc{IntraCFG} can differ in o
 to meet the requirements of a given application.
 This flexibility allows the users of the framework to optimize the efficiency of the analysis by selectively
 excluding/including certain nodes from the CF.
-For example, nodes such as \astnode{WhileStmt}, which are essential for the 
-construction of CFGs, as they are used to define the shape of CFGs, can be excluded 
+For example, nodes such as \astnode{WhileStmt}, which are essential for the
+construction of CFGs, as they are used to define the shape of CFGs, can be excluded
 from the CFGs as they do not provide any information relevant to the analysis.
 \begin{figure}[H]
 	\centering
@@ -117,7 +117,7 @@ In \textsc{IntraJ}, we implemented five different dataflow analyses:
 All the analyses rely on the result of the control-flow analysis. To the analysis are exposed
 the \Ahoa{CFGRoot}{entry} and \Ahoa{CFGRoot}{exit} attributes of the CFG, as well as the \Asyn{CFGNode}{succ} and \Asyn{CFGNode}{pred}
 attributes of each node.
-Each analysis is implemented as a separate aspect of the compiler. 
+Each analysis is implemented as a separate aspect of the compiler.
 Still, some analyses' results are used as input for other analyses. For instance,
 the result of Live Variable Analysis is used as input for the Dead Assignment Analysis.
 Similarly, the result of Dead Assignment Analysis is used to compute Indirect Dead Assignment Analysis.

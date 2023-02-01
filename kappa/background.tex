@@ -1,6 +1,6 @@
 \section{Background}
 \label{sec:background}
-This section provides an overview of the research that underlies the main results 
+This section provides an overview of the research that underlies the main results
 of this thesis, with a focus on Program Analysis. Specifically, we will delve into
 the concepts of dataflow analysis~\cite{aho2007compilers,Nielson2010Principles},
 control-flow analysis~\cite{allen1970control}, (Reference) attribute grammars~\cite{knuth1968semantics, DBLP:journals/informaticaSI/Hedin00},
@@ -48,96 +48,102 @@ As our reliance on software increases, the repercussions of bugs can become more
 resulting in huge financial losses and even loss of life.
 Well known examples of software bugs include the \emph{Therac-25} radiation therapy machine~\cite{leveson1993investigation},
 the \emph{Mars Climate Orbiter} crash~\cite{Sawyer1999}, resulting in 327 milion dollars loss, and the \emph{Toyota unintended acceleration}~\cite{kane2010toyota}.
-Not only can software bugs result in financial losses and harm to people, 
+Not only can software bugs result in financial losses and harm to people,
 they can also have a negative impact on the environment, as seen in the \emph{Deepwater Horizon} oil spill~\cite{Shafer2010Oil}.
-\emph{Program analysis} is a branch of computer science that aims to study the behavior 
+\emph{Program analysis} is a branch of computer science that aims to study the behavior
 and properties of computer programs. Program analysis plays a crucial role in software
-development and maintenance, as it helps to ensure the expected functioning of software 
+development and maintenance, as it helps to ensure the expected functioning of software
 systems and to identify potential bugs or security vulnerabilities as the one mentioned above.
 Program analysis can be performed either statically, by examining the code without executing it,
 or dynamically, by observing the program's behavior during execution.
 
 
 \subsubsection{Manual Inspection}
-Manual inspection is the simplest form of program analysis, where a human expers 
+Manual inspection is the simplest form of program analysis, where a human expers
 manually examines the code to identify potential problems. It is often performed
-by code reviewers or software testers to identify logical errors, 
-or performance bottlenecks. Manual inspection, while potentially effective, can 
-be time-consuming and error-prone. Additionally, it is not a scalable solution as it is unfeasible 
+by code reviewers or software testers to identify logical errors,
+or performance bottlenecks. Manual inspection, while potentially effective, can
+be time-consuming and error-prone. Additionally, it is not a scalable solution as it is unfeasible
 to manually inspect all the code of a large software system.
 On the other hand, manual inspection remains necessary in some forms of program analysis. For instance,
-in \emph{Taint analysis}~\cite{arzt2014flowdroid}, an analysis that tracks the flow of data in a program 
+in \emph{Taint analysis}~\cite{arzt2014flowdroid}, an analysis that tracks the flow of data in a program
 to identify potential security threats, manual inspection is required to identify
 potential \emph{sources} and \emph{sinks}.
 
 \subsubsection{Dynamic Analysis}
-Dynamic analysis involves executing the code and observing its behavior at runtime. 
+Dynamic analysis involves executing the code and observing its behavior at runtime.
 There are several dynamic analysis techniques, including:
 \begin{itemize}
   \item \emph{Debuggers and profilers}: are the most common dynamic analysis techniques used to identify issues in code.
-  Debuggers like, GDB\footnote{\url{https://www.sourceware.org/gdb/}} and LLDB\footnote{\url{https://lldb.llvm.org/}}, allow for the execution of code to be 
-  monitored and stepped through in order to identify and fix bugs, 
+  Debuggers like, GDB\footnote{\url{https://www.sourceware.org/gdb/}} and LLDB\footnote{\url{https://lldb.llvm.org/}}, allow for the execution of code to be
+  monitored and stepped through in order to identify and fix bugs,
   while profilers gather performance information about the execution of code to help optimize its efficiency.
   Profilers like, Valgrind\footnote{\url{https://valgrind.org/}}, and Intel VTune~\cite{reinders2005vtune}, can be used to identify memory leaks,
   performance bottlenecks, and other issues.
-  \item \emph{Fuzzing}~\cite{li2018fuzzing}: a dynamic analysis technique that involves generating random or 
-  semi-random inputs and executing the code with these inputs to identify potential 
-  crashes or vulnerabilities. Fuzzing can help to identify security vulnerabilities 
+  \item \emph{Fuzzing}~\cite{li2018fuzzing}: a dynamic analysis technique that involves generating random or
+  semi-random inputs and executing the code with these inputs to identify potential
+  crashes or vulnerabilities. Fuzzing can help to identify security vulnerabilities
   or other problems that may not be easily uncovered through traditional testing methods.
   Indeed, fuzzing is often used to test non-expectable inputs, such as malformed data,
   or unexpected sequences of events.
-  \item \emph{Dynamic Symbolic Execution}~\cite{Baldoni2018Survey}: a technique that 
-  involves observing the behavior of a program during runtime to gather information 
+  \item \emph{Dynamic Symbolic Execution}~\cite{Baldoni2018Survey}: a technique that
+  involves observing the behavior of a program during runtime to gather information
   about its internal state and behavior. This information can then be used to
   identify potential bugs or security vulnerabilities. Most dynamic symbolic execution tools,
-  such as \emph{KLEE}~\cite{cadar2008klee} are based on \emph{concolic execution}, 
+  such as \emph{KLEE}~\cite{cadar2008klee} are based on \emph{concolic execution},
   which combines concrete and symbolic execution to identify potential bugs.
 \end{itemize}
 
 \subsection{Static Analysis}
-Static analysis involves examining the source code of a program without executing it, 
-in order to identify potential problems. 
+Static analysis involves examining the source code of a program without executing it,
+in order to identify potential problems.
 There are several static analysis techniques, including:
 \begin{itemize}
-  \item \emph{Model Checking}: a technique that involves automatically 
-  verifying program's properties against a formal specification in order to 
+  \item \emph{Model Checking}: a technique that involves automatically
+  verifying program's properties against a formal specification in order to
   identify properties violations. On the other hand, model checking can be used
   to validate that the code meets desired specifications. Model checking algorithms,
   including the classical \emph{Bounded Model Checking}\cite{Clarke1999BoundedMC} and the more recent
-  \emph{IC3}~\cite{bradley2012understanding}, have gained popularity in the field and 
-  are widely used in tools such as \emph{NuSMV}~\cite{cavada2014nuxmv} for automatic 
+  \emph{IC3}~\cite{bradley2012understanding}, have gained popularity in the field and
+  are widely used in tools such as \emph{NuSMV}~\cite{cavada2014nuxmv} for automatic
   verification of software behavior.
   \item \emph{Deductive Methods}: are techniques that heavily use mathematical proofs
-  to establish the correctness of software systems. This approach typically involves 
-  expressing the program logic and its intended behavior as a set of axioms and theorems, 
-  and then using automated theorem provers and proof assistants, e.g., 
-  \emph{Coq}~\cite{bertot2013interactive} and \emph{Isabel}~\cite{Nipkow2002Isabelle} to validate the proof. 
-  Deductive methods offer a high degree of confidence in the correctness of 
-  software systems, as they are based on a formal, mathematical framework. 
-  However, they can be challenging to apply to real-world software systems, as they 
+  to establish the correctness of software systems. This approach typically involves
+  expressing the program logic and its intended behavior as a set of axioms and theorems,
+  and then using automated theorem provers and proof assistants, e.g.,
+  \emph{Coq}~\cite{bertot2013interactive} and \emph{Isabel}~\cite{Nipkow2002Isabelle} to validate the proof.
+  Deductive methods offer a high degree of confidence in the correctness of
+  software systems, as they are based on a formal, mathematical framework.
+  However, they can be challenging to apply to real-world software systems, as they
   require intervention of highly specialised humans and can be computationally intensive.
-  \item \emph{Hoare Logic and Separation Logic}: Hoare logic~\cite{hoare1969axiomatic} is a formal method 
-  for reasoning about the correctness of computer programs. It is based on the notion of \emph{Hoare triples}, which consist of a 
-  precondition, an assignment statement, and a postcondition. The precondition 
-  and postcondition specify the desired properties of the program's inputs and 
-  outputs, and the assignment statement defines the transformation that takes 
+  \item \emph{Hoare Logic and Separation Logic}: Hoare logic~\cite{hoare1969axiomatic} is a formal method
+  for reasoning about the correctness of computer programs. It is based on the notion of \emph{Hoare triples}, which consist of a
+  precondition, an assignment statement, and a postcondition. The precondition
+  and postcondition specify the desired properties of the program's inputs and
+  outputs, and the assignment statement defines the transformation that takes
   place between the inputs and outputs.
-  Separation logic~\cite{reynolds2002separation}, on the other hand, is a relatively new addition to Hoare logic 
-  that aims to make it easier to reason about the behavior of large, complex software 
-  systems. Separation logic differs from Hoare logic in that it provides a way to 
-  reason about the separation of different parts of a program's memory, rather 
-  than just reasoning about the overall memory state. 
+  Separation logic~\cite{reynolds2002separation}, on the other hand, is a relatively new addition to Hoare logic
+  that aims to make it easier to reason about the behavior of large, complex software
+  systems. Separation logic differs from Hoare logic in that it provides a way to
+  reason about the separation of different parts of a program's memory, rather
+  than just reasoning about the overall memory state. This makes it possible to
+  reason about the behavior of programs that manipulate large amounts of data, and
+  to prove properties about them with more precision and confidence.
+  Modern analysis tools, like \emph{Facebook Infer}~\cite{calcagno2011infer},
+  make use of both Hoare Logic and Separation Logic to find potential bugs
+  and security flaws in huge software systems.
+  \item \emph{Type Analysis}~\cite{pierce2002types}: is a technique used in software analysis to verify
+  the correctness of data types in a program. This method uses typing rules to verify
+  the type of each expression, assignment, and other elements of a program.
+  The goal of type analysis is to identify type errors, e.g., type mismatches,
+  and to ensure that the program is well-typed.
 \end{itemize}
-In this thesis we focus on a specific class of static analysis techniques, 
+In this thesis we focus on a specific class of static analysis techniques,
 called \emph{Control-flow} and \emph{Dataflow} analysis. These are techniques involve the
-tracking of data in a program to identify potential bugs and security vulnerabilities. 
-We recognize that the results of our analyses, while effective, 
-may not be sound nor complete, and that the analysis may not be able to identify 
+tracking of data in a program to identify potential bugs and security vulnerabilities.
+We recognize that the results of our analyses, while effective,
+may not be sound nor complete, and that the analysis may not be able to identify
 all the bugs or vulnerabilities in a program~\cite{livshits2015defense}.
-
-
-
-
 
 \subsection{Control-flow analysis}
 Control-flow analysis involves analysing the control flow of the program, which refers
@@ -678,7 +684,7 @@ The \textsc{JastAdd} metacompiler is based on the following components:
 \end{itemize}
 In \textsc{JastAdd}, synthesized attributes are defined using the \code{syn} keyword followed
 by the type and the name of the attribute. Similarly, inherited attributes are defined
-using the \code{inh} keyword. 
+using the \code{inh} keyword.
 
 Let us reconsider the example depicted in Figure~\ref{fig:ragsExample}.
 The abstract grammar is defined in a ``\code{.ast}'' file with the following syntax:
