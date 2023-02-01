@@ -58,7 +58,7 @@ Program analysis can be performed either statically, by examining the code witho
 or dynamically, by observing the program's behavior during execution.
 
 
-\subsection{Manual Inspection}
+\subsubsection{Manual Inspection}
 Manual inspection is the simplest form of program analysis, where a human expers 
 manually examines the code to identify potential problems. It is often performed
 by code reviewers or software testers to identify logical errors, 
@@ -70,7 +70,7 @@ in \emph{Taint analysis}~\cite{arzt2014flowdroid}, an analysis that tracks the f
 to identify potential security threats, manual inspection is required to identify
 potential \emph{sources} and \emph{sinks}.
 
-\subsection{Dynamic Analysis}
+\subsubsection{Dynamic Analysis}
 Dynamic analysis involves executing the code and observing its behavior at runtime. 
 There are several dynamic analysis techniques, including:
 \begin{itemize}
@@ -93,6 +93,8 @@ There are several dynamic analysis techniques, including:
   such as \emph{KLEE}~\cite{cadar2008klee} are based on \emph{concolic execution}, 
   which combines concrete and symbolic execution to identify potential bugs.
 \end{itemize}
+
+
 
 
 
