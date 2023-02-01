@@ -70,6 +70,33 @@ in \emph{Taint analysis}~\cite{arzt2014flowdroid}, an analysis that tracks the f
 to identify potential security threats, manual inspection is required to identify
 potential \emph{sources} and \emph{sinks}.
 
+\subsection{Dynamic Analysis}
+Dynamic analysis involves executing the code and observing its behavior at runtime. 
+There are several dynamic analysis techniques, including:
+\begin{itemize}
+  \item \emph{Debuggers and profilers}: are the most common dynamic analysis techniques used to identify issues in code.
+  Debuggers like, GDB\footnote{https://www.sourceware.org/gdb/} and LLDB\footnote{https://lldb.llvm.org/}, allow for the execution of code to be 
+  monitored and stepped through in order to identify and fix bugs, 
+  while profilers gather performance information about the execution of code to help optimize its efficiency.
+  Profilers like, Valgrind\footnote{\url{https://valgrind.org/}}, and Intel VTune~\cite{reinders2005vtune}, can be used to identify memory leaks,
+  performance bottlenecks, and other issues.
+  \item \emph{Fuzzing}~\cite{li2018fuzzing}: a dynamic analysis technique that involves generating random or 
+  semi-random inputs and executing the code with these inputs to identify potential 
+  crashes or vulnerabilities. Fuzzing can help to identify security vulnerabilities 
+  or other problems that may not be easily uncovered through traditional testing methods.
+  Indeed, fuzzing is often used to test non-expectable inputs, such as malformed data,
+  or unexpected sequences of events.
+  \item \emph{Dynamic Symbolic Execution}~\cite{Baldoni2018Survey}: a technique that 
+  involves observing the behavior of a program during runtime to gather information 
+  about its internal state and behavior. This information can then be used to
+  identify potential bugs or security vulnerabilities. Most dynamic symbolic execution tools,
+  such as \emph{KLEE}~\cite{cadar2008klee} are based on \emph{concolic execution}, 
+  which combines concrete and symbolic execution to identify potential bugs.
+\end{itemize}
+
+
+
+
 \subsection{Control-flow analysis}
 Control-flow analysis involves analysing the control flow of the program, which refers
 to the execution and evaluation order of the program's statements and expressions.
