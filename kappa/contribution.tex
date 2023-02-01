@@ -142,8 +142,14 @@ In this context, our artifact, \textsc{IntraJ}, was presented at the
 ROSE\footnote{\textbf{R}ecognizing and Rewarding \textbf{O}pen Science in \textbf{SE},
 \url{https://icsme2021.github.io/cfp/AEandROSETrack.html}} Festival 2021,
 co-located with ICSME2021 and SCAM2021. The artifact was awarded the \emph{Open Research Objects}
-(ORO) and \emph{Research Objects Reviewed} (ROR) badges, which demonstrate its high level of documentation
-and structure, making it easily accessible and reusable by other researchers.
+(ORO) and \emph{Research Objects Reviewed} (ROR) badges.
+The ORO badge indicates that the artifact is publicly accessible and has been
+\emph{``placed in a archival repository, with a unique identifier and a link provided''}.
+The ROR badge highlights that the artifact has been
+\emph{``very carefully documented and structured, making it suitable for reuse and repurposing
+in accordance with research community norms and standards''.} This recognition
+demonstrates the high quality and usefulness of the artifact.
+
 \begin{figure}[htbp]
   \centering
   \begin{subfigure}{0.3\linewidth}
@@ -159,11 +165,6 @@ and structure, making it easily accessible and reusable by other researchers.
   \caption{Badges awarded to the artifact.}
   \label{fig:badges}
 \end{figure}
-
-Our artifact was well documented, with a clear and concise README.md, and was easy to
-use, with a self-contained script that enabled reviewers to easily reproduce the
-results presented in Paper~\ref{paper:intraj}. These factors helped to demonstrate the practicality
-and reliability of our work, and allowed other researchers to build upon our findings.
 
 
 \subsection{\textsc{IntraTeal}: \textsc{IntraCFG} for TEAL}
@@ -275,8 +276,11 @@ fun foo(x) = {
 			\end{lstlisting}
 		};
 	\end{tikzpicture}
-	\caption{\label{fig:nonConverging} Trivial example of non-converging program. The {\color{red}red} path represents the
-  non-converging sequence. The {\color{ForestGreen}green} path represents the converging sequence using the widening operator.
+	\caption{\label{fig:nonConverging} Trivial example of non-converging analysis.
+  The {\color{red}red} path represents the non-converging evaluation sequence.
+  The analysis keeps changing the value of the variable \code{x} without ever
+  reaching a fix-point. The {\color{ForestGreen}green} path represents a
+  sequence convergin to a fix-point by using the widening operator.
   }
 \end{figure}
 
