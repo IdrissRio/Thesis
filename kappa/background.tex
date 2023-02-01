@@ -94,6 +94,35 @@ There are several dynamic analysis techniques, including:
   which combines concrete and symbolic execution to identify potential bugs.
 \end{itemize}
 
+\subsection{Static Analysis}
+Static analysis involves examining the source code of a program without executing it, 
+in order to identify potential problems. 
+There are several static analysis techniques, including:
+\begin{itemize}
+  \item \emph{Model Checking}: a technique that involves automatically 
+  verifying program's properties against a formal specification in order to 
+  identify properties violations. On the other hand, model checking can be used
+  to validate that the code meets desired specifications. Model checking algorithms,
+  including the classical \emph{Bounded Model Checking}\cite{Clarke1999BoundedMC} and the more recent
+  \emph{IC3}~\cite{bradley2012understanding}, have gained popularity in the field and 
+  are widely used in tools such as \emph{NuSMV}~\cite{cavada2014nuxmv} for automatic 
+  verification of software behavior.
+  \item \emph{Deductive Methods}: are techniques that heavily use mathematical proofs
+  to establish the correctness of software systems. This approach typically involves 
+  expressing the program logic and its intended behavior as a set of axioms and theorems, 
+  and then using automated theorem provers and proof assistants, e.g., 
+  \emph{Coq}~\cite{bertot2013interactive} and \emph{Isabel}~\cite{Nipkow2002Isabelle} to validate the proof. 
+  Deductive methods offer a high degree of confidence in the correctness of 
+  software systems, as they are based on a formal, mathematical framework. 
+  However, they can be challenging to apply to real-world software systems, as they 
+  require intervention of highly specialised humans and can be computationally intensive.
+\end{itemize}
+In this thesis we focus on a specific class of static analysis techniques, 
+called \emph{Control-flow} and \emph{Dataflow} analysis. These are techniques involve the
+tracking of data in a program to identify potential bugs and security vulnerabilities. 
+We recognize that the results of our analyses, while effective, 
+may not be sound nor complete, and that the analysis may not be able to identify 
+all the bugs or vulnerabilities in a program~\cite{livshits2015defense}.
 
 
 
