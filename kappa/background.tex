@@ -75,7 +75,7 @@ Dynamic analysis involves executing the code and observing its behavior at runti
 There are several dynamic analysis techniques, including:
 \begin{itemize}
   \item \emph{Debuggers and profilers}: are the most common dynamic analysis techniques used to identify issues in code.
-  Debuggers like, GDB\footnote{https://www.sourceware.org/gdb/} and LLDB\footnote{https://lldb.llvm.org/}, allow for the execution of code to be 
+  Debuggers like, GDB\footnote{\url{https://www.sourceware.org/gdb/}} and LLDB\footnote{\url{https://lldb.llvm.org/}}, allow for the execution of code to be 
   monitored and stepped through in order to identify and fix bugs, 
   while profilers gather performance information about the execution of code to help optimize its efficiency.
   Profilers like, Valgrind\footnote{\url{https://valgrind.org/}}, and Intel VTune~\cite{reinders2005vtune}, can be used to identify memory leaks,
@@ -116,6 +116,17 @@ There are several static analysis techniques, including:
   software systems, as they are based on a formal, mathematical framework. 
   However, they can be challenging to apply to real-world software systems, as they 
   require intervention of highly specialised humans and can be computationally intensive.
+  \item \emph{Hoare Logic and Separation Logic}: Hoare logic~\cite{hoare1969axiomatic} is a formal method 
+  for reasoning about the correctness of computer programs. It is based on the notion of \emph{Hoare triples}, which consist of a 
+  precondition, an assignment statement, and a postcondition. The precondition 
+  and postcondition specify the desired properties of the program's inputs and 
+  outputs, and the assignment statement defines the transformation that takes 
+  place between the inputs and outputs.
+  Separation logic~\cite{reynolds2002separation}, on the other hand, is a relatively new addition to Hoare logic 
+  that aims to make it easier to reason about the behavior of large, complex software 
+  systems. Separation logic differs from Hoare logic in that it provides a way to 
+  reason about the separation of different parts of a program's memory, rather 
+  than just reasoning about the overall memory state. 
 \end{itemize}
 In this thesis we focus on a specific class of static analysis techniques, 
 called \emph{Control-flow} and \emph{Dataflow} analysis. These are techniques involve the
