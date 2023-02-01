@@ -15,8 +15,7 @@ Diffrently from the existing RAG-based framework~\cite{10.1016/j.scico.2012.02.0
 \textsc{IntraCFG} enables the construction of \textsc{AST-Unrestricted} CFGs,
 which are CFGs whose shape is not restricted to the AST structure.
 \subsection{Overall Architecture}
-The overall architecture of our proposed framework, \textsc{IntraCFG}, and its
-ecosystem\todo{Not sure about the word ecosystem} is shown in Figure~\ref{fig:intraCFG}.
+The overall architecture of our proposed framework, \textsc{IntraCFG}, is shown in Figure~\ref{fig:intraCFG}.
 The framework provides the skeleton and default behaviour for construction of CFGs,
 which can be instantiated for specific languages\footnote{\textbf{\texttt{IntraX}} in the diagram.}, e.g., Java or Teal.
 \begin{figure}[H]
@@ -326,9 +325,8 @@ compared to existing industrial tools. However, we recognized the potential
 for further improvement, by exploiting the on-demand evaluation feature of \textsc{JastAdd}.
 On-demand evaluation enables the execution of dataflow analyses
 on methods within open files, as opposed to the entire codebase. This approach
-allows for user-centric\todo{maybe ``localised'' is better?}, real-time feedback on complex bugs, providing developers
-with instantaneous insights and facilitating efficient debugging and troubleshooting
-processes.
+allows for local and in real-time feedback on complex bugs, providing developers
+with instantaneous insights, facilitating the debugging process.
 To achieve this, we used the \textsc{MagpieBridge} framework, which facilitates the integration
 of static analysers with IDEs that support the LSP. \textsc{MagpieBridge} provides an
 abstraction layer between the IDE and the static analysis tool, simplifying the
