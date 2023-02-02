@@ -330,9 +330,14 @@ and the least upper bound and greatest lower bound are set union and set interse
 respectively. The least element in this lattice is the empty set $\emptyset$ and the
 greatest element is the set $S$ itself.
 
-A forward monotone framework consist of two equations and a transfer function $f$.
-For each node $n$ in the control-flow graph, we define the following two equations:
-$$\text{in}(n) = \bigcup\limits_{p \in \text{pred}(n)} \text{out}(p)$$
+Monotone frameworks consist of a join operator $\bigsqcup$\footnote{
+  For analyses over sets, the join operator can be $\bigcup$ or $\bigcap$.
+}, a monotone transfer function $f$,
+and a finite lattice $L$.
+
+
+For each node $n$ in the control-flow graph, a \emph{forward analysis} is defined by the following equations:
+$$\text{in}(n) = \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p)$$
 
 $$\text{out}(n) = f(\text{in}(n), n)$$
 
@@ -340,9 +345,8 @@ where $f:C \mapsto L$ is a monotone transfer function, also called transfer func
 The transfer function $f$ maps each element $c$ in the set $C$ (i.e., concrete domain)
 to an element $f(c)$ in the \emph{finite} lattice $L$ (i.e., abstract domain). The sets \emph{pred(n)} and \emph{succ(n)}
 denote the set of predecessors and successors of node $n$, respectively.
-
-A backward monotone framework is similar to a forward framework, except that the equations are reversed:
-$$\text{out}(n) = \bigcup\limits_{s \in \text{succ}(n)} \text{in}(s)$$
+A backward analysis is similar to a forward one, except that the equations are reversed:
+$$\text{out}(n) = \bigsqcup\limits_{s \in \text{succ}(n)} \text{in}(s)$$
 
 $$\text{in}(n) = f(\text{out}(n), n).$$
 
