@@ -2,19 +2,19 @@
 
 
 Static program analysis plays a crucial role in ensuring the quality and security of
-software applications by detecting and fixing bugs, vulnerabilities,
-and potential security risks in the code. The utilization of declarative paradigms
-in dataflow analysis as part of this process has become increasingly popular in recent years.
+software applications by detecting and fixing bugs,
+and potential security vulnerabilities in the code. The utilization of declarative paradigms
+in dataflow analysis as part of this process has become increasingly popular in recent years.\\[5pt]
 
-The aim of this thesis is to examine the benefits and limitations of implementing
-declarative paradigms (e.g., using Reference Attribute Grammars)  in static program analysis through dataflow analysis, specifically
-by computing the analysis directly on the source code rather than on an intermediate representation.
+The aim of this thesis is to explore the design and implementation of \emph{control-flow} and 
+\emph{dataflow} analyses using the \emph{Reference Attribute Grammars} formalism.
+Specifically, we focus on the construction of analyses directly on the source code
+rather than on an intermediate representation.\\[5pt]
 
-The focus of this work is on our\todo{Can I use ``Our''?} language-agnostic framework, called \textsc{IntraCFG},
-that enables more efficient and effective dataflow analysis by allowing the  construction of precise and
-lightweight source-level control-flow graphs. This framework superimposes control-flow
-graphs on the abstract syntax tree of the program, allowing for more accurate analysis
-on the source code level. The effectiveness of the \textsc{IntraCFG} framework is
+The main result, summarised in this thesis, is our language-agnostic framework, called \textsc{IntraCFG}.
+\textsc{IntraCFG} enables efficient and effective dataflow analysis by allowing the construction of precise and
+lightweight source-level control-flow graphs. The framework superimposes control-flow
+graphs on top of the abstract syntax tree of the program. The effectiveness of the \textsc{IntraCFG} framework is
 demonstrated through two case studies, \textsc{IntraJ} and \textsc{IntraTeal}, that
 show the potential and the flexibility of \textsc{IntraCFG} in different contexts,
 such as, bug detection and teaching.
