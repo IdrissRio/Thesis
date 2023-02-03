@@ -33,9 +33,17 @@ Collection attributes aggregate information by combining contributions that can 
 A \emph{contribution clause} is associated with an AST node type, and defines information to be included, possibly conditionally, in a particular collection.
 Both the information and the condition can be defined by using attributes.
 
-\begin{figure}[H]
+For JFeature, we use a collection attribute, \code{features}, on the root of the AST.
+The value of \code{features} is a set of objects, each defined by a contribution clause somewhere in the AST.
+The objects are of type \code{Feature} that
+models essential information about the extracted feature: the Java version, feature name, and absolute path of the compilation unit where the feature was found.
+
+
+\begin{figure}[ht]
   \centering
-\begin{lstlisting}[language=JastAdd]
+  \newsavebox{\mybox}
+	\begin{lrbox}{\mybox}%
+    \begin{lstlisting}[language=JastAdd]
 coll HashSet<Feature> Program.features();
 
 Modifiers contributes
@@ -45,7 +53,9 @@ Modifiers contributes
 Switch contributes
   new Feature("JAVA7", "StringInSwitch", getCU().path())
   when getExpr().type().isString() to Program.features();
-\end{lstlisting}
+    \end{lstlisting}%
+\end{lrbox}%
+\scalebox{0.7}{\usebox{\mybox}}
 \begin{tikzpicture}[scale=0.7,edge from parent/.style={draw,-latex},sibling distance=8em,
   every node/.style = {align=center,scale=0.7},
   astnode/.style={shape=rectangle, draw, fill=white},
@@ -103,11 +113,6 @@ void foo(String color){
 \end{tikzpicture}
 \caption{\label{fig:featureExample}Example definitions of features.}
 \end{figure}
-
-For JFeature, we use a collection attribute, \code{features}, on the root of the AST.
-The value of \code{features} is a set of objects, each defined by a contribution clause somewhere in the AST.
-The objects are of type \code{Feature} that
-models essential information about the extracted feature: the Java version, feature name, and absolute path of the compilation unit where the feature was found.
 
 Figure~\ref{fig:featureExample} shows an example with JastAdd code at the top of the figure, and below that, an example program and its attributed AST.
 The \code{features} collection is defined on the nonterminal \code{Program}, which is the root of the AST (line 1). Then two features are defined, \textsc{Strictfp} and \textsc{String In Switch} (lines 3-5 and 7-9).
