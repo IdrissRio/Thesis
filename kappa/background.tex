@@ -59,7 +59,7 @@ or dynamically, by observing the program's behavior during execution.
 
 
 \subsubsection{Manual Inspection}
-Manual inspection is the simplest form of program analysis, where a human expers
+Manual inspection is the simplest form of program analysis, where a human experts
 manually examines the code to identify potential problems. It is often performed
 by code reviewers or software testers to identify logical errors,
 or performance bottlenecks. Manual inspection, while potentially effective, can
@@ -88,8 +88,9 @@ There are several dynamic analysis techniques, including:
   or unexpected sequences of events.
   \item \emph{Dynamic Symbolic Execution}~\cite{Baldoni2018Survey}: a technique that
   involves observing the behavior of a program during runtime to gather information
-  about its internal state and behavior. This information can then be used to
-  identify potential bugs or security vulnerabilities. Most dynamic symbolic execution tools,
+  about its internal state and behavior. 
+  % This information can then be used to identify potential bugs or security vulnerabilities.
+  Most dynamic symbolic execution tools,
   such as \emph{KLEE}~\cite{cadar2008klee} are based on \emph{concolic execution},
   which combines concrete and symbolic execution to identify potential bugs.
 \end{itemize}
@@ -140,7 +141,7 @@ There are several static analysis techniques, including:
 \end{itemize}
 In this thesis we focus on a specific class of static analysis techniques,
 called \emph{Control-flow} and \emph{Dataflow} analysis. These are techniques involve the
-tracking of data in a program to identify potential bugs and security vulnerabilities.
+tracking of data in a program.
 We recognize that the results of our analyses, while effective,
 may not be sound nor complete, and that the analysis may not be able to identify
 all the bugs or vulnerabilities in a program~\cite{livshits2015defense}.
@@ -153,9 +154,9 @@ all the bugs or vulnerabilities in a program~\cite{livshits2015defense}.
 Control-flow analysis involves analysing the control flow of the program, which refers
 to the execution and evaluation order of the program's statements and expressions.
 Each possible evaluation order of a program is called a control-flow path.
-The main result of control-flow analysis is a control-flow graph (CFG),
-which is a directed graph where each node represents a basic block
-and each edge represents a control-flow edge. A basic block is a sequence of
+The main result of control-flow analysis is a control-flow graph (CFG) $G=(V,E)$,
+which is a directed graph where each node $v \in V$ represents a basic block
+and each edge $e \in E$ represents a control-flow edge. A basic block is a sequence of
 statements that are executed in order, and that are always executed together, meaning
 that there is no control-flow edge that enters or exits the basic block in the middle of the sequence.
 A control-flow edge is an edge that represents a control-flow dependency between two basic blocks.
@@ -165,7 +166,7 @@ on the source-level and on the intermediate representation (IR). The source-leve
 involves analysing the source code of a program and constructing the CFG
 directly from the source code on top of the abstract syntax tree. The IR approach involves
 first converting the source code into an IR, e.g., bytecode,
-and then constructing the CFG from the IR.
+and then constructing the CFG from the IR.%
 
 Constructing the CFG on the source level has several advantages.
 One of the main benefits is that it allows for the analysis to be performed directly
@@ -336,19 +337,24 @@ Monotone frameworks consist of a join operator $\bigsqcup$\footnote{
 and a finite lattice $L$.
 
 
-For each node $n$ in the control-flow graph, a \emph{forward analysis} is defined by the following equations:
-$$\text{in}(n) = \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p)$$
-
-$$\text{out}(n) = f(\text{in}(n), n)$$
-
-where $f:C \mapsto L$ is a monotone transfer function, also called transfer function.
+For each node $n \in V$, a \emph{forward analysis} is defined by the following equations:
+\begin{align*}
+  \text{in}(n) &= \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p) \\
+  \text{out}(n) &= f_n(\text{in}(n))
+\end{align*}
+% $$\text{in}(n) = \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p)$$
+% $$\text{out}(n) = f_n(\text{in}(n))$$
+where $f_n:C \mapsto L$ is a monotone transfer function, also called transfer function.
 The transfer function $f$ maps each element $c$ in the set $C$ (i.e., concrete domain)
 to an element $f(c)$ in the \emph{finite} lattice $L$ (i.e., abstract domain). The sets \emph{pred(n)} and \emph{succ(n)}
 denote the set of predecessors and successors of node $n$, respectively.
 A backward analysis is similar to a forward one, except that the equations are reversed:
-$$\text{out}(n) = \bigsqcup\limits_{s \in \text{succ}(n)} \text{in}(s)$$
-
-$$\text{in}(n) = f(\text{out}(n), n).$$
+\begin{align*}
+  \text{out}(n) &= \bigsqcup\limits_{s \in \text{succ}(n)} \text{in}(s) \\
+  \text{in}(n) &= f_n(\text{out}(n))
+\end{align*}
+% $$\text{in}(n) = f_n(\text{out}(n)).$$
+% $$\text{out}(n) = \bigsqcup\limits_{s \in \text{succ}(n)} \text{in}(s)$$
 
 The framework defines a mutual dependency between the $in$ and $out$ sets of a node.
 This circular dependency is solved through a fix point computation that is
