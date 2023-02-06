@@ -6,31 +6,31 @@ the concepts of dataflow analysis~\cite{aho2007compilers,Nielson2010Principles},
 control-flow analysis~\cite{allen1970control}, (Reference) attribute grammars~\cite{knuth1968semantics, DBLP:journals/informaticaSI/Hedin00},
 and their implementation through the \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01}.
 
-Dataflow analysis is a technique used to determine the values that are used and
-defined within a program. It is a fundamental concept in the field of compiler
-construction, and it is used in the field of code optimisation, security vulnerabilities, and bugs detection.
-Dataflow analysis heavily depends on control-flow analysis, which computes an overapproxiamation of
-all possible paths that a program can take.
+Dataﬂow analysis determines the values used and deﬁned within a program. 
+It is a fundamental concept in the field of compiler
+construction and is used in the field of code optimisation, security vulnerabilities, and bug detection.
+Dataflow analysis heavily depends on control-flow analysis, which computes an overapproximation of
+all possible paths a program can take.
 
-Attribute grammars are a formalism for describing the structure of a program,
-and for specifying properties of the program. They are used in the implementation
-of compilers, and program analysis tools.
+Attribute grammars are a formalism for describing a program's structure and 
+specifying the program's properties. They are used in the implementation
+of compilers and program analysis tools.
 Reference Attribute Grammars (RAGs) are an extension of the attribute grammars formalism,
 where the attribute values can be defined in terms of references to the attributes
-of other elements in the grammar. \textsc{JastAdd} which is used in our work, is a meta-compiler
+of other elements in the grammar. \textsc{JastAdd}, used in our work, is a meta-compiler
 for implementing compilers and other language tools, e.g., static analysers, using RAGs.
 
 The main results of this thesis are \textsc{IntraCFG} and \textsc{JFeature}.
 \textsc{IntraCFG} is a language-independent framework for implementing control-flow graphs
 on the source code level.
-It is based on \textsc{JastAdd} and Control-flow analysis theory. \textsc{IntraTeal} is a instance
+It is based on \textsc{JastAdd} and Control-flow analysis theory. \textsc{IntraTeal} is an instance
 of \textsc{IntraCFG} on the TEAL language that we will use to demonstrate the effectiveness
 of the framework. We also designed \textsc{JFeature}, a fact extractor for Java programs,
-with the aim of presenting a more comprehensive overview of a Java program by
+to present a more comprehensive overview of a Java program by
 taking into account the utilisation of various features and constructs specific
 to the Java language across different Java versions. The objective of \textsc{JFeature} is
-to assist researchers and developers in the process of selecting benchmarks.
-Throughout this Section, these concepts will be discussed in more detail and used to
+to assist researchers and developers in selecting benchmarks.
+Throughout this section, these concepts will be discussed in more detail and used to
 demonstrate the effectiveness of the proposed methods.
 
 \usetikzlibrary{backgrounds}
@@ -43,55 +43,56 @@ The dependency graph in Figure~\ref{fig:dependencygraph} shows the relationship 
 the concepts and the contribution of this thesis.
 
 \subsection{Program Analysis: Motivation and Techniques}
-In the past few decades, software has become increasingly important in all types of systems.
+In the past few decades, software has become increasingly important in all systems.
 As our reliance on software increases, the repercussions of bugs can become more severe,
-resulting in huge financial losses and even loss of life.
-Well known examples of software bugs include the \emph{Therac-25} radiation therapy machine~\cite{leveson1993investigation},
-the \emph{Mars Climate Orbiter} crash~\cite{Sawyer1999}, resulting in 327 milion dollars loss, and the \emph{Toyota unintended acceleration}~\cite{kane2010toyota}.
-Not only can software bugs result in financial losses and harm to people,
-they can also have a negative impact on the environment, as seen in the \emph{Deepwater Horizon} oil spill~\cite{Shafer2010Oil}.
-\emph{Program analysis} is a branch of computer science that aims to study the behavior
+resulting in substantial financial losses and even loss of life.
+Well-known examples of software bugs include the \emph{Therac-25} radiation therapy machine~\cite{leveson1993investigation},
+the \emph{Mars Climate Orbiter} crash~\cite{Sawyer1999}, resulting in a 327 million dollars loss, and the \emph{Toyota unintended acceleration}~\cite{kane2010toyota}.
+Not only can software bugs result in ﬁnancial losses and harm people, but they can also negatively impact the environment,
+as seen in the \emph{Deepwater Horizon} oil spill~\cite{Shafer2010Oil}.
+\emph{Program analysis} is a branch of computer science that aims to study the behaviour
 and properties of computer programs. Program analysis plays a crucial role in software
 development and maintenance, as it helps to ensure the expected functioning of software
-systems and to identify potential bugs or security vulnerabilities as the one mentioned above.
-Program analysis can be performed either statically, by examining the code without executing it,
-or dynamically, by observing the program's behavior during execution.
+systems and to identify potential bugs or security vulnerabilities such as the one mentioned above.
+Program analysis can be performed either statically by examining the code without executing it
+or dynamically by observing the program's behaviour during execution.
 
 
 \subsubsection{Manual Inspection}
-Manual inspection is the simplest form of program analysis, where a human experts
-manually examines the code to identify potential problems. It is often performed
-by code reviewers or software testers to identify logical errors,
-or performance bottlenecks. Manual inspection, while potentially effective, can
-be time-consuming and error-prone. Additionally, it is not a scalable solution as it is unfeasible
-to manually inspect all the code of a large software system.
+Manual inspection is the simplest form of program analysis, where human experts
+manually examine the code to identify potential problems. Code reviewers or software 
+testers often perform it to identify logical errors or performance bottlenecks. 
+Manual inspection, while potentially effective, can
+be time-consuming and error-prone. Additionally, it is not a scalable solution as 
+it is unfeasible to manually inspect all the code of extensive software systems. 
 On the other hand, manual inspection remains necessary in some forms of program analysis. For instance,
 in \emph{Taint analysis}~\cite{arzt2014flowdroid}, an analysis that tracks the flow of data in a program
 to identify potential security threats, manual inspection is required to identify
 potential \emph{sources} and \emph{sinks}.
 
 \subsubsection{Dynamic Analysis}
-Dynamic analysis involves executing the code and observing its behavior at runtime.
+Dynamic analysis involves executing the code and observing its behaviour at runtime.
 There are several dynamic analysis techniques, including:
 \begin{itemize}
-  \item \emph{Debuggers and profilers}: are the most common dynamic analysis techniques used to identify issues in code.
-  Debuggers like, GDB\footnote{\url{https://www.sourceware.org/gdb/}} and LLDB\footnote{\url{https://lldb.llvm.org/}}, allow for the execution of code to be
+  \item \emph{Debugging and profiling}: are the most common dynamic analysis techniques used to identify issues in code.
+  Debuggers like GDB\footnote{\url{https://www.sourceware.org/gdb/}} and LLDB\footnote{\url{https://lldb.llvm.org/}} allow for the execution of code to be
   monitored and stepped through in order to identify and fix bugs,
-  while profilers gather performance information about the execution of code to help optimize its efficiency.
-  Profilers like, Valgrind\footnote{\url{https://valgrind.org/}}, and Intel VTune~\cite{reinders2005vtune}, can be used to identify memory leaks,
+  while profilers gather performance information about the execution of code to help optimise its efficiency.
+  Profilers like Valgrind\footnote{\url{https://valgrind.org/}}, and Intel VTune~\cite{reinders2005vtune} can be used to identify memory leaks,
   performance bottlenecks, and other issues.
-  \item \emph{Fuzzing}~\cite{li2018fuzzing}: a dynamic analysis technique that involves generating random or
-  semi-random inputs and executing the code with these inputs to identify potential
-  crashes or vulnerabilities. Fuzzing can help to identify security vulnerabilities
+  \item \emph{Fuzzing}~\cite{li2018fuzzing}: is a dynamic analysis technique that 
+  involves generating random or semi-random inputs and executing the code with these 
+  inputs to identify potential crashes or vulnerabilities. Fuzzing can help to 
+  identify security vulnerabilities.
   or other problems that may not be easily uncovered through traditional testing methods.
-  Indeed, fuzzing is often used to test non-expectable inputs, such as malformed data,
+  Indeed, fuzzing is often used to test non-expectable inputs, such as malformed data
   or unexpected sequences of events.
-  \item \emph{Dynamic Symbolic Execution}~\cite{Baldoni2018Survey}: a technique that
-  involves observing the behavior of a program during runtime to gather information
-  about its internal state and behavior. 
+  \item \emph{Dynamic Symbolic Execution}~\cite{Baldoni2018Survey}: it involves 
+  observing a program's behaviour during runtime to gather information about its 
+  internal state and behaviour.
   % This information can then be used to identify potential bugs or security vulnerabilities.
   Most dynamic symbolic execution tools,
-  such as \emph{KLEE}~\cite{cadar2008klee} are based on \emph{concolic execution},
+  such as \emph{KLEE}~\cite{cadar2008klee}, are based on \emph{concolic execution},
   which combines concrete and symbolic execution to identify potential bugs.
 \end{itemize}
 
@@ -100,50 +101,48 @@ Static analysis involves examining the source code of a program without executin
 in order to identify potential problems.
 There are several static analysis techniques, including:
 \begin{itemize}
-  \item \emph{Model Checking}: a technique that involves automatically
-  verifying program's properties against a formal specification in order to
-  identify properties violations. On the other hand, model checking can be used
-  to validate that the code meets desired specifications. Model checking algorithms,
+  \item \emph{Model Checking}: a technique that automatically verifies the program's properties 
+  against a formal speciﬁcation to identify property violations. Model checking algorithms,
   including the classical \emph{Bounded Model Checking}\cite{Clarke1999BoundedMC} and the more recent
   \emph{IC3}~\cite{bradley2012understanding}, have gained popularity in the field and
   are widely used in tools such as \emph{NuSMV}~\cite{cavada2014nuxmv} for automatic
-  verification of software behavior.
+  verification of software behaviour.
+  On the other hand, model checking can validate that the code meets desired speciﬁcations.
   \item \emph{Deductive Methods}: are techniques that heavily use mathematical proofs
   to establish the correctness of software systems. This approach typically involves
-  expressing the program logic and its intended behavior as a set of axioms and theorems,
+  expressing the program logic and its intended behaviour as a set of axioms and theorems
   and then using automated theorem provers and proof assistants, e.g.,
-  \emph{Coq}~\cite{bertot2013interactive} and \emph{Isabel}~\cite{Nipkow2002Isabelle} to validate the proof.
+  \emph{Coq}~\cite{bertot2013interactive} and \emph{Isabel}~\cite{Nipkow2002Isabelle}, to validate the proof.
   Deductive methods offer a high degree of confidence in the correctness of
   software systems, as they are based on a formal, mathematical framework.
   However, they can be challenging to apply to real-world software systems, as they
-  require intervention of highly specialised humans and can be computationally intensive.
+  require the intervention of highly specialised humans and can be computationally intensive.
   \item \emph{Hoare Logic and Separation Logic}: Hoare logic~\cite{hoare1969axiomatic} is a formal method
   for reasoning about the correctness of computer programs. It is based on the notion of \emph{Hoare triples}, which consist of a
   precondition, an assignment statement, and a postcondition. The precondition
   and postcondition specify the desired properties of the program's inputs and
-  outputs, and the assignment statement defines the transformation that takes
-  place between the inputs and outputs.
+  outputs, and the assignment statement defines the transformation between the inputs and outputs.
   Separation logic~\cite{reynolds2002separation}, on the other hand, is a relatively new addition to Hoare logic
-  that aims to make it easier to reason about the behavior of large, complex software
+  that aims to make it easier to reason about the behaviour of large, complex software
   systems. Separation logic differs from Hoare logic in that it provides a way to
   reason about the separation of different parts of a program's memory, rather
   than just reasoning about the overall memory state. This makes it possible to
-  reason about the behavior of programs that manipulate large amounts of data, and
-  to prove properties about them with more precision and confidence.
+  reason about the behaviour of programs that manipulate large amounts of data and
+  prove properties about them more precisely.
   Modern analysis tools, like \emph{Facebook Infer}~\cite{calcagno2011infer},
-  make use of both Hoare Logic and Separation Logic to find potential bugs
-  and security flaws in huge software systems.
-  \item \emph{Type Analysis}~\cite{pierce2002types}: is a technique used in software analysis to verify
+  use Hoare Logic and Separation Logic to find potential bugs
+  and security flaws in massive software systems.
+  \item \emph{Type Analysis}~\cite{pierce2002types}: this is a technique used in software analysis to verify
   the correctness of data types in a program. This method uses typing rules to verify
-  the type of each expression, assignment, and other elements of a program.
+  the type of each expression, assignment, and other element of a program.
   The goal of type analysis is to identify type errors, e.g., type mismatches,
   and to ensure that the program is well-typed.
 \end{itemize}
-In this thesis we focus on a specific class of static analysis techniques,
-called \emph{Control-flow} and \emph{Dataflow} analysis. These are techniques involve the
+This thesis, focuses on a specific class of static analysis techniques
+called \emph{Control-flow} and \emph{Dataflow} analysis. These techniques involve the
 tracking of data in a program.
-We recognize that the results of our analyses, while effective,
-may not be sound nor complete, and that the analysis may not be able to identify
+We recognise that the results of our analyses, while effective,
+may not be sound nor complete and that the analysis may not be able to identify
 all the bugs or vulnerabilities in a program~\cite{livshits2015defense}.
 
 
@@ -154,34 +153,35 @@ all the bugs or vulnerabilities in a program~\cite{livshits2015defense}.
 Control-flow analysis involves analysing the control flow of the program, which refers
 to the execution and evaluation order of the program's statements and expressions.
 Each possible evaluation order of a program is called a control-flow path.
-The main result of control-flow analysis is a control-flow graph (CFG) $G=(V,E)$,
-which is a directed graph where each node $v \in V$ represents a basic block
-and each edge $e \in E$ represents a control-flow edge. A basic block is a sequence of
-statements that are executed in order, and that are always executed together, meaning
-that there is no control-flow edge that enters or exits the basic block in the middle of the sequence.
-A control-flow edge is an edge that represents a control-flow dependency between two basic blocks.
+The main result of the control-flow analysis is a control-flow graph (CFG) $G=(V,E)$,
+which is a directed graph where each node $v \in V$ represents a basic block,
+and each edge $e \in E$ represents a control-flow edge. 
+A control-ﬂow edge is an edge that represents a control-ﬂow dependency between 
+two basic blocks. A basic block is a sequence of statements executed in order 
+and always executed together, meaning that no control-ﬂow edge enters or exits 
+the basic block in the middle of the sequence.
 
 We can distinguish two main approaches to constructing the CFG for a program:
-on the source-level and on the intermediate representation (IR). The source-level approach
+on the source level and the intermediate representation (IR). The source-level approach
 involves analysing the source code of a program and constructing the CFG
 directly from the source code on top of the abstract syntax tree. The IR approach involves
 first converting the source code into an IR, e.g., bytecode,
 and then constructing the CFG from the IR.%
 
 Constructing the CFG on the source level has several advantages.
-One of the main benefits is that it allows for the analysis to be performed directly
-on the source code of the program, which can be more easily understood by humans.
-This can be particularly useful for debugging and program understanding tasks,
+One of the main beneﬁts is that it allows for the analysis to be performed directly on 
+the program's source code, which humans can more easily understand.
+This approach can be particularly useful for debugging and program understanding tasks,
 as it allows the analysis to be performed in the context of the original program.
 Another advantage of constructing the CFG on the source level is that it does not
-require the generation of the IR enabling faster and more efficient analysis,
+require the generation of the IR, enabling faster and more efficient analysis,
 as it avoids the overhead of IR generation.
 In addition, constructing the CFG on the source level can work with semantically
-and syntactically invalid code, which can be useful for analysing programs with
+and syntactically invalid code, which can be helpful for analysing programs with
 errors or incomplete code (e.g., during the development process).
 Furthermore, in situations where the IR must be generated in real-time,
 for instance, when the analysis is performed in an integrated development environment (IDE),
-the overhead of code generation and optimization may make this process too expensive,
+the overhead of code generation and optimisation may make this process too expensive,
 causing latency in the IDE and frustration in the developer~\cite{piskachev2022far}.
 In such cases, constructing the CFG on the source level
 may be a more efficient option.
@@ -190,8 +190,8 @@ However, there are also some disadvantages to constructing the CFG on the source
 One of the main limitations is that it can be more difficult to accurately capture the
 control-flow of a program when working with the source code containing unsugared constructs,
 such as macros and preprocessor directives, that
-can complicate the analysis specification. In addition, the source code may be written in a variety
-of languages with different syntax and semantics, which can make it challenging to
+can complicate the analysis specification. In addition, the source code may be written in various
+of languages with different syntax and semantics, making it challenging to
 design a single analysis that works across all languages.
 The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the control-flow
 graphs of the simple \texttt{foo} method.
@@ -223,7 +223,7 @@ void foo(){
       \draw [->] (else) -- (end);
   \end{tikzpicture}
   \end{tabular}
-  \caption{\label{fig:cfgsourcelevel}Source level control-flow graph of the \texttt{foo} method, showing the branching behavior of the if statement.}
+  \caption{\label{fig:cfgsourcelevel}Source level control-flow graph of the \texttt{foo} method, showing the branching behaviour of the if statement.}
 \end{figure}
 
 
@@ -282,9 +282,9 @@ void foo(){
 \subsection{Dataflow Analysis}
 \label{sec:dataflowanalysis}
 Dataflow analysis is a technique used in computer science to analyse the flow of
-data through a program. It has its roots in the field of program optimization,
+data through a program. It has its roots in the field of program optimisation,
 where it was originally used to identify opportunities for improving the performance
-of programs by tracking variable definitions and uses. This information can be used to optimize the program by eliminating
+of programs by tracking variable definitions and uses. This information can be used to optimise the program by eliminating
 unnecessary computations (e.g., Very Busy Expression or Available Expression
 analyses~\cite{aho2007compilers,vallee-rai10soot,falconer2007deepweaver,sagiv1996ide,kildall1973dataflow}) and improving
 the use of available resources (e.g., registers optimisation).
