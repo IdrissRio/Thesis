@@ -71,7 +71,7 @@ to identify potential security threats, manual inspection is required to identif
 potential \emph{sources} and \emph{sinks}.
 
 \subsubsection{Dynamic Analysis}
-Dynamic analysis involves executing the code and observing its behaviour at runtime.
+Dynamic analysis involves executing the code and observing its behaviour at run-time.
 There are several dynamic analysis techniques, including:
 \begin{itemize}
   \item \emph{Debugging and profiling}: are the most common dynamic analysis techniques used to identify issues in code.
@@ -88,7 +88,7 @@ There are several dynamic analysis techniques, including:
   Indeed, fuzzing is often used to test non-expectable inputs, such as malformed data
   or unexpected sequences of events.
   \item \emph{Dynamic Symbolic Execution}~\cite{Baldoni2018Survey}: it involves 
-  observing a program's behaviour during runtime to gather information about its 
+  observing a program's behaviour during run-time to gather information about its 
   internal state and behaviour.
   % This information can then be used to identify potential bugs or security vulnerabilities.
   Most dynamic symbolic execution tools,
@@ -538,7 +538,7 @@ The concrete and abstract syntax of TEAL-0 are shown in Figure~\ref{fig:tealGram
 One of the key features of TEAL is that it is an object-oriented language,
 which means that it allows the creation of classes and objects that can inherit
 characteristics and behaviour from one another. However, it does not have a dynamic
-dispatcher, which means that the method that is called for an object at runtime
+dispatcher, which means that the method that is called for an object at run-time
 is determined at compile-time based on the type of the object.
 TEAL is divided in layers, with each version building
 upon the features of the previous one. TEAL-0 is the most basic version and includes
@@ -675,25 +675,25 @@ and the main results summarized in this thesis.
 
 \subsection{The \textsc{JastAdd} Metacompiler}
 \label{sec:jastadd}
-The \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a powerful tool for the construction of
+The \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a powerful tool for constructing
 RAGs.
-\textsc{JastAdd} allow language designers to  handle complex language constructs in a modular and extensible
+\textsc{JastAdd} allows language designers to handle complex language constructs in a modular and extensible
 manner through the use of the RAGs formalism.
 The \textsc{JastAdd} metacompiler is a Java-based tool that generates
 Java code from a RAG specification. The generated code can be used to construct an AST and to perform
 analysis on the AST.
 Another important aspect of \textsc{JastAdd} is its support for on-demand attribute evaluation.
 Attribute evaluation is performed only when the corresponding
-attribute is actually required and triggered by the program. This approach enables \textsc{JastAdd} to
+attribute is required and triggered by the program. This approach enables \textsc{JastAdd} to
 avoid performing unnecessary computations, which can improve the run-time
 performance of the generated program.
 
 The \textsc{JastAdd} metacompiler is based on the following components:
 \begin{itemize}
     \item The \textsc{JastAdd} language: a language for the definition of RAGs.
-    The \textsc{JastAdd} language allow to specify the abstract grammar of a language, and,
+    The \textsc{JastAdd} language is used to specify the abstract grammar of a language and, 
     with a Java-like syntax, the attributes of the RAG.
-    \item The \textsc{JastAdd} compiler: a compiler that generates Java code from a RAG.
+    \item The \textsc{JastAdd} compiler: that is a compiler that generates Java code from a RAG.
 \end{itemize}
 In \textsc{JastAdd}, synthesized attributes are defined using the \code{syn} keyword followed
 by the type and the name of the attribute. Similarly, inherited attributes are defined
@@ -800,14 +800,14 @@ syn boolean Type.compatibleType(Type t){
     \end{lstlisting}
 
     \item \emph{Higher-Order Attribute (HOA)}\footnote{Also known as \emph{Non-Terminal Attributes (NTA)}.}:
-    the value of an HOA is a freshly new subtree. Are called \emph{Higher-Order Attributes}
-    because are attribute and at the same time a non-terminal, therefore they can be attributed.
+    the value of an HOA is a freshly new subtree. They are called \emph{Higher-Order Attributes}
+    because they are attributes and, at the same time, non-terminal; therefore, they can be attributed.
     The subtree computed by an HOA behaves like a normal non-terminal, i.e., it can be
-    attributed and it can be used in the definition of other attributes. In \textsc{JastAdd}, HOAs
+    attributed and used in the definition of other attributes. In \textsc{JastAdd}, HOAs
     are defined using the \code{nta} keyword. HOAs are widely used to reify information
-    that are not explicit in the source-code and therefore, not present in the AST.
-    For example, we use HOAs to reify the entry and exit points of a method. In CFGs, it
-    is common to have a unique entry point and a unique exit point for each method.
+    that is not explicit in the source code and, therefore, not present in the AST.
+    For example, we use HOAs to reify a method's entry and exit points. In CFGs, it
+    is common to have a unique entry point and exit point for each method.
     \begin{lstlisting}[language=JastAdd]
 syn nta Entry FunDecl.entry() = new Entry();
 syn nta Exit FunDecl.exit() = new Exit();
@@ -828,25 +828,24 @@ syn nta Exit FunDecl.exit() = new Exit();
     \end{itemize}
     We use the symbol \AcircSyn{A}{x} to denote a circular synthesized attribute.
 
-    \item \emph{Collection Attribute}: these attribute have no equations, but contributions. The
+    \item \emph{Collection Attribute}: these attributes have no equations but contributions. The
     result of a collection attribute is the aggregation of contributions that can
     come from anywhere in the AST. A contribution clause is associated with
-    an AST node type and describes information to be included in a collection
-    attribute, possibly under certain conditions. Collection attributes, are especially
-    useful in compiler construction, to collect all the semantic errors in a program
+    an AST node type and describes the information to be included in a collection
+    attribute, possibly under certain conditions. Collection attributes are especially
+    useful in compiler construction to collect all the semantic errors in a program
     from anywhere in the AST. In \textsc{JastAdd}, collection attributes are defined using the
     \code{coll} keyword.
 
-    An example of collection attribute is the following
+    An example of a collection attribute is the following:
     \begin{lstlisting}[language=JastAdd]
 coll Set<Errors> Program.errors();
 Expr contributes this when type.compatible(expectedType()) to Program.errors();
     \end{lstlisting}
     The collection attribute, \texttt{Program.errors()}, denoted with \Acoll{Program}{errors},
     is used to collect all the semantic errors in the program. The contribution clause
-    states that the expression \texttt{this} contributes to the collection
-     when the type of the expression is not compatible with
-    the expected type.
+    states that the expression \texttt{this} contributes to the collection when 
+    the expression type is incompatible with the expected type.
 \end{itemize}
 
 
