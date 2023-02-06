@@ -283,7 +283,7 @@ void foo(){
 \label{sec:dataflowanalysis}
 Dataflow analysis is a technique used in computer science to analyse the flow of
 data through a program. It has its roots in the field of program optimisation,
-where it was originally used to identify opportunities for improving the performance
+where it was initially used to identify opportunities for improving the performance
 of programs by tracking variable definitions and uses. This information can be used to optimise the program by eliminating
 unnecessary computations (e.g., Very Busy Expression or Available Expression
 analyses~\cite{aho2007compilers,vallee-rai10soot,falconer2007deepweaver,sagiv1996ide,kildall1973dataflow}) and improving
@@ -304,34 +304,34 @@ potential bugs in Java programs.
 Dataflow analysis is also widely used to identify potential security vulnerabilities
 in software~\cite{flowDroid,piskachev2021secucheck,lawall10coccinelle}
 by tracking the flow of sensitive data through a program and
-identifying points where it may be exposed to unauthorized access or manipulation.
+identifying points where it may be exposed to unauthorised access or manipulation.
 
 
 \subsubsection*{Monotone Frameworks}
 \label{sec:monotoneframeworks}
-Monotone framework~\cite{kam1977monotone} is a theoretical framework for reasoning
+Monotone frameworks~\cite{kam1977monotone} are a theoretical framework for reasoning
 about program dataflow properties.
 These frameworks provide a flexible and generic framework for expressing and solving
 dataflow equations, which can be used to reason about a wide range of dataflow
-properties, such as live variables, reaching definitions, and available expressions analyses.
+properties, such as live variables, reaching definitions and available expressions analyses.
 Monotone frameworks are built on the concept of lattice~\cite{Donnellan1968,Birkhoff1967,cousot1977ai}.
 A lattice is a partially ordered set in which any two elements have a unique least
 upper bound (also known as a join or a supremum) and a unique greatest lower bound
 (also known as a meet or an infimum). Meaning that, for any elements $a$ and $b$ in
 the lattice, there exists a unique element denoted as  $a \vee b$  (or  $a \cup b$)
-such that  $a \leq a \vee b$  and  $ b \leq a \vee b$ , and  $a \wedge b$
+such that  $a \leq a \vee b$  and  $ b \leq a \vee b$, and  $a \wedge b$
 (or  $ a\cap b$) such that  $ a\wedge b\leq a$  and  $a \wedge b\leq b$.
 
 A well-formed lattice has a unique least element, commonly denoted as $\bot$,
-and a unique greatest element, commonly denoted as $\top$. These elements satisfy
+and a unique greatest element commonly denoted as $\top$. These elements satisfy
 the properties that for any element $x$ in the lattice, $\bot \leq x$ and x $\leq \top$.
 The diagram in Figure~\ref{fig:lattice} shows the lattice of sets over the set
 $S = \{s_1, s_2, s_3\}$, where the partial ordering is defined by set inclusion
-and the least upper bound and greatest lower bound are set union and set intersection
-respectively. The least element in this lattice is the empty set $\emptyset$ and the
+and the least upper bound and greatest lower bound are set union and set intersection,
+respectively. The least element in this lattice is the empty set $\emptyset$, and the
 greatest element is the set $S$ itself.
 
-Monotone frameworks consist of a join operator $\bigsqcup$\footnote{
+Monotone frameworks include a join operator $\bigsqcup$\footnote{
   For analyses over sets, the join operator can be $\bigcup$ or $\bigcap$.
 }, a monotone transfer function $f$,
 and a finite lattice $L$.
@@ -357,11 +357,11 @@ A backward analysis is similar to a forward one, except that the equations are r
 % $$\text{out}(n) = \bigsqcup\limits_{s \in \text{succ}(n)} \text{in}(s)$$
 
 The framework defines a mutual dependency between the $in$ and $out$ sets of a node.
-This circular dependency is solved through a fix point computation that is
+This circular dependency is solved through a fix point computation,
 a mathematical technique that finds a stable state, or fix point, in a system.
 In the context of the Monotone frameworks, this
 refers to finding a state where the $in$ and $out$ sets of all nodes in the CFG have reached a
-stable value, and no further changes will occur. The fix point is guarantee to exist
+stable value, and no further changes will occur. The fix point is guaranteed to exist
 because the transfer function $f$ is monotone~\cite{Knaster1929}.
 
 
@@ -396,11 +396,10 @@ Attribute grammars provide a powerful tool for specifying the behaviour of a pro
 language and for verifying the correctness of programs written in that language.
 %
 AGs are composed of two components: a context-free grammar~\cite{CREMERS197586},
-which defines the syntax of the language, and an attribute evaluation function,
-which defines the semantics of the language. The context-free grammar is used to
+which defines the language's syntax, and an attribute evaluation function,
+which defines the semantics of the language. Context-free grammar is used to
 parse a program into its abstract syntax tree, and the attribute evaluation function
-is used to compute the values of the attributes associated with each element
-of the tree.
+is used to compute the values of the attributes associated with each tree element.
 
 Attribute grammars enable the description of the
 interdependence of syntactic and semantic elements of a programming language.
@@ -418,9 +417,9 @@ and the node's own attributes.
 
 A \emph{synthesized} attribute is a property of a non-terminal that is computed
 based on the attributes of its possible derivations. For example, the type of an expression
-in a programming language may be a synthesized attribute that is computed based
-on the types of the sub-expressions in the expression. For instance, if a variable is initialized
-with the expression ``3 + 4'', the type of the variable would be determined to
+in a programming language may be a synthesized attribute computed based
+on the types of sub-expressions in the expression. For instance, if a variable is initialized
+with the expression ``3 + 4'', the variable type would be determined to
 be integer based on the types of the operands in the expression.
 We denote a synthesized attribute as follows:
 \begin{equation*}
@@ -434,7 +433,7 @@ An example of an inherited attribute is the scope of a variable in a programming
 language. The scope of a variable is the region of a program in which the variable
 is visible and can be accessed. The scope of a variable is inherited from the
 context in which it is declared. For example, if a variable is declared within a
-function, the variable will be visible and accessible within the body of the function,
+function, the variable will be visible and accessible within the body of the function
 but not outside of the function.
 
 
@@ -444,7 +443,7 @@ Inherited attributes are defined in two parts: a declaration and an equation.
 \end{equation*}
 where \astnode{A} and \astnode{B} are node types.
 The first part of the equation declares the attribute \Ainh{A}{x} as inherited by \astnode{A},
-so that every node of type \astnode{A} has can access it. The second part of the
+so every node of type \astnode{A}  can access it. The second part of the
 equation defines the attribute for each child of \astnode{B}. The wildcard \astnode{*}
 indicates that the attribute is defined and broadcasted to all children of \astnode{B} with type \astnode{A}.
 
@@ -477,7 +476,7 @@ indicates that the attribute is defined and broadcasted to all children of \astn
     \caption{\label{fig:ragsExample} Graphical representation of the attribute grammar example.}
 \end{figure}
 
-To better explain the concept of attribute grammars, we present the following
+To better explain the concept of AGs, we present the following
 example with the following abstract grammar:
     \begin{align*}
         A& ::= B \quad C \\
@@ -499,7 +498,7 @@ the equation systems for the attributes \Asyn{A}{z} and \Asyn{B}{x}:
     \Asyn{B}{x} &= 2
 \end{align*}
 leading to \Asyn{A}{z} = 3 and \Asyn{B}{x} = 2.
-The value for the inherited attribute \Ainh{C}{y} is defined by the node \astnode{A} for
+The value for the inherited attribute \Ainh{C}{y} is defined by node \astnode{A} for
 each child of type \astnode{C}. The value of \Ainh{C}{y} is computed by solving the equation system:
 \begin{align*}
     \Ainh{C}{y} &= \Asyn{A}{z} + \Asyn{C}{v} \\
@@ -511,12 +510,12 @@ resulting in \Ainh{C}{y} = 8. Figure~\ref{fig:ragsExample} depicts the described
 
 \subsection{Reference Attribute Grammars}
 \label{sec:rag}
-Reference Attribute Grammars (RAGs) where introduced in~\cite{DBLP:journals/informaticaSI/Hedin00}
+Reference Attribute Grammars (RAGs) were introduced in~\cite{DBLP:journals/informaticaSI/Hedin00}
 and are an extension of AGs to Object-Oriented languages. While attributes in AGs
-can only refer to terminal values, RAGs allow attributes to refer to non-terminals i.e., node in the AST.
-RAGs are well-suited for the analysis of object-oriented languages, since they enable
-the definition of relation between AST nodes. Attributes that refer to
-to AST nodes can declaratively construct relation, i.e., graphs, on the AST.
+can only refer to terminal values, RAGs allow attributes to refer to non-terminals, i.e., nodes in the AST.
+RAGs are well-suited for the analysis of object-oriented languages since they enable
+the definition of relations between AST nodes. Attributes referring
+to AST nodes can declaratively construct relations, i.e., graphs, on the AST.
 Examples of the relations that can be constructed using RAGs are:
 \begin{itemize}
     \item Name analysis: checks that all names are well-defined and used correctly. A relation between
@@ -524,29 +523,29 @@ Examples of the relations that can be constructed using RAGs are:
     \item Type analysis: checks that all expressions have a valid type. A relation between the expression
     and its type is constructed,
     \item Graph of a class hierarchy: a graph where nodes are classes and edges are inheritance relations,
-    \item Control flow graph: a graph where nodes are statements and/or expressions, and edges are control flow relations, and,
+    \item Control flow graph: a graph where nodes are statements or expressions, and edges are control flow relations, and,
     \item Call graph: a graph where nodes are methods and edges are method calls.
 \end{itemize}
 
 \subsection{The TEAL Programming Language}
 \label{sec:teal}
-TEAL v0.4 (Typed Easily Analysable Language) is a programming language designed by Christoph Reichenbach, and  used in the
+TEAL v0.4 (Typed Easily Analysable Language) is a programming language designed by Christoph Reichenbach and used in the
 program analysis\footnote{\url{https://fileadmin.cs.lth.se/cs/Education/EDAP15/2022/web/index.html}} course at Lund University.
-The goal of TEAL is to provide a language that allows students to
+TEAL aims to provide a language that allows students to
 focus on the challenges of performing program analysis on a real-world language
 without being overwhelmed by the details of a fully-featured language.
-The concrete and the abstract syntax of TEAL-0 are shown in Figure~\ref{fig:tealGrammar}.
+The concrete and abstract syntax of TEAL-0 are shown in Figure~\ref{fig:tealGrammar}.
 One of the key features of TEAL is that it is an object-oriented language,
 which means that it allows the creation of classes and objects that can inherit
 characteristics and behaviour from one another. However, it does not have a dynamic
 dispatcher, which means that the method that is called for an object at runtime
-is determined at compile time based on the type of the object.
-TEAL was developed in an incremental manner, with each version building
+is determined at compile-time based on the type of the object.
+TEAL is divided in layers, with each version building
 upon the features of the previous one. TEAL-0 is the most basic version and includes
 support for variable declarations and use, procedures, and basic control structures such as if
 and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2 allows users to
-define their own types.
-For the sake of simplicity, we will use TEAL-0 and TEAL-1 to exemplify the use of RAGs
+define their types.
+For simplicity, we will use TEAL-0 and TEAL-1 to exemplify the use of RAGs
 and the main results summarized in this thesis.
 \newsavebox{\mylistingbox}
 
@@ -782,7 +781,7 @@ class B {
 
 Another key feature of \textsc{JastAdd}  is the support of \emph{intertype declarations} for the definition of attributes.
 An intertype declaration of an attribute is a declaration that is performed into
-an aspect\footnote{See \emph{Aspect-Oriented Programming}~\cite{Kiczales1997Aspect}.} that, at compile time,
+an aspect\footnote{See \emph{Aspect-Oriented Programming}~\cite{Kiczales1997Aspect}.} that, at compile-time,
 is inlined in the class specified in the intertype declaration. The example in Figure~\ref{fig:interType}
 shows an intertype declaration of an attribute.
 The attributes \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrDecl}
