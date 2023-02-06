@@ -175,7 +175,7 @@ demonstrates the high quality and usefulness of the artifact.
 As a further demonstration\footnote{This application of \textsc{IntraCFG} has not been
 peer-reviewed by the scientific community.} of the applicability of \textsc{IntraCFG},
 we developed \textsc{IntraTeal}, an implementation of the framework for the Teal programming language.
-The teal programming language is used for teaching purposes
+The Teal programming language is used for teaching purposes
 and provides a simple and easy-to-learn syntax for students to understand the
 concepts of static program analysis (see Section~\ref{sec:teal}).
 As part of the course, the complete source code of \textsc{IntraTeal} was provided to students along with
@@ -188,7 +188,7 @@ students with an opportunity to apply the concepts they had learned in a practic
 setting and gain a deeper understanding of dataflow analysis.
 
 Another key aspect of both, \textsc{IntraTeal} and \textsc{IntraJ} implementations, is that they
-construct enhanced control-sensitive CFGs. Control-sensitive CFGs
+construct enhanced control-sensitive CFGs, i.e., it understands that \code{if (x != null){x.f=1}} is safe. Control-sensitive CFGs
 are a more precise representation of the control flow of a program, as they take
 into account the specific control flow behaviour of a program. This is achieved by
 synthesizing two AST nodes, i.e., \astnode{ControlTrue} and \astnode{ControlFalse} for each

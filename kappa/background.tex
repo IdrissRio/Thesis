@@ -804,7 +804,7 @@ syn boolean Type.compatibleType(Type t){
     the value of an HOA is a freshly new subtree. Are called \emph{Higher-Order Attributes}
     because are attribute and at the same time a non-terminal, therefore they can be attributed.
     The subtree computed by an HOA behaves like a normal non-terminal, i.e., it can be
-    attributed and it can be used in the definition of other attributes. In JastAdd, HOAs
+    attributed and it can be used in the definition of other attributes. In \textsc{JastAdd}, HOAs
     are defined using the \code{nta} keyword. HOAs are widely used to reify information
     that are not explicit in the source-code and therefore, not present in the AST.
     For example, we use HOAs to reify the entry and exit points of a method. In CFGs, it
@@ -818,7 +818,7 @@ syn nta Exit FunDecl.exit() = new Exit();
     or indirectly on itself. In \textsc{JastAdd}, circular attributes are expressed using the \code{circular}
     keyword. To guarantee termination, circular attributes are evaluated in a fixed-point
     computation, i.e., the attribute is evaluated until the value of the attribute does not change.
-    The requirements, that are not checked by JastAdd, to guarantee termination are:
+    The requirements, that are not checked by \textsc{JastAdd}, to guarantee termination are:
     \begin{itemize}
         \item All the possible values computed by the attribute must be placed
         in a lattice of finite height.
