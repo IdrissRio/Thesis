@@ -3,26 +3,37 @@
 
 Static program analysis plays a crucial role in ensuring the quality and security of
 software applications by detecting and fixing bugs,
-and potential security vulnerabilities in the code. The utilization of declarative paradigms
-in dataflow analysis as part of this process has become increasingly popular in recent years.\\[5pt]
+and potential security vulnerabilities in the code. The utilisation of declarative
+paradigms in dataflow analysis as part of static program analysis has become 
+increasingly popular in recent years due to its enhance expressivity 
+and modularity, allowing for a higher-level programming approach, resulting in
+easy and efficient development.\\[5pt]
 
 The aim of this thesis is to explore the design and implementation of \emph{control-flow} and 
-\emph{dataflow} analyses using the \emph{Reference Attribute Grammars} formalism.
+\emph{dataflow} analyses using the declarative \emph{Reference Attribute Grammars} formalism.
 Specifically, we focus on the construction of analyses directly on the source code
 rather than on an intermediate representation.\\[5pt]
 
 The main result, summarised in this thesis, is our language-agnostic framework, called \textsc{IntraCFG}.
 \textsc{IntraCFG} enables efficient and effective dataflow analysis by allowing the construction of precise and
 lightweight source-level control-flow graphs. The framework superimposes control-flow
-graphs on top of the abstract syntax tree of the program. The effectiveness of the \textsc{IntraCFG} framework is
-demonstrated through two case studies, \textsc{IntraJ} and \textsc{IntraTeal}, that
-show the potential and the flexibility of \textsc{IntraCFG} in different contexts,
-such as, bug detection and teaching.
-\textsc{IntraJ}, has proven to be faster and precise as well-known
-industrial tools. Its precision and performance, combined with
-on-demand evaluation, make \textsc{IntraJ} an ideal tool for use in
-Integrated Development Environments.
+graphs on top of the abstract syntax tree of the program. 
+The effectiveness of \textsc{IntraCFG} is demonstrated through two case studies, 
+\textsc{IntraJ} and \textsc{IntraTeal}. These case studies showcase the potential and 
+flexibility of \textsc{IntraCFG} in diverse contexts, such as bug detection and education. 
+\textsc{IntraJ} specifically supports the Java programming language, while 
+\textsc{IntraTeal} is an educational language designed for teaching program analysis.\\[5pt]
+
+\textsc{IntraJ}, has proven to be faster than and precise as well-known
+industrial tools. 
+The combination of precision, performance, and on-demand evaluation in \textsc{IntraJ} 
+leads to a low latency in querying the analysis results. This makes \textsc{IntraJ} a
+suitable tool for use in interactive tools. Preliminary experiments have also 
+been conducted to demonstrate how \textsc{IntraJ} can be used to support interactive
+bug detection and fixing.\\[5pt]
+
 Additionally, this thesis presents \textsc{JFeature}, a tool for automatically extracting
-and summarising the key features of a corpus of Java programs. \textsc{JFeature} allows
-researcher and developers to gain a deeper understanding of the characteristics of a codebase and
-can be used to evaluate the effectiveness of their tools and techniques.
+and summarising the key features of a corpus of Java programs. \textsc{JFeature} provides 
+researchers and developers a deeper understanding of the characteristics of 
+a codebase, enabling them to identify suitable corpus for the evaluation of their 
+tools and methodologies.
