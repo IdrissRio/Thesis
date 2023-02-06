@@ -1,6 +1,6 @@
 \section{\textsc{IntraCFG}: Intraprocedural Framework for Source-Level Control-Flow Analysis}%
 \label{sec:IntraCFG}
-The techniques of CFGs construction has seen significant advancements
+The techniques of CFG construction have seen significant advancements
 in recent years, with various frameworks being proposed to aid in the construction
 of precise intraprocedural CFGs~\cite{smits2020flowspec,10.1016/j.scico.2012.02.002}.
 We contribute to the state-of-the-art by introducing \textsc{IntraCFG}, a declarative, RAG-based,
@@ -9,14 +9,14 @@ and language-independent framework for constructing precise intraprocedural CFGs
 Unlike most other frameworks, which build CFGs on the IR level,
 e.g.,  bytecode, \textsc{IntraCFG}'s approach superimposes the CFGs
 on the AST. This allows for accurate client analysis,
-as the CFGs are constructed directly on the source code level, rather than an
+as the CFGs are constructed directly on the source code level rather than an
 intermediate representation.
 Diffrently from the existing RAG-based framework~\cite{10.1016/j.scico.2012.02.002},
 \textsc{IntraCFG} enables the construction of \textsc{AST-Unrestricted} CFGs,
 which are CFGs whose shape is not restricted to the AST structure.
 \subsection{Overall Architecture}
 The overall architecture of our proposed framework, \textsc{IntraCFG}, is shown in Figure~\ref{fig:intraCFG}.
-The framework provides the skeleton and default behaviour for construction of CFGs,
+The framework provides the skeleton and default behaviour for constructing CFGs,
 which can be instantiated for specific languages\footnote{\textbf{\texttt{IntraX}} in the diagram.}, e.g., Java or Teal.
 \begin{figure}[H]
     \centering
@@ -26,12 +26,12 @@ which can be instantiated for specific languages\footnote{\textbf{\texttt{IntraX
 
 The framework consists of several key components, including interfaces
 (e.g., \astnode{CFGRoot}, \astnode{CFGSupport}, and \astnode{CFGNode}), attribute equations that define the
-default behaviour, and user APIs. The interfaces provide the structure for the
-CFG and the attribute equations define the default behaviour for the CFG
+default behaviour, and APIs. The interfaces provide the structure for the
+CFG, and the attribute equations define the default behaviour for the CFG
 construction. Language specific AST nodes implement the different interfaces
-according to the level of precision desired for the CFG.
-The framework expose the CFG to the client analysis through APIs, that can be used
-to query the CFG for information, such as the entry and exit nodes, or to traverse the CFG.
+according to the precision desired for the CFG.
+The framework exposes the CFG to client analyses through APIs, which can query 
+the CFG for information, such as the entry and exit nodes, or traverse the CFG.
 The language-independent nature of \textsc{IntraCFG} allows for easy integration
 with various programming languages and enables the construction of precise CFGs
 for those languages. The use of attribute equations and interfaces also allows
@@ -58,9 +58,9 @@ We built \textsc{IntraJ} upon the \textsc{ExtendJ} extensible Java compiler~\cit
 \end{figure}
 
 %Discussing modularity
-As can be seen in Figure~\ref{fig:intraJ}, we designed \textsc{IntraJ}
+As seen in Figure~\ref{fig:intraJ}, we designed \textsc{IntraJ}
 following a  modular approach, and we separately
-instantiated the framework for different versions of Java such as Java 4,
+instantiated the framework for different versions of Java, such as Java 4,
 Java 5, Java 7 and Java 8. Each version of Java is implemented as a separate
 aspect of the compiler. This approach allows us and the users of \textsc{IntraJ}
 to easily extend the framework to support new versions of Java.
@@ -68,8 +68,8 @@ to easily extend the framework to support new versions of Java.
 % Discussing precision
 The degree of precision in creating CFGs using \textsc{IntraCFG} can differ in order
 to meet the requirements of a given application.
-This flexibility allows the users of the framework to optimize the efficiency of the analysis by selectively
-excluding/including certain nodes from the CF.
+This ﬂexibility allows the framework users to optimise the analysis's eﬃciency 
+by selectively excluding/including specific nodes from the CFG.
 For example, nodes such as \astnode{WhileStmt}, which are essential for the
 construction of CFGs, as they are used to define the shape of CFGs, can be excluded
 from the CFGs as they do not provide any information relevant to the analysis.
@@ -97,11 +97,11 @@ The example in Figure~\ref{fig:CFG} is a visual representation of the AST and CF
 to the specific requirements of the analysis and eliminate unnecessary complexity for improved performance.
 In this example, nodes like \astnode{IfStmt} or \astnode{Dot} are not included in the CFG,
 resulting in a more concise but precise representation of the control flow of the program.
-On the other hand, the precision of the CFGs can be improved by synthesising new nodes and new subtrees.
+On the other hand, the precision of the CFGs can be improved by synthesising new nodes and subtrees.
 For instance, we designed \textsc{IntraJ} to compute an exception-sensitive
 control-flow analysis, i.e., new AST subtrees are synthesized for each possible exceptional path.
-The resulting CFGs are more precise, but they are also more complex, resulting
-in a higher memory consumption and a longer analysis time.
+The resulting CFGs are more precise but also more complex, resulting
+in higher memory consumption and a more extended analysis time.
 
 
 
@@ -127,14 +127,14 @@ Each analysis defines its abstract domain, transfer function and \emph{in} and
 The language dependency of the dataflow analysis arises from the fact that the
 transfer function, which defines the relationship between the \emph{in} and \emph{out},
 is modelled as an attribute. This transfer function attribute is
-define for each AST node in the CFG in order to capture the semantic of passing
+define for each AST node in the CFG to capture the semantics of passing
 through that node.
 
 
 \subsubsection{\textsc{IntraJ} Artifact Evaluation}
-Artifact evaluation is an important part of the scientific process as it enables
+Artifact evaluation is an essential part of the scientific process as it enables
 researchers to demonstrate the reproducibility and practicality of their work.
-It also allows other researchers to build upon and reuse the work in their own
+It also allows other researchers to build upon and reuse the work in their
 studies, helping to advance the field as a whole.
 
 In this context, our artifact, \textsc{IntraJ}, was presented at the
@@ -143,7 +143,7 @@ ROSE\footnote{\textbf{R}ecognizing and Rewarding \textbf{O}pen Science in \textb
 co-located with ICSME2021 and SCAM2021. The artifact was awarded the \emph{Open Research Objects}
 (ORO) and \emph{Research Objects Reviewed} (ROR) badges.
 The ORO badge indicates that the artifact is publicly accessible and has been
-\emph{``placed in a archival repository, with a unique identifier and a link provided''}.
+\emph{``placed in an archival repository, with a unique identifier and a link provided''}.
 The ROR badge highlights that the artifact has been
 \emph{``very carefully documented and structured, making it suitable for reuse and repurposing
 in accordance with research community norms and standards''.} This recognition
@@ -178,22 +178,21 @@ we developed \textsc{IntraTeal}, an implementation of the framework for the Teal
 The Teal programming language is used for teaching purposes
 and provides a simple and easy-to-learn syntax for students to understand the
 concepts of static program analysis (see Section~\ref{sec:teal}).
-As part of the course, the complete source code of \textsc{IntraTeal} was provided to students along with
-instructions and guidelines for utilizing the API to implement their own analyses.
-We also made available a reference implementation of the
-\texttt{NullPointerException} analysis. We then asked students, as a way of
-extending their understanding and skills, to implement an \texttt{IndexOutOfBound}
-analysis on the interval abstract domain. This exercise provided the
-students with an opportunity to apply the concepts they had learned in a practical
-setting and gain a deeper understanding of dataflow analysis.
+As part of the course, the complete source code of \textsc{IntraTeal} was provided 
+to students, along with instructions and guidelines for utilizing the API to implement 
+their analyses. We also made available a reference implementation of the \code{NullPointerException} 
+analysis. To extend their understanding and skills, we then asked students to implement 
+an \code{IndexOutOfBound} analysis on the interval abstract domain. This exercise allowed the 
+students to apply the concepts they had learned in a practical setting and gain a 
+deeper understanding of dataﬂow analysis.
 
-Another key aspect of both, \textsc{IntraTeal} and \textsc{IntraJ} implementations, is that they
-construct enhanced control-sensitive CFGs, i.e., it understands that \code{if (x != null){x.f=1}} is safe. Control-sensitive CFGs
+Another key aspect of \textsc{IntraTeal} and \textsc{IntraJ} implementations is that they
+construct enhanced control-sensitive CFGs, i.e., it understands that \texttt{if (x != null)\{x.f=1\}}, is safe. Control-sensitive CFGs
 are a more precise representation of the control flow of a program, as they take
 into account the specific control flow behaviour of a program. This is achieved by
 synthesizing two AST nodes, i.e., \astnode{ControlTrue} and \astnode{ControlFalse} for each
 comparison operator, e.g.,  ``$\le$'', ``$==$'', ``$!=$'', inside a conditional expression.
-These HOAs are used to represent the control flow of the program and the information that ca be inferred from
+These HOAs are used to represent the control flow of the program and the information that can be inferred from
 it. \\
 %
 \begin{minipage}{0.45\textwidth}
