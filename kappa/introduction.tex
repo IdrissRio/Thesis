@@ -27,9 +27,12 @@ performed.
 However, more recently, there has been a growing interest in using
 declarative paradigms for dataflow analysis, which are based on specifying \emph{what}
 the analysis should compute rather than \emph{how} it should be performed.
+This approach leads to a higher-level specification, resulting in improved modularity as
+the emphasis is on the desired outcome, rather than the specific operations required to 
+achieve it.
 There are several declarative languages for specifying dataflow analysis, 
 such as \emph{Flowspec}~\cite{smits2020flowspec}, which is a domain-specific language,
-and Flix~\cite{madsen2016programming}. However, in this thesis, we focus on the utilisation of Reference 
+and Flix~\cite{madsen2016programming}. In this thesis, we focus on the utilisation of Reference 
 Attribute Grammars~\cite{hedin2000rags} as a declarative approach for programming dataflow analysis. 
 Our implementation is performed upon the \textsc{ExtendJ}~\cite{ekman2007jastadd} Java compiler
 which is written in \textsc{JastAdd}~\cite{DBLP:journals/entcs/HedinM01}: a
