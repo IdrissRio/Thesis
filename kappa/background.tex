@@ -395,7 +395,7 @@ Given a monotonic transfer function $f$ and a finite lattice $\mathcal{L}$, the 
 a backward analysis are defined as follow:
 \begin{align*}
   \text{out}(n) &= \bigsqcup\limits_{s \in \text{succ}(n)} \text{in}(s) \\
-  \text{in}(n) &= f_n(\text{out}(n),n)
+  \text{in}(n) &= f(\text{out}(n),n)
 \end{align*}
 
 The equations for both forward and backward analyses define a mutual dependency
