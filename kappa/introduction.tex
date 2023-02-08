@@ -5,13 +5,13 @@ As our reliance on software increases, the repercussions of bugs can become more
 resulting in substantial financial losses and even loss of life.
 Well-known examples of software bugs include the \emph{Therac-25} radiation therapy machine~\cite{leveson1993investigation},
 the \emph{Mars Climate Orbiter} crash~\cite{Sawyer1999}, resulting in a 327 million dollars loss, and the \emph{Toyota unintended acceleration}~\cite{kane2010toyota}.
-Not only can software bugs result in ﬁnancial losses and harm people, but they can also negatively impact the environment,
+Not only can software bugs result in financial losses and harm people, but they can also negatively impact the environment,
 as seen in the \emph{Deepwater Horizon} oil spill~\cite{Shafer2010Oil}.
 \emph{Program analysis} is a branch of computer science that aims to study the behaviour
 and properties of computer programs. Program analysis plays a crucial role in software
 development and maintenance, as it helps to ensure the expected functioning of software
 systems and to identify potential bugs or security vulnerabilities such as the one mentioned above.
-In this thesis, we focus on \emph{static program analysis}. 
+In this thesis, we focus on \emph{static program analysis}.
 Static program analysis (\emph{static analysis} for short) is
 \emph{``the art of reasoning about a program's behaviour without executing it''}~\cite{spa}.
 It is an essential technique for improving the quality and reliability of software
@@ -27,7 +27,7 @@ and potential interactions with other system components.
 
 
 
-One of the foundamental techniques used in static analysis is \emph{dataflow analysis},
+One of the fundamental techniques used in static analysis is \emph{dataflow analysis},
 which focuses on the flow of data through a program. Dataflow analysis applications are used to identify
 potential sources of errors, such as uninitialised variables or null dereference~\cite{khedker2017data},
 and to optimise the program's performance by identifying opportunities for
@@ -39,68 +39,68 @@ However, more recently, there has been a growing interest in using
 declarative paradigms for dataflow analysis, which are based on specifying \emph{what}
 the analysis should compute rather than \emph{how}.
 The declarative approach leads to a higher-level specification, resulting in improved modularity as
-the emphasis is on the desired outcome, rather than the specific steps required to 
+the emphasis is on the desired outcome, rather than the specific steps required to
 achieve it.
-There are several declarative languages for specifying dataflow analysis, 
+There are several declarative languages for specifying dataflow analysis,
 such as \emph{Flowspec}~\cite{smits2020flowspec}, a domain-specific language,
-or the functional language \emph{Flix}~\cite{madsen2016programming}. In this thesis, we use \emph{Reference 
-Attribute Grammars}~\cite{hedin2000rags} as a declarative approach for implementing dataflow analysis. 
+or the functional language \emph{Flix}~\cite{madsen2016programming}. In this thesis, we use \emph{Reference
+Attribute Grammars}~\cite{hedin2000rags} as a declarative approach for implementing dataflow analysis.
 Our implementation is performed upon the \textsc{ExtendJ}~\cite{ekman2007jastadd} Java compiler,
 which is written in the \textsc{JastAdd}~\cite{DBLP:journals/entcs/HedinM01} ecosystem.
 The \textsc{JastAdd} system supports RAGs, a powerful and flexible
-formalism for defining compilers and static analysis tools. 
-\textsc{JastAdd} implements demand-driven evaluation algorithms, ensuring that attributes are evaluated only 
+formalism for defining compilers and static analysis tools.
+\textsc{JastAdd} implements demand-driven evaluation algorithms, ensuring that attributes are evaluated only
 when necessary, reducing the overall evaluation time by avoiding redundant
 computations.
 
-The primary goal of this thesis is to explore the definition of static analysis 
+The primary goal of this thesis is to explore the definition of static analysis
 frameworks utilising RAGs.
-We aim to exploit the declarative nature of RAGs, 
-combined with the demand-driven evaluation, to study the feasibility of using static 
+We aim to exploit the declarative nature of RAGs,
+combined with the demand-driven evaluation, to study the feasibility of using static
 analysis directly in the development process, i.e., in the Integrated Development Environment (IDE).
-Our attention is mainly directed towards intraprocedural analyses, 
+Our attention is mainly directed towards intraprocedural analyses,
 including control-flow and dataflow analysis, which involve examining a single procedure.
 
 We started using an older RAG-based framework, \textsc{JastAddJ-intraflow}~\cite{10.1016/j.scico.2012.02.002},
-but we encountered some limitations. The most critical issue was that the computed 
-control-flow analysis was imprecise, meaning that the 
-control-flow graph, which represents all possible paths in a program, did not 
+but we encountered some limitations. The most critical issue was that the computed
+control-flow analysis was imprecise, meaning that the
+control-flow graph, which represents all possible paths in a program, did not
 accurately reflect the actual evaluation order of the program.
 
 Therefore, we developed a more general framework called \textsc{IntraCFG}.
-We evaluated the precision of \textsc{IntraCFG} with two instances of the framework, 
-\textsc{IntraJ} and \textsc{IntraTeal}. 
+We evaluated the precision of \textsc{IntraCFG} with two instances of the framework,
+\textsc{IntraJ} and \textsc{IntraTeal}.
 \textsc{IntraJ} is an instance of \textsc{IntraCFG} for the Java programming language,
-and we compared its performance and precision with the industrial tool \textsc{SonarQube}~\cite{sonarqube}. Our results 
-showed that \textsc{IntraJ} is more efficient and as precise as \textsc{SonarQube}. 
-Additionally, we implemented \textsc{IntraTeal}, an instance of our framework for the teaching 
-language TEAL, which has proven to be a supportive tool for teaching control-flow and 
+and we compared its performance and precision with the industrial tool \textsc{SonarQube}~\cite{sonarqube}. Our results
+showed that \textsc{IntraJ} is more efficient and as precise as \textsc{SonarQube}.
+Additionally, we implemented \textsc{IntraTeal}, an instance of our framework for the teaching
+language TEAL, which has proven to be a supportive tool for teaching control-flow and
 dataflow analyses. Finally, we initiated an exploratory study on integrating
 \textsc{IntraJ} and \textsc{IntraTeal} in interactive tools, e.g., IDEs.
 
-While evaluating \textsc{IntraJ}, we found it challenging to locate suitable 
-benchmark suites. To overcome this issue, we designed and implemented \textsc{JFeature}, 
+While evaluating \textsc{IntraJ}, we found it challenging to locate suitable
+benchmark suites. To overcome this issue, we designed and implemented \textsc{JFeature},
 a static analysis tool for automatically extracting features from a Java codebase.
-\textsc{JFeature} allows researchers and developers to explore the characteristics of a 
-codebase, including the use of different Java features across different 
+\textsc{JFeature} allows researchers and developers to explore the characteristics of a
+codebase, including the use of different Java features across different
 versions, facilitating the identification of suitable corpora for evaluating
 their tools and methodologies.
 
-The following sections of this thesis provide a detailed background on the 
+The following sections of this thesis provide a detailed background on the
 underlying concepts and techniques used in this work. We then present our main contributions:
 \begin{itemize}
 	\item \textsc{IntraCFG}: a language-agnostic framework for intraprocedural analysis.
 	 An overview of this contribution can be found in Section~\ref{sec:IntraCFG}, and more details are presented in Paper~\ref{paper:intraj}.
-	\item \textsc{IntraJ}: an instance of \textsc{IntraCFG} for the Java programming language. 
-	We evaluate \textsc{IntraJ} compared to industry standards, showcasing its 
+	\item \textsc{IntraJ}: an instance of \textsc{IntraCFG} for the Java programming language.
+	We evaluate \textsc{IntraJ} compared to industry standards, showcasing its
 	performance and precision. An overview of this contribution can be found in Section~\ref{sec:IntraJ},
 	with more details provided in Paper~\ref{paper:intraj}.
 	\item Integration into IDEs: we have conducted exploratory experiments on integrating
 	\textsc{IntraJ} into IDEs. The preliminary results of this contribution are described in Section~\ref{sec:IDEIntegration}.
 	\item \textsc{IntraTEAL}: an instance of \textsc{IntraCFG} for teaching control-flow and  dataflow analysis using the TEAL language.
 	This contribution is described in detail in Section~\ref{sec:intraTeal}.
-	\item \textsc{JFeature}: a tool for automatically extracting and summarising key 
-	features of a Java codebase. An overview of this contribution can be found 
+	\item \textsc{JFeature}: a tool for automatically extracting and summarising key
+	features of a Java codebase. An overview of this contribution can be found
 	in Section~\ref{sec:JFeature}, with more details presented in Paper~\ref{paper:jfeature}.
 
 \end{itemize}

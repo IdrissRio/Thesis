@@ -16,25 +16,25 @@ The dependency graph in Figure~\ref{fig:dependencygraph} shows the relationship 
 the concepts and the contribution of this thesis.
 
 \subsection{Automatic Program Analysis: Positioning My Research Within the Field}
-Automatic Program Analysis is a ﬁeld of computer science that aims to automatically 
+Automatic Program Analysis is a branch of computer science that aims to automatically
 analyse and evaluate programs' properties, e.g., \emph{correctness}, \emph{liveness} and \emph{safety}. We can distinguish two main
 approaches to program analysis: \emph{static} and \emph{dynamic} analysis.
 
-Dynamic analysis examines the behavior of a program by executing it.
+Dynamic analysis examines the behaviour of a program by executing it.
 Precise information about a single program's execution are gathered
 and used to determine the properties of the program.
 This approach is effective in detecting runtime errors, such as memory leaks~\cite{Valgrind},
 performance bottlenecks~\cite{VTune}, and security vulnerabilities~\cite{li2018fuzzing}.
 However, its limitations come from the requirement for complete and
-accurate input data for a single run, and the difficulty in accounting for 
+accurate input data for a single run, and the difficulty in accounting for
 all possible execution paths.
 
 In contrast, static analysis performs the analysis without executing the program,
 relying on information gathered from the source code. This approach has
-the advantage of being more exhaustive, as it can analyze the entire program,
-including infeasible execution paths. However, a limitation of static analysis is 
-that it is prone to producing false positive results, since it cannot take into 
-account the actual behavior of the program at runtime.
+the advantage of being more exhaustive, as it can analyse the entire program,
+including infeasible execution paths. However, a limitation of static analysis is
+that it is prone to producing false positive results, since it cannot take into
+account the actual behaviour of the program at runtime.
 
 Static Analysis can be further divided into several categories, including \emph{Type}
 and \emph{Effect analyses}~\cite{nielson1999type}. Type Analysis aims to determine the type of variables and expressions
@@ -44,32 +44,32 @@ produce, such as the mutation of data. This information can be used to identify
 potential bugs and improve program understandability.
 
 In the context of this thesis, we focus on intraprocedural control-flow and dataflow analysis, which
-involve analyzing the flow of data within a single procedure in a program.
-This type of analysis is both a type and effect analysis, as it not only considers 
-the types of data being operated on, but also the effects of operations on the 
+involve analysing the flow of data within a single procedure in a program.
+This type of analysis is both a type and effect analysis, as it not only considers
+the types of data being operated on, but also the effects of operations on the
 flow of data within the procedure.
 We do this using Monotone Frameworks, a mathematical framework that provides a
 foundation for dataflow analysis. In the future, we aim to improve the precision of the analysis
 by considering the implementation of interprocedural analysis, which involves
-analyzing the flow of data across multiple procedures in a program.
+analysing the flow of data across multiple procedures in a program.
 
 Additionally, precision is a crucial aspect of dataflow analysis.
-Depending on the desired outcome, various levels of precision can be achieved, 
-but it is important to weigh the trade-off between precision and performance. 
-A higher level of precision often requires increased computational resources, 
-leading to a decrease in performance, and vice versa. Hence, finding the right 
-balance between precision and performance is crucial in achieving effective and 
+Depending on the desired outcome, various levels of precision can be achieved,
+but it is important to weigh the trade-off between precision and performance.
+A higher level of precision often requires increased computational resources,
+leading to a decrease in performance, and vice versa. Hence, finding the right
+balance between precision and performance is crucial in achieving effective and
 efficient dataflow analysis results.
 
-In the context of our research, we have chosen to compute control-sensitive and 
-exception-sensitive control-flow analyses. This approach 
+In the context of our research, we have chosen to compute control-sensitive and
+exception-sensitive control-flow analyses. This approach
 simplifies the specification of dataflow analyses which are built upon the
 control-flow analysis.
 
 In terms of implementation strategies, there are various approaches that can be
 used, including Datalog~\cite{dura2021javadl}, functional programming~\cite{madsen2016datalog}, or ad-hoc implementation.
-However, we choose to implement the analysis using Reference Attribute Grammars. 
-This approach allows us to exploit the benefits of modularity, high-level programming, 
+However, we choose to implement the analysis using Reference Attribute Grammars.
+This approach allows us to exploit the benefits of modularity, high-level programming,
 and on-demand evaluation, which results in a flexible and efficient implementation.
 
 We recognise that the results of our analyses, while effective,
@@ -88,7 +88,7 @@ The result of the control-flow analysis is a control-flow graph (CFG) $G=(V,E)$.
 Each vertex $v \in V$ represents a unit of execution, e.g., a single statement or expression,
 or a basic block (a sequence of statements without labels and jumps).
 Each edge $(v_1,v_2) \in E$  represents a control-flow edge, indicating that the
-execution of $v_1$ may be directly follewed by the execution of $v_2$.
+execution of $v_1$ may be directly followed by the execution of $v_2$.
 
 We can distinguish two main approaches to constructing the CFG for a program:
 on the source level and the intermediate representation (IR). The source-level approach
@@ -123,7 +123,7 @@ of languages with different syntax and semantics, making it challenging to
 design a single analysis that works across all languages.
 
 The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the source-level and bytecode control-flow
-graphs of the simple method \texttt{foo}. To simplify dataflow anlyses, it is
+graphs of the simple method \texttt{foo}. To simplify dataflow analyses, it is
 a common practice to add two additional nodes to the CFG, the \emph{Entry}
 and \emph{Exit} nodes. These nodes represent the unique entry and exit points of the method, respectively.
 \begin{figure}[h]
