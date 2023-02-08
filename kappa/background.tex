@@ -282,7 +282,7 @@ variable \code{x} is assigned a new value, which is not \code{null}. If the cond
 is \code{false}, the variable \code{x} is assigned to \code{null}. Therefore, at the
 end of the method, the variable \code{x} may be either \code{null} or not \code{null}.
 This information can be used to identify potential bugs in the program, such as
-\code{NullPointerException} exceptions.
+\code{NullPointerException}.
 
 We keep track of the value of \code{x} by mapping it to a finite set of possible values:
 \code{null}, \code{notnull}, \code{maybenull}, or \code{undefined}. 
@@ -293,9 +293,9 @@ The information is updated at each node $n$ according to the following rules:
 \begin{itemize}
 \item If $n$ is an assignment node, the information is updated according to the
 assignment operation. For example, if the assignment is \code{x = null}, then the
-information is updated to \code{null}. If the assignment is \code{x = y}, then the
-information is updated to the value \code{y} maps to.
-\item If $n$ is a conditional, an Entry or an Exit node, nothing is updated.
+it is recorded that \code{x} is updated to \code{null}. If the assignment is \code{x = y}, then 
+\code{x} is mapped to the value \code{y} maps to.
+\item If $n$ is a conditional, an Entry or an Exit node, no update is performed.
 \end{itemize}
 
 The dataflow analysis just described is an instance of the mathematical concept of
