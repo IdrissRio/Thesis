@@ -192,7 +192,9 @@ of languages with different syntax and semantics, making it challenging to
 design a single analysis that works across all languages.
 
 The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the source-level and bytecode control-flow
-graphs of the simple method \texttt{foo}.
+graphs of the simple method \texttt{foo}. To simplify dataflow anlyses, it is 
+a common practice to add two additional nodes to the CFG, the \emph{Entry} 
+and \emph{Exit} nodes. These nodes represent the unique entry and exit points of the method, respectively.
 \begin{figure}[h]
   \centering
 \begin{tabular}{l r}
