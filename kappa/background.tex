@@ -131,11 +131,11 @@ and \emph{Exit} nodes. These nodes represent the unique entry and exit points of
 \begin{tabular}{l r}
   \begin{lstlisting}[language=JastAdd]
 void foo(){
-  int x = 0;
+  Integer x = 0;
   if (x > 0) {
     x = 1;
   } else {
-    x = -1;
+    x = null;
   }
 }
   \end{lstlisting} &\hspace{2.5cm}
@@ -144,7 +144,7 @@ void foo(){
       \node (assign) [rectangle, below of=start] {\texttt{x = 0}};
       \node (if) [rectangle, below of=assign] {\texttt{if (x > 0)}};
       \node (then) [rectangle, below of=if] {\texttt{x = 1}};
-      \node (else) [rectangle, right of=then] {\texttt{x = -1}};
+      \node (else) [rectangle, right of=then] {\texttt{x = null}};
       \node (end) [rectangle, below of=else] {\texttt{Exit}};
       \draw [->] (start) -- (assign);
         \draw [->] (assign) -- (if);
@@ -164,19 +164,23 @@ void foo(){
 
 \begin{lstlisting}[language=bytecode, frame=none]
 1 : 0 : iconst_0
-2 : 1 : istore_1
-3 : 2 : iload_1
-4 : 3 : ifle        10
-5 : 6 : iconst_1
-6 : 7 : istore_1
-7 : 8 : goto        13
-8 : 11: iconst_m1
-9 : 12: istore_1
-10: 13: return
+2 : 1 : invokestatic  #7
+3 : 4 : astore_1
+4 : 5 : aload_1
+5 : 6 : invokevirtual #13
+6 : 9 : ifle          20
+7 : 12: iconst_1
+8 : 13: invokestatic  #7
+9 : 16: astore_1
+10: 17: goto          22
+11: 20: aconst_null
+12: 21: astore_1
+13: 22: return
 \end{lstlisting}
 &\hspace{2.5cm}
+\scalebox{0.85}{
 \begin{tikzpicture}[
-  node distance=0.4cm,
+  node distance=0.25cm,
   every node/.style={shape=rectangle, align=center},
   baseline=(current bounding box.center)]
   % Nodes
@@ -184,25 +188,52 @@ void foo(){
   \node (1) [below=of 0] {1};
   \node (2) [below=of 1] {2};
   \node (3) [below=of 2] {3};
-  \node (6) [left=of 3] {6};
-  \node (7) [below=of 6] {7};
+  \node (4) [below=of 3] {4};
+  \node (5) [below=of 4] {5};
+  \node (6) [below=of 5] {6};
+  \node (7) [left=of 6] {7};
   \node (8) [below=of 7] {8};
-  \node (11) [right=of 3] {11};
+  \node (9) [below=of 8] {9};
+  \node (10) [below=of 9] {10};
+  \node (11) [right=of 6] {11};
   \node (12) [below=of 11] {12};
-  \node (14) [below=of 3] {};
+  \node (14) [below=of 6] {};
   \node (15) [below=of 14] {};
-  \node (13) [below=of 15] {13};
+  \node (16) [below=of 15] {};
+  \node (13) [right=of 10] {13};
   \node (exit) [right=of 13] {\texttt{exit}};
   \node (entry) [left=of 0] {\texttt{entry}};
 
   % Edges
-  \path[->] (0) edge (1) (1) edge (2) (2) edge (3) (3) edge[bend right] (6) (3) edge[bend left] (11) (6) edge (7) (7) edge (8) (8) edge (13) (11) edge (12) (12) edge (13);
-  \path[->] (13) edge (exit) (entry) edge (0);
-  \draw[dashed] (0.north west) rectangle (2.south east);
-  \draw[dashed] (6.north west) rectangle (8.south east);
-  \draw[dashed] (11.north west) rectangle (12.south east);
+  \path[-stealth] (0) edge (1);
+  \path[-stealth] (1) edge (2);
+  \path[-stealth] (2) edge (3);
+  \path[-stealth] (3) edge (4);
+  \path[-stealth] (4) edge (5);
+  \path[-stealth] (5) edge (6);
+  \path[-stealth] (6) edge[bend right] (7);
+  \path[-stealth] (6) edge[bend left] (11);
+  \path[-stealth] (7) edge (8);
+  \path[-stealth] (8) edge (9);
+  \path[-stealth] (9) edge (10);
+  \path[-stealth] (10) edge (13);
+  \path[-stealth] (11) edge (12);
+  \path[-stealth] (12) edge (13);
 
-\end{tikzpicture}
+  % \path[->] (0) edge (1) (1) edge (2) (2) edge (3) (3) edge[bend right] (6) (3) edge[bend left] (11) (6) edge (7) (7) edge (8) (8) edge (13) (11) edge (12) (12) edge (13);
+  \path[-stealth] (13) edge (exit) (entry) edge (0);
+   \draw[dashed] (0.north west) rectangle (1.south east);
+   \draw[dashed] (2.north west) rectangle (2.south east);
+   \draw[dashed] (3.north west) rectangle (5.south east);
+   \draw[dashed] (6.north west) rectangle (6.south east);
+   \draw[dashed] (7.north west) rectangle (8.south east);
+   \draw[dashed] (9.north west) rectangle (10.south east);
+   \draw[dashed] (11.north west) rectangle (12.south east);
+   \draw[dashed] (13.north west) rectangle (13.south east);
+  % \draw[dashed] (6.north west) rectangle (8.south east);
+  % \draw[dashed] (11.north west) rectangle (12.south east);
+
+\end{tikzpicture}}
 \end{tabular}
 \caption{\label{fig:cfgintermediatelevel}Bytecode control-flow graph of the \texttt{foo} method. Each dashed box represents a basic block.}
 \end{figure}
@@ -217,11 +248,11 @@ data through a program. It has its roots in the field of program optimisation,
 where it was initially used to identify opportunities for improving the performance
 of programs by tracking variable definitions and uses. This information can be used to optimise the program by eliminating
 unnecessary computations (e.g., Very Busy Expression or Available Expression
-analyses~\cite{aho2007compilers,vallee-rai10soot,falconer2007deepweaver,sagiv1996ide,kildall1973dataflow}) and improving
+analyses~\cite{aho2007compilers}) and improving
 the use of available resources (e.g., registers optimisation).
 
 
-In the context of bug detection~\cite{spoon, fink2012wala}, dataflow analysis can be used to identify
+In the context of bug detection, dataflow analysis can be used to identify
 potential sources of errors in a program by tracking the flow of data through
 the program and identifying points where data may be used in unexpected or
 incorrect ways. This can be particularly useful in identifying bugs that may
@@ -233,59 +264,132 @@ potential bugs in Java programs.
 % I looked here how they cited pmd, findbugs and spotbugs. https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8103456
 
 Dataflow analysis is also widely used to identify potential security vulnerabilities
-in software~\cite{flowDroid,piskachev2021secucheck,lawall10coccinelle}
-by tracking the flow of sensitive data through a program and
+in software~\cite{flowDroid} by tracking the flow of sensitive data through a program and
 identifying points where it may be exposed to unauthorised access or manipulation.
 
+We will demonstrate the application of dataflow analysis by presenting the following
+practical example. Let us reconsider the \code{foo} method introduced in Figure~\ref{fig:cfgsourcelevel}.
+Our goal is to determine at each stage of the program whether the variable \code{x} 
+has a \code{null} value or not\footnote{For simplicity, we assume that the language 
+allows only assignments of the form \code{x = y} where \code{x} and \code{y} can 
+be either variables a numeric constants or the \code{null} literal.}.
+ At the entry point of the method, i.e., Entry node,
+it is indeterminate whether \code{x} is \code{null} or not, as it has not been initialized yet.
+However, at the declaration of the variable \code{x}, we can determine that it is
+not \code{null} because it is initialised to a non-\code{null}
+value. Then, if the condition \code{if(x > 0)} is \code{true}, the
+variable \code{x} is assigned a new value, which is not \code{null}. If the condition
+is \code{false}, the variable \code{x} is assigned to \code{null}. Therefore, at the
+end of the method, the variable \code{x} may be either \code{null} or not \code{null}.
+This information can be used to identify potential bugs in the program, such as
+\code{NullPointerException} exceptions.
+
+We keep track of the value of \code{x} by mapping it to a finite set of possible values:
+\code{null}, \code{notnull}, \code{maybenull}, or \code{undefined}. 
+As we traverse the control-flow graph, we propagate this information from node 
+$n$ to node $n'$ if $(n,n')\in E$, until it reaches the exit node.
+
+The information is updated at each node $n$ according to the following rules:
+\begin{itemize}
+\item If $n$ is an assignment node, the information is updated according to the
+assignment operation. For example, if the assignment is \code{x = null}, then the
+information is updated to \code{null}. If the assignment is \code{x = y}, then the
+information is updated to the value \code{y} maps to.
+\item If $n$ is a conditional, an Entry or an Exit node, nothing is updated.
+\end{itemize}
+
+The dataflow analysis just described is an instance of the mathematical concept of
+Monotone Frameworks~\cite{Nielson2010Principles}.
 
 \subsubsection*{Monotone Frameworks}
 \label{sec:monotoneframeworks}
-Monotone frameworks~\cite{kam1977monotone} are a theoretical framework for reasoning
+Monotone frameworks are a theoretical approach for reasoning
 about program dataflow properties.
-These frameworks provide a flexible and generic framework for expressing and solving
+This approach provides a flexible and generic framework for expressing and solving
 dataflow equations, which can be used to reason about a wide range of dataflow
 properties, such as live variables, reaching definitions and available expressions analyses.
-Monotone frameworks are built on the concept of lattice~\cite{Donnellan1968,Birkhoff1967,cousot1977ai}.
+Monotone frameworks are built on the concept of lattice~\cite{Donnellan1968}.
 A lattice is a partially ordered set in which any two elements have a unique least
 upper bound (also known as a join or a supremum) and a unique greatest lower bound
-(also known as a meet or an infimum). Meaning that, for any elements $a$ and $b$ in
+(also known as a meet or an infimum). This means that, for any elements $a$ and $b$ in
 the lattice, there exists a unique element denoted as  $a \vee b$  (or  $a \cup b$)
 such that  $a \leq a \vee b$  and  $ b \leq a \vee b$, and  $a \wedge b$
 (or  $ a\cap b$) such that  $ a\wedge b\leq a$  and  $a \wedge b\leq b$.
-
 A well-formed lattice has a unique least element, commonly denoted as $\bot$,
 and a unique greatest element commonly denoted as $\top$. These elements satisfy
-the properties that for any element $x$ in the lattice, $\bot \leq x$ and x $\leq \top$.
-The diagram in Figure~\ref{fig:lattice} shows the lattice of sets over the set
-$S = \{s_1, s_2, s_3\}$, where the partial ordering is defined by set inclusion
-and the least upper bound and greatest lower bound are set union and set intersection,
-respectively. The least element in this lattice is the empty set $\emptyset$, and the
-greatest element is the set $S$ itself.
+the properties that for any element $x$ in the lattice, $\bot \leq x$ and $x \leq \top$.
+\begin{wrapfigure}{r}{0.5\textwidth}
+     \begin{center}
+  \begin{tikzpicture}
+      \node (top) at (0,1) {\code{maybenull}};
+      \node (null) at (-1,0) {\code{null}};
+      \node (notnull) at (1,0) {\code{notnull}};
+      \node (bot) at (0,-1) {\code{undefined}};
+      \draw (bot) -- (null) -- (top) -- (notnull) -- (bot);
+    \end{tikzpicture}
+    \caption{\label{fig:lattice}Diagram of the lattice used in the example in Section~\ref{sec:dataflowanalysis}.
+    In this case, \code{maybenull} $= \top$ and \code{undefined}$= \bot$.}
+  \end{center}
+\end{wrapfigure}
+
 
 Monotone frameworks include a join operator $\bigsqcup$\footnote{
   For analyses over sets, the join operator can be $\bigcup$ or $\bigcap$.
 }, a monotone transfer function $f$,
 and a finite lattice $L$.
 
+In our example, the lattice $L$ is the set of possible values of the variable \code{x}. 
+This lattice is shown in Figure~\ref{fig:lattice}. Here \code{maybenull} is
+the greatest element in the lattice, as it represents the set of all possible values
+that a variable can take. On the other hand, \code{undefined} is the least element
+representing the absence of information.
+The join operator $\bigsqcup$ is the union operator, which is used to combine the
+information of two nodes. For example, if the information at node $n$ is \code{null}
+and the information at node $n'$ is \code{notnull}, then the information at node
+$n \bigsqcup n'$ is \code{maybenull}.
+In Section~\ref{sec:dataflowanalysis}, we described the effect of passing through 
+a node using natural language. Now, we will formally present this update as our
+transfer function. Our monotonic transfer function $f_{\textit{NULL}}: (\textit{Var} \rightarrow L) \times V \rightarrow (\textit{Var} \rightarrow L)$ is defined as:
 
-For each node $n \in V$, a \emph{forward analysis} is defined by the following equations:
+\[ 
+  f_{\textit{NULL}}(\Gamma, \vterminal{node}) = 
+  \begin{cases*}
+  \Gamma[\vmetavar{v} \mapsto \semNPA{\vmetavar{e}}^\Gamma] & if  \vterminal{node} is \vterminal{\vmetavar{v} = \vmetavar{e}}  \\
+  \Gamma  & otherwise
+\end{cases*} \]%
+
+\[
+\begin{array}{llcl}
+\textrm{where}&\semNPA{\vterminal{n}\in \mathbb{N}}^\Gamma			&=& \textbf{notnull}\\
+&\semNPA{\vterminal{null}}^\Gamma			&=& \textbf{null}\\
+&\semNPA{\vmetavar{v}}^\Gamma				&=& \Gamma(\vmetavar{v})\\
+\end{array}
+\]
+
+
+To propagate information from node $n$ to its succeeding nodes and to represent the 
+effect of traversing a node, we define the following two equations:
 \begin{align*}
-  \text{in}(n) &= \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p) \\
-  \text{out}(n) &= f_n(\text{in}(n))
+  \text{in}(n) &= \begin{cases} \{ v \rightarrow \bot \mid \forall v \in $Var$ \} & $if $ n $ is Entry$ \\ \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p) & $otherwise$ \end{cases} \\
+  \text{out}(n) &= f_{\mathit{NULL}}(\text{in}(n),n)
 \end{align*}
-% $$\text{in}(n) = \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p)$$
-% $$\text{out}(n) = f_n(\text{in}(n))$$
-where $f_n:C \mapsto L$ is a monotone transfer function, also called transfer function.
-The transfer function $f$ maps each element $c$ in the set $C$ (i.e., concrete domain)
-to an element $f(c)$ in the \emph{finite} lattice $L$ (i.e., abstract domain). The sets \emph{pred(n)} and \emph{succ(n)}
-denote the set of predecessors and successors of node $n$, respectively.
-A backward analysis is similar to a forward one, except that the equations are reversed:
+where $\text{pred}(n) = \{ p \mid (p,n)\in E\}$.
+
+To model the information that is available before and after passing through a 
+node, and to reflect the impact of passing through the node, we have defined 
+two sets: the $in$ set and the $out$ set. The $in$ set gathers the available 
+information before the node is passed, and the $out$ set captures the outcome 
+of applying the transfer function $f_{\textit{NULL}}$ on the $in$ set.
+
+These equations can be adapted to perform backward analyses as well. For example,
+given a monotonic transfer function $f$ and a finite lattice $L$, the equations for 
+a backward analysis would be:
+
 \begin{align*}
   \text{out}(n) &= \bigsqcup\limits_{s \in \text{succ}(n)} \text{in}(s) \\
-  \text{in}(n) &= f_n(\text{out}(n))
+  \text{in}(n) &= f_n(\text{out}(n),n)
 \end{align*}
-% $$\text{in}(n) = f_n(\text{out}(n)).$$
-% $$\text{out}(n) = \bigsqcup\limits_{s \in \text{succ}(n)} \text{in}(s)$$
+
 
 The framework defines a mutual dependency between the $in$ and $out$ sets of a node.
 This circular dependency is solved through a fix point computation,
@@ -296,25 +400,6 @@ stable value, and no further changes will occur. The fix point is guaranteed to 
 because the transfer function $f$ is monotone~\cite{Knaster1929}.
 
 
-\begin{figure}[h]
-    \centering
-\begin{tikzpicture}
-    \node (max) at (0,4) {$S$};
-    \node (a) at (-2,2) {$\{s_1,s_2\}$};
-    \node (b) at (0,2) {$\{s_1,s_3\}$};
-    \node (c) at (2,2) {$\{s_2,s_3\}$};
-    \node (d) at (-2,0) {$\{s_1\}$};
-    \node (e) at (0,0) {$\{s_2\}$};
-    \node (f) at (2,0) {$\{s_3\}$};
-    \node (min) at (0,-2) {$\emptyset$};
-    \draw (min) -- (d) -- (a) -- (max) -- (b) -- (f)
-    (e) -- (min) -- (f) -- (c) -- (max)
-    (d) -- (b);
-    \draw[preaction={draw=white, -,line width=6pt}] (a) -- (e) -- (c);
-  \end{tikzpicture}
-  \caption{\label{fig:lattice}Hesse diagram~\cite{Hesse1874} of the $\mathcal{P}(S)$ lattice.
-  In this case, $S = \top$ and $\emptyset = \bot$.}
-\end{figure}
 
 \subsection{Attribute Grammars}
 \label{chap:attr-grammars}
