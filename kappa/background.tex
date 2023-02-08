@@ -166,29 +166,13 @@ directly from the source code on top of the abstract syntax tree. The IR approac
 first converting the source code into an IR, e.g., bytecode,
 and then constructing the CFG from the IR.%
 
-% Constructing the CFG on the source level has several advantages.
-% One of the main beneﬁts is that it allows for the analysis to be performed directly on 
-% the program's source code, which humans can more easily understand.
-% This approach can be particularly useful for debugging and program understanding tasks,
-% as it allows the analysis to be performed in the context of the original program.
-% Another advantage of constructing the CFG on the source level is that it does not
-% require the generation of the IR, enabling faster and more efficient analysis,
-% as it avoids the overhead of IR generation.
-% In addition, constructing the CFG on the source level can work with semantically
-% and syntactically invalid code, which can be helpful for analysing programs with
-% errors or incomplete code (e.g., during the development process).
-% Furthermore, in situations where the IR must be generated in real-time,
-% for instance, when the analysis is performed in an integrated development environment (IDE),
-% the overhead of code generation and optimisation may make this process too expensive,
-% causing latency in the IDE and frustration in the developer~\cite{piskachev2022far}.
-% In such cases, constructing the CFG on the source level
-% may be a more efficient option.
 The construction of the CFG at the source level presents several advantages. One of the 
 main benefits is the ability to map the analysis results directly back to the source code 
 and present it to the user in the context of the original program. On the other hand, 
 if the CFG is constructed at the IR level, there would be a complex translation step 
 required to find the corresponding source level constructs, and in some cases it would 
-not even be possible due to the loss of information during the translation process, e.g., \code{source-file retention} for Java annotations. 
+not even be possible due to the loss of information during the translation process, e.g., 
+\code{source-file retention} policy for Java annotations. 
 For this reason, constructing the CFG at the source level is particularly useful for 
 debugging and program understanding tasks, as it provides a clear and direct 
 representation of the program. Additionally, this approach enables faster and 
