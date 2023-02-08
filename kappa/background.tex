@@ -318,6 +318,14 @@ such that  $a \leq a \vee b$  and  $ b \leq a \vee b$, and  $a \wedge b$
 A well-formed lattice has a unique least element, commonly denoted as $\bot$,
 and a unique greatest element commonly denoted as $\top$. These elements satisfy
 the properties that for any element $x$ in the lattice, $\bot \leq x$ and $x \leq \top$.
+In dataflow analysis, lattices are widely used to represent the information flow in a program.
+A common example of a lattice used in dataflow analysis is the \emph{binary lattice} with 
+elements \emph{true} and \emph{false}, which is used to represent the presence or absence of
+of a property. Another example is the \emph{interval lattice}, which is used 
+to represent ranges of number. This lattice, compared to the binary lattice, is more 
+complex but provides more precise information about the flow of numerical values 
+in a program. Additionally, while the binary lattice is \emph{finite}, the interval lattice can 
+be potentially \emph{infinite}.
 \begin{wrapfigure}{r}{0.5\textwidth}
      \begin{center}
   \begin{tikzpicture}
@@ -336,20 +344,22 @@ the properties that for any element $x$ in the lattice, $\bot \leq x$ and $x \le
 Monotone frameworks include a join operator $\bigsqcup$\footnote{
   For analyses over sets, the join operator can be $\bigcup$ or $\bigcap$.
 }, a monotone transfer function $f$,
-and a finite lattice $L$.
+and a finite lattice $\mathcal{L}$.
 
-In our example, the lattice $L$ is the set of possible values of the variable \code{x}. 
+In our example, the lattice $\mathcal{L}$ is the set of possible values of the variable \code{x}. 
 This lattice is shown in Figure~\ref{fig:lattice}. Here \code{maybenull} is
 the greatest element in the lattice, as it represents the set of all possible values
 that a variable can take. On the other hand, \code{undefined} is the least element
 representing the absence of information.
-The join operator $\bigsqcup$ is the union operator, which is used to combine the
-information of two nodes. For example, if the information at node $n$ is \code{null}
-and the information at node $n'$ is \code{notnull}, then the information at node
-$n \bigsqcup n'$ is \code{maybenull}.
-In Section~\ref{sec:dataflowanalysis}, we described the effect of passing through 
-a node using natural language. Now, we will formally present this update as our
-transfer function. Our monotonic transfer function $f_{\textit{NULL}}: (\textit{Var} \rightarrow L) \times V \rightarrow (\textit{Var} \rightarrow L)$ is defined as:
+The join operator $\bigsqcup$ merges the information of two nodes by taking their
+union. For instance, if node $n$ has information \code{null} and node $n'$ has 
+information \code{notnull}, then the information at the merged node $n \bigsqcup n'$ 
+becomes \code{maybenull}. 
+In the previous section, we explained how a node affects the flow of data 
+using plain language. Now, we will present this concept in a formal manner 
+as a transfer function. Let \textit{Var} be the set of variables in the program, we define
+the monotone transfer function $f_{\textit{NULL}}: (\textit{Var} \rightarrow \mathcal{L}) \times V \rightarrow (\textit{Var} \rightarrow \mathcal{L})$
+as follows:
 
 \[ 
   f_{\textit{NULL}}(\Gamma, \vterminal{node}) = 
@@ -370,28 +380,26 @@ transfer function. Our monotonic transfer function $f_{\textit{NULL}}: (\textit{
 To propagate information from node $n$ to its succeeding nodes and to represent the 
 effect of traversing a node, we define the following two equations:
 \begin{align*}
-  \text{in}(n) &= \begin{cases} \{ v \rightarrow \bot \mid \forall v \in $Var$ \} & $if $ n $ is Entry$ \\ \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p) & $otherwise$ \end{cases} \\
+  \text{in}(n) &= \begin{cases} \{ v \rightarrow \bot \mid \forall v \in $\textit{Var}$ \} & $if $ n $ is Entry$ \\ \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p) & $otherwise$ \end{cases} \\
   \text{out}(n) &= f_{\mathit{NULL}}(\text{in}(n),n)
 \end{align*}
 where $\text{pred}(n) = \{ p \mid (p,n)\in E\}$.
-
-To model the information that is available before and after passing through a 
-node, and to reflect the impact of passing through the node, we have defined 
-two sets: the $in$ set and the $out$ set. The $in$ set gathers the available 
-information before the node is passed, and the $out$ set captures the outcome 
+We have defined the $in$ and the $out$ sets to model the information that is available 
+before and after passing through a node, respectively. The $in$ set gathers the available 
+information before entering the node, while the $out$ set captures the effect 
 of applying the transfer function $f_{\textit{NULL}}$ on the $in$ set.
 
-These equations can be adapted to perform backward analyses as well. For example,
-given a monotonic transfer function $f$ and a finite lattice $L$, the equations for 
-a backward analysis would be:
-
+These equations can be adapted to perform backward analyses, i.e., analyses that
+propagate information from the exit node to the entry node. 
+Given a monotonic transfer function $f$ and a finite lattice $\mathcal{L}$, the equations for 
+a backward analysis are defined as follow:
 \begin{align*}
   \text{out}(n) &= \bigsqcup\limits_{s \in \text{succ}(n)} \text{in}(s) \\
   \text{in}(n) &= f_n(\text{out}(n),n)
 \end{align*}
 
-
-The framework defines a mutual dependency between the $in$ and $out$ sets of a node.
+The equations for both forward and backward analyses define a mutual dependency 
+between the $in$ and $out$ sets of a node. 
 This circular dependency is solved through a fix point computation,
 a mathematical technique that finds a stable state, or fix point, in a system.
 In the context of the Monotone frameworks, this
