@@ -437,11 +437,15 @@ on the types of sub-expressions in the expression. For instance, if a variable i
 with the expression ``3 + 4'', the variable type would be determined to
 be integer based on the types of the operands in the expression.
 
-We denote a synthesized attribute as follows:
+Synthesized attributes are composed by a declaration and an equation:
 \begin{equation*}
-  \Asyn{A}{x} = e
+  \Asyn{A}{x} \quad\quad \quad\quad \Asyn{A}{x} = e
 \end{equation*}
-where \astnode{A} is the name of the node type.
+where \astnode{A} is the name of the node type. Sometimes, the declaration and the equation
+are combined into a single line, as follows:
+\begin{equation*}
+  \Asyn{A}{x} = e.
+\end{equation*}
 
 For the sake of readability, we use the notation introduced by Fors et al. in~\cite{fors2020patterns},
 where attribute names are preceded by a symbol (e.g.,\textcolor{ATGsym}{\mSyn{}},\textcolor{ATGsym}{\mInh{}}) 
