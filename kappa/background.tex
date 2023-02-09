@@ -412,47 +412,51 @@ because the transfer function $f$ is monotone~\cite{Knaster1929}.
 \subsection{Attribute Grammars}
 \label{chap:attr-grammars}
 Attribute grammars~\cite{knuth1968semantics} (AGs) are a formalism for specifying
-the syntax and semantics of programming languages.
-They were first introduced by Knuth in 1968 as a way to define the syntax and semantics of the programming
-language ALGOL 68. This formalism is based on the concept of attributes,
+the syntax and semantics of programming languages. This formalism is based on the concept of attributes,
 which are properties associated with the elements of a language's abstract syntax tree.
 Attribute grammars provide a powerful tool for specifying the behaviour of a programming
-language and for verifying the correctness of programs written in that language.
+language and for verifying the compile-time correctness of programs written in that language.
 %
-AGs are composed of two components: a context-free grammar~\cite{CREMERS197586},
-which defines the language's syntax, and an attribute evaluation function,
-which defines the semantics of the language. Context-free grammar is used to
-parse a program into its abstract syntax tree, and the attribute evaluation function
-is used to compute the values of the attributes associated with each tree element.
+AGs are composed of three components: a context-free grammar,
+which defines the language's syntax,  a set of attributes,
+which are properties associated with the elements of the abstract syntax tree,
+and attribute equations, used to compute the values of the attributes associated with each node in the syntax tree.
 
 Attribute grammars enable the description of the
 interdependence of syntactic and semantic elements of a programming language.
 For instance, the type of a variable may be determined by its declaration,
 but the type of an expression may be determined by the types of its sub-expressions.
-Attribute grammars provide a way to specify these constraints.
+Attribute grammars provide a way to specify these rules.
 
-Attributes are define using equations. We can distinguish two types of
-attributes: synthesized attributes and inherited attributes.
-For the sake of readability, we borrow the notation introduced by Fors et al. in~\cite{fors2020patterns},
-where attribute names are preceded by a symbol that indicates the type of the attribute.
-We reserve the symbol \Abase{x} to denote the attribute name and the symbol $e$ to denote the attribute value,
-e.g., a constant, a function of the node's children, or a function of the node's children
-and the node's own attributes.
+We can distinguish two types of attributes: synthesized attributes and inherited attributes.
 
-A \emph{synthesized} attribute is a property of a non-terminal that is computed
-based on the attributes of its possible derivations. For example, the type of an expression
+A \emph{synthesized} attribute is a property of a node that is computed
+based on the attributes of the subtree rooted at that node. For example, the type of an expression
 in a programming language may be a synthesized attribute computed based
 on the types of sub-expressions in the expression. For instance, if a variable is initialized
 with the expression ``3 + 4'', the variable type would be determined to
 be integer based on the types of the operands in the expression.
+
 We denote a synthesized attribute as follows:
 \begin{equation*}
   \Asyn{A}{x} = e
   \end{equation*}
 where \astnode{A} is the name of the node type.
 
-An \emph{inherited} attribute is a property of a non-terminal that is inherited from
-its parent element in the abstract syntax tree.
+For the sake of readability, we use the notation introduced by Fors et al. in~\cite{fors2020patterns},
+where attribute names are preceded by a symbol (e.g.,\textcolor{ATGsym}{\mSyn{}},\textcolor{ATGsym}{\mInh{}}) 
+that indicates the kind of the attribute (e.g., synthesized or inherited).
+We use the symbol \Abase{x} to denote the attribute name and the symbol $e$ to denote the attribute value,
+e.g., a constant, or a function of the node's children and/or the node's own attributes.
+
+An \emph{inherited} attribute is a property of a node that gets its value from
+its parent in the abstract syntax tree.
+An example of inherited attribute is the expected type of an expression.
+The expected type of an expression is inherited from the context in which the expression is used.
+For example, the expected type of an expression in a \code{if} statement has to be a boolean value.
+This information is inherited from the \code{if} statement node.
+
+
 An example of an inherited attribute is the scope of a variable in a programming
 language. The scope of a variable is the region of a program in which the variable
 is visible and can be accessed. The scope of a variable is inherited from the
@@ -463,13 +467,12 @@ but not outside of the function.
 
 Inherited attributes are defined in two parts: a declaration and an equation.
 \begin{equation*}
-\Ainh{A}{x} \quad\quad \quad\quad \Ainhdef{B}{*}{x} = e
+\Ainh{A}{x} \quad\quad \quad\quad \Ainhdef{B}{A}{x} = e
 \end{equation*}
 where \astnode{A} and \astnode{B} are node types.
 The first part of the equation declares the attribute \Ainh{A}{x} as inherited by \astnode{A},
 so every node of type \astnode{A}  can access it. The second part of the
-equation defines the attribute for each child of \astnode{B}. The wildcard \astnode{*}
-indicates that the attribute is defined and broadcasted to all children of \astnode{B} with type \astnode{A}.
+equation defines the attribute for each child \astnode{A} of \astnode{B}.
 
 \begin{figure}
     \begin{tikzpicture}[scale=0.7,edge from parent/.style={draw,-latex},sibling distance=8em,
