@@ -440,7 +440,7 @@ be integer based on the types of the operands in the expression.
 We denote a synthesized attribute as follows:
 \begin{equation*}
   \Asyn{A}{x} = e
-  \end{equation*}
+\end{equation*}
 where \astnode{A} is the name of the node type.
 
 For the sake of readability, we use the notation introduced by Fors et al. in~\cite{fors2020patterns},
@@ -455,15 +455,6 @@ An example of inherited attribute is the expected type of an expression.
 The expected type of an expression is inherited from the context in which the expression is used.
 For example, the expected type of an expression in a \code{if} statement has to be a boolean value.
 This information is inherited from the \code{if} statement node.
-
-
-An example of an inherited attribute is the scope of a variable in a programming
-language. The scope of a variable is the region of a program in which the variable
-is visible and can be accessed. The scope of a variable is inherited from the
-context in which it is declared. For example, if a variable is declared within a
-function, the variable will be visible and accessible within the body of the function
-but not outside of the function.
-
 
 Inherited attributes are defined in two parts: a declaration and an equation.
 \begin{equation*}
@@ -520,10 +511,11 @@ is defined by node \astnode{C} with value 5.
 Figure~\ref{fig:ragsExample} depicts the described example.
 
 
-The preceding example is a simple instance of an AGs and does not demonstrate all of its expressiveness.
-In a real-world scenario, the attribute grammar would be more complex. 
-For instance, subtyping and nodes with more than one child of the same type do not appear in this example
-but are essential to express, e.g., the semantics of a programming language.
+The previous example only presents a straightforward instance of Attribute Grammars 
+and does not display its full expressivness. In real-life scenarios, Attribute Grammars 
+tend to be more complex. Features, such as subtyping and nodes with multiple 
+children of the same type which play an important role in expressing the semantics of 
+a programming language.
 
 For example, in the following grammar:
     \begin{align*}
@@ -732,7 +724,7 @@ The abstract grammar is defined in a ``\code{.ast}'' file with the following syn
         B;
         C ::= B;
     \end{lstlisting}
-where each line defines a non-terminal, i.e., a node in the AST.
+where each line defines a node in the AST.
 The attributes are defined in a ``\code{.jrag}'' file with the following syntax:
     \begin{lstlisting}[language=JastAdd]
         syn int A.z() = getB().x() + 2;
