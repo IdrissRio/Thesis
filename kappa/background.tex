@@ -267,11 +267,11 @@ In fact, an interprocedural control-flow graph enables tracking of the flow of
 sensitive across multiple methods or functions, thereby allowing identification of points
 where the data may be exposed to unauthorized access or manipulation.
 
-We will demonstrate the application of dataflow analysis by presenting the following
+We will demonstrate an application of intraprocedural dataflow analysis by presenting the following
 practical example. Let us reconsider the \code{foo} method introduced in Figure~\ref{fig:cfgsourcelevel}.
 Our goal is to determine at each stage of the program whether the variable \code{x}
 has a \code{null} value or not\footnote{For simplicity, we assume that the language
-allows only assignments of the form \code{x = y} where \code{x} and \code{y} can
+allows only assignments of the form \code{x = y} where \code{y} can
 be either variables a numeric constants or the \code{null} literal.}.
  At the entry point of the method, i.e., Entry node,
 it is indeterminate whether \code{x} is \code{null} or not, as it has not been initialized yet.
