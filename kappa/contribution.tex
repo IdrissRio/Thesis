@@ -222,7 +222,6 @@ program analysis\footnote{\url{https://fileadmin.cs.lth.se/cs/Education/EDAP15/2
 TEAL aims to provide a language that allows students to
 focus on the challenges of performing program analysis on a real-world language
 without being overwhelmed by the details of a fully-featured language.
-The concrete and abstract syntax of TEAL-0 are shown in Figure~\ref{fig:tealGrammar}.
 % One of the key features of TEAL is that it is an object-oriented language,
 % which means that it allows the creation of classes and objects that can inherit
 % characteristics and behaviour from one another. However, it does not have a dynamic
@@ -231,10 +230,14 @@ The concrete and abstract syntax of TEAL-0 are shown in Figure~\ref{fig:tealGram
 TEAL is divided in layers, with each version building
 upon the features of the previous one. TEAL-0 is the most basic version and includes
 support for variable declarations and use, procedures, and basic control structures such as if
-and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2 allows users to
-define their types.
-For simplicity, we will use TEAL-0 to exemplify the use of RAGs
-and the main results summarized in this thesis.
+and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2
+introduces user-defined classes. 
+In this section,  we will use TEAL-0 to exemplify the use of RAGs
+and \textsc{IntraCFG}.
+The concrete and abstract grammar of TEAL-0 are shown in Figure~\ref{fig:tealGrammar}.
+The concrete grammar is used for parssing. The abstract grammar is given using
+\textsc{JastAdd} syntax, and will be used in examples throughout this section 
+to describe analyses in TEAL.
 \newsavebox{\mylistingbox}
 
 \begin{figure}[H]
@@ -309,11 +312,12 @@ and the main results summarized in this thesis.
     Program ::= Decl*;
 
     abstract Decl;
-    VarDecl : Decl ::= IdDecl [DeclaredType:Type] [Initializer:Expr];
-    FunDecl : Decl ::= IdDecl [DeclaredReturnType:Type] Formal:VarDecl* [Body:Stmt];
+    VarDecl : Decl ::= IdDecl [DeclTy:Type] [Initializer:Expr];
+    FunDecl : Decl ::= IdDecl [DeclRetTy:Type] Formal:VarDecl* [Body:Stmt];
 
     abstract Expr;
-    abstract BinExpr : Expr ::= Left:Expr Right:Expr;
+    abstract BinExpr : Expr ::= 
+          Left:Expr Right:Expr;
     AddExpr : BinExpr;
     SubExpr : BinExpr;
     MulExpr : BinExpr;
@@ -357,11 +361,16 @@ and the main results summarized in this thesis.
 \scalebox{0.75}{\usebox{\mylistingbox}}
 
         \end{minipage}
-\caption{\label{fig:tealGrammar} The concrete and part of the abstract grammar of the \textsc{Teal} language.}
+\caption{\label{fig:tealGrammar} The concrete parsing grammar and parts of the abstract \textsc{JastAdd} grammar of the Teal language. 
+ Color coding highlights declarations ({\bfseries\color{orange}orange}), expressions ({\bfseries\color{lightblue}blue}) and statements ({\bfseries\color{magenta}magenta}).}
 \end{figure}
 
-
-
+\textsc{IntraTeal} is our implementation of \textsc{IntraCFG} for the Teal language. 
+In line with the approach taken for the implementation of the control-flow analysis for \textsc{IntraJ} 
+and different versions of Java, we created separate aspects for the 
+control-flow analysis of Teal-0 and Teal-1.  The control-flow analysis is then 
+used to implement the \code{NullPointerException} analysis. The overall architecture of \textsc{IntraTeal} is
+shown in Figure~\ref{fig:IntraTeal}.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.65]{kappa/img/architectureteal.pdf}
@@ -380,38 +389,19 @@ students to apply the concepts they had learned in a practical setting and gain 
 deeper understanding of dataﬂow analysis.
 
 Another key aspect of \textsc{IntraTeal} and \textsc{IntraJ} implementations is that they
-construct enhanced control-sensitive CFGs, i.e., it understands that \texttt{if (x != null)\{x.f=1\}}, is safe. Control-sensitive CFGs
-are a more precise representation of the control flow of a program, as they take
-into account the specific control flow behaviour of a program. This is achieved by
-synthesizing two AST nodes, i.e., \astnode{ControlTrue} and \astnode{ControlFalse} for each
+construct enhanced control-sensitive CFGs, i.e., it understands that the following code, 
+dereferencing \code{x} inside the body of the if-statement, is safe:
+\begin{lstlisting}[language=JastAdd]
+if (x != null){
+  x.f = 1
+}
+\end{lstlisting}
+Control-sensitive CFGs are a more precise representation of the control flow of a program, as they take
+into account the different behavior when a branching condition is true or false. This is achieved by
+using HOAs to synthesise two AST nodes, i.e., \astnode{ControlTrue} and \astnode{ControlFalse}, for each
 comparison operator, e.g.,  ``$\le$'', ``$==$'', ``$!=$'', inside a conditional expression.
-These HOAs are used to represent the control flow of the program and the information that can be inferred from
-it. \\
-%
-\begin{minipage}{0.45\textwidth}
-    \begin{lstlisting}[language=JastAdd,caption={Control-sensitivity to improve null pointer analysis.}, label={lst:control-null}]
-if(x!=null){
-  //x is not null here
-}
-    \end{lstlisting}
-    \end{minipage}\hfill%
-    \begin{minipage}{0.45\textwidth}
-    \begin{lstlisting}[language=JastAdd,caption={Control-sensitivity to improve interval analysis.}, label={lst:control-interval}]
-if(x > 4 and x <= 6){
-    //x is [5,6] here
-}
-    \end{lstlisting}
-\end{minipage}\\
-The example in Listing~\ref{lst:control-null} shows how the \astnode{ControlTrue} and \astnode{ControlFalse}
-HOAs are used to keep track of the information that the object \texttt{x} is not null
-in the \emph{then} branch and null in the \emph{else} branch.
-This information is used to improve the precision of the analysis and provide
-more accurate results without affecting the performance of the analysis.
-
-We also asked students to use the \astnode{ControlTrue} and \astnode{ControlFalse}
-HOAs to improve the precision of the interval analysis. The example in
-Listing~\ref{lst:control-interval} shows how the \astnode{ControlTrue} and \astnode{ControlFalse}
-HOAs are used to keep track of the information that the object \texttt{x} is in the interval $[5,6]$.
+These HOAs are used to enhance the control flow of the program with the information that can be inferred from
+it. 
 \begin{figure}
 	\centering
 	\begin{tikzpicture}
@@ -429,29 +419,49 @@ fun foo(x) = {
 	\caption{\label{fig:ExampleTEAL} Example of control-sensitivity in \textsc{IntraTeal}.}
 \end{figure}
 \begin{lstlisting}[language=JastAdd,label={lst:ControlTrueEq}, caption={Transfer function for \astnode{ControlTrue} HOA.}]
-eq ControlTrue.nullnessTransfer(NullDomain lattice) {
-  NullDomain result = new NullDomain(lattice);
-  NullDomain assignment = getCond().getImplicitAssignment();
-  return result.join(assignment);
-}
+eq ControlTrue.nullnessTransfer(NullDomain lattice) = new NullDomain(lattice).join(getCond().getImplicitAssignment());
 \end{lstlisting}
 The example presented in Figure~\ref{fig:ExampleTEAL} along with the \textsc{JastAdd} code
-provided in Listing~\ref{lst:ControlTrueEq} illustrates how the precision of the
-analysis is enhanced by considering implicit assignments~\cite{spa} in the control flow of
+provided in Listing~\ref{lst:ControlTrueEq} illustrates how the nullness precision of the
+analysis is enhanced by considering implicit assignments (modelled as assertions in~\cite{spa}) in the control flow of
 the program. Specifically, the transfer function for the \astnode{ControlTrue} HOA
-takes into account that the object \texttt{x} is null when it is printed within
-the \emph{then} branch of the \texttt{if} statement.
+records the effect of the implicit assignment when the condition is true of the \astnode{IfStmt} node.
+In this case, the variable \texttt{x} is assigned the value \texttt{null} and the transfer function
+records this information in the \astnode{ControlTrue} HOA.
+
+\begin{minipage}{0.45\textwidth}
+  \begin{lstlisting}[language=JastAdd,caption={Control-sensitivity to improve null pointer analysis.}, label={lst:control-null}]
+if(x!=null){
+//x is not null here
+}
+  \end{lstlisting}
+  \end{minipage}\hfill%
+  \begin{minipage}{0.45\textwidth}
+  \begin{lstlisting}[language=JastAdd,caption={Control-sensitivity to improve interval analysis.}, label={lst:control-interval}]
+if(x > 4 and x <= 6){
+  //x is [5,6] here
+}
+  \end{lstlisting}
+\end{minipage}\\
+For the example in Listing~\ref{lst:control-null} the \astnode{ControlTrue} and \astnode{ControlFalse}
+HOAs are used to keep track of the information that the object \texttt{x} is not null
+in the \emph{then} branch and null in the \emph{else} branch.
+This information is used to improve the precision of the analysis and provide
+more accurate results without affecting the performance of the analysis.
+
+We also asked students to use the \astnode{ControlTrue} and \astnode{ControlFalse}
+HOAs to improve the precision of the interval analysis. Similarly to the previous example, in 
+Listing~\ref{lst:control-interval} the \astnode{ControlTrue} and \astnode{ControlFalse}
+are used to keep track of the information that the object \texttt{x} is in the interval $[5,6]$.
 
 
-The task assigned to the students, was to implement an \texttt{IndexOutOfBound} analysis on the interval domain.
+The task assigned to the students was to implement an \texttt{IndexOutOfBound} analysis on the interval domain.
 The interval domain, being an infinite domain, poses a significant challenge for
-dataflow analysis due to the inherent nature of infinite domains. In particular,
+dataflow analysis. In particular,
 the iterative nature of dataflow analysis algorithms, which rely on the computation
 of a sequence of approximations, may not terminate when applied to an infinite domain.
-This can result in an excessive consumption of computational resources and ultimately
-lead to a failure of the analysis. Additionally, the use of infinite domains can also
-lead to the presence of non-converging sequences, resulting in an analysis that does
-not converge to a stable solution. The example in Figure~\ref{fig:nonConverging}
+Even if the computation terminates, it can result in an excessive consumption of computational resources. 
+The example in Figure~\ref{fig:nonConverging}
 illustrates a non-converging program.
 \begin{figure}
 	\centering
@@ -472,7 +482,7 @@ fun foo(x) = {
   The {\color{red}red} path represents the non-converging evaluation sequence.
   The analysis keeps changing the value of the variable \code{x} without ever
   reaching a fix-point. The {\color{ForestGreen}green} path represents a
-  sequence convergin to a fix-point by using the widening operator.
+  sequence converging to a fix-point by using the widening operator.
   }
 \end{figure}
 
@@ -487,7 +497,7 @@ number of steps.
 This experience highlights the need for native support for widening and narrowing
 operators in \textsc{JastAdd}, to allow static analysis developers to effectively deal with
 infinite lattices. In the future, we plan to investigate the implementation of this
-feature in \textsc{JastAdd} to facilitate developers of static analysis tools.
+feature in \textsc{JastAdd} to facilitate the development of static analysis tools.
 
 
 \section{IDE Integration}
