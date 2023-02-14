@@ -13,7 +13,7 @@ and their implementation through the \textsc{JastAdd} metacompiler.
   \caption{\label{fig:dependencygraph}Dependency graph of the concepts discussed in this Section.}
 \end{figure}
 The dependency graph in Figure~\ref{fig:dependencygraph} shows the relationship between
-the concepts and the contribution of this thesis.
+the concepts and the contributions of this thesis.
 
 \subsection{Automatic Program Analysis: Positioning My Research Within the Field}
 Automatic Program Analysis is a branch of computer science that aims to automatically
@@ -32,23 +32,34 @@ all possible execution paths.
 In contrast, static analysis performs the analysis without executing the program,
 relying on information gathered from the source code. This approach has
 the advantage of being more exhaustive, as it can analyse the entire program,
-including infeasible execution paths. However, a limitation of static analysis is
-that it is prone to producing false positive results, since it cannot take into
-account the actual behaviour of the program at runtime.
+including infeasible execution paths. 
+One limitation of static analysis is that it can result in \emph{false positive} 
+and \emph{false negative} results. False positive results occur when the analysis 
+incorrectly reports a problem in the code, whereas false negative results occur 
+when the analysis fails to report an actual problem in the code. The \emph{soundness} and 
+\emph{completeness} of the analysis determine the accuracy of the results. Soundness refers 
+to the property that if the analysis reports a problem, then there is indeed a 
+problem in the code.
+Completeness refers to the property that if there is a problem 
+in the code, the analysis will eventually report it. In practice, it is often 
+difficult to achieve both soundness and completeness, which leads to the trade-off 
+between false positive and false negative results in static analysis.
 
 Static Analysis can be further divided into several categories, including \emph{Type}
-and \emph{Effect analyses}~\cite{nielson1999type}. Type Analysis aims to determine the type of variables and expressions
+and \emph{Effect analyses}~\cite{nielson1999type}. \todo{idriss: In NNH, they divide in Type and Effect only. I think we should stick to that. IMO dataflow is a combination of type and effect analysis.}
+Type Analysis aims to determine the type of variables and expressions
 in a program, which can be used to identify type mismatches, type errors, and improve
 code readability. Effect analysis focuses on the study of side effects that a program can
 produce, such as the mutation of data. This information can be used to identify
 potential bugs and improve program understandability.
 
-In the context of this thesis, we focus on intraprocedural control-flow and dataflow analysis, which
-involve analysing the flow of data within a single procedure in a program.
-This type of analysis is both a type and effect analysis, as it not only considers
-the types of data being operated on, but also the effects of operations on the
-flow of data within the procedure.
-We do this using Monotone Frameworks, a mathematical framework that provides a
+In the context of this thesis, we focus on intraprocedural control-flow and dataflow analysis.
+Intraprocedural control-flow analysis focuses on determining the order in which 
+statements and expressions within a single method in a program will be executed, 
+without considering any function or method calls that may occur.
+Intraprocedural dataflow analysis uses the control-flow information to 
+determine properties on the flow of data within a single method.
+Our implementations are instances of the Monotone Framework, a mathematical framework that provides a
 foundation for dataflow analysis. In the future, we aim to improve the precision of the analysis
 by considering the implementation of interprocedural analysis, which involves
 analysing the flow of data across multiple procedures in a program.
@@ -62,8 +73,13 @@ balance between precision and performance is crucial in achieving effective and
 efficient dataflow analysis results.
 
 In the context of our research, we have chosen to compute control-sensitive and
-exception-sensitive control-flow analyses. This approach
-simplifies the specification of dataflow analyses which are built upon the
+exception-sensitive control-flow analyses.
+Control-sensitivity refers to the ability of the analysis to distinguish between
+true and false branches of conditional statements, such as if-statements, and 
+taking into account the implicit side effects of the conditional expressions.
+Exception-sensitivity refers to the ability of the analysis to distinguish between
+the normal and exceptional execution paths of a program.
+This approach simplifies the specification of dataflow analyses which are built upon the
 control-flow analysis.
 
 In terms of implementation strategies, there are various approaches that can be
@@ -101,7 +117,7 @@ The construction of the CFG at the source level presents several advantages. One
 main benefits is the ability to map the analysis results directly back to the source code
 and present it to the user in the context of the original program. On the other hand,
 if the CFG is constructed at the IR level, there would be a complex translation step
-required to find the corresponding source level constructs, and in some cases it would
+required to find the corresponding source level constructs. In some cases it would
 not even be possible due to the loss of information during the translation process, e.g.,
 \code{source-file retention} policy for Java annotations.
 For this reason, constructing the CFG at the source level is particularly useful for
@@ -123,10 +139,10 @@ of languages with different syntax and semantics, making it challenging to
 design a single analysis that works across all languages.
 
 The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the source-level and bytecode control-flow
-graphs of the simple method \texttt{foo}. To simplify dataflow analyses, it is
+graphs of a simple method \texttt{foo}. To simplify dataflow analyses, it is
 a common practice to add two additional nodes to the CFG, the \emph{Entry}
 and \emph{Exit} nodes. These nodes represent the unique entry and exit points of the method, respectively.
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
 \begin{tabular}{l r}
   \begin{lstlisting}[language=JastAdd]
@@ -154,11 +170,11 @@ void foo(){
       \draw [->] (else) -- (end);
   \end{tikzpicture}
   \end{tabular}
-  \caption{\label{fig:cfgsourcelevel}Source level control-flow graph of the \texttt{foo} method, showing the branching behaviour of the if statement.}
+  \caption{\label{fig:cfgsourcelevel}Source level control-flow graph of the \texttt{foo} method, showing the branching behaviour of the \code{if}-statement.}
 \end{figure}
 
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
 \begin{tabular}{l r}
 
@@ -263,8 +279,8 @@ data-flow analysis to identify potential bugs in Java code.
 % I looked here how they cited pmd, findbugs and spotbugs. https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8103456
 Dataflow analysis, particularly interprocedural dataflow analysis, is widely
 used to identify potential security vulnerabilities in software~\cite{flowDroid}. 
-In fact, an interprocedural control-flow graph enables tracking of the flow of 
-sensitive across multiple methods or functions, thereby allowing identification of points
+In fact, an interprocedural control-flow graph enables tracking of the flow
+across multiple methods or functions, thereby allowing identification of points
 where the data may be exposed to unauthorized access or manipulation.
 
 We will demonstrate an application of intraprocedural dataflow analysis by presenting the following
@@ -273,7 +289,8 @@ Our goal is to determine at each stage of the program whether the variable \code
 has a \code{null} value or not\footnote{For simplicity, we assume that the language
 allows only assignments of the form \code{x = y} where \code{y} can
 be either variables a numeric constants or the \code{null} literal.}.
- At the entry point of the method, i.e., Entry node,
+
+At the entry point of the method, i.e., Entry node,
 it is indeterminate whether \code{x} is \code{null} or not, as it has not been initialized yet.
 However, at the declaration of the variable \code{x}, we can determine that it is
 not \code{null} because it is initialised to a non-\code{null}
@@ -287,7 +304,7 @@ This information can be used to identify potential bugs in the program, such as
 We keep track of the value of \code{x} by mapping it to a finite set of possible values:
 \code{null}, \code{notnull}, \code{maybenull}, or \code{undefined}.
 As we traverse the control-flow graph, we propagate this information from node
-$n$ to node $n'$ if $(n,n')\in E$, until it reaches the exit node.
+$n$ to node $n'$ if $(n,n')\in E$, until it reaches the Exit node.
 
 The information is updated at each node $n$ according to the following rules:
 \begin{itemize}
@@ -309,6 +326,7 @@ This approach provides a flexible and generic framework for expressing and solvi
 dataflow equations, which can be used to reason about a wide range of dataflow
 properties, such as live variables, reaching definitions and available expressions analyses.
 Monotone frameworks are built on the concept of lattice~\cite{Donnellan1968}.
+
 A lattice is a partially ordered set in which any two elements have a unique least
 upper bound (also known as a join or a supremum) and a unique greatest lower bound
 (also known as a meet or an infimum). This means that, for any elements $a$ and $b$ in
@@ -321,8 +339,8 @@ the properties that for any element $x$ in the lattice, $\bot \leq x$ and $x \le
 In dataflow analysis, lattices are widely used to represent the information flow in a program.
 A common example of a lattice used in dataflow analysis is the \emph{binary lattice} with
 elements \emph{true} and \emph{false}, which is used to represent the presence or absence of
-of a property. Another example is the \emph{interval lattice}, which is used
-to represent ranges of number. This lattice, compared to the binary lattice, is more
+a property. Another example is the \emph{interval lattice}, which is used
+to represent ranges of numbers. This lattice, compared to the binary lattice, is more
 complex but provides more precise information about the flow of numerical values
 in a program. Additionally, while the binary lattice is \emph{finite}, the interval lattice can
 be potentially \emph{infinite}.
@@ -356,7 +374,7 @@ union. For instance, if node $n$ has information \code{null} and node $n'$ has
 information \code{notnull}, then the information at the merged node $n \bigsqcup n'$
 becomes \code{maybenull}.
 In the previous section, we explained how a node affects the flow of data
-using plain language. Now, we will present this concept in a formal manner
+using natural language. Now, we will present this concept in a formal manner
 as a transfer function. Let \textit{Var} be the set of variables in the program, we define
 the monotone transfer function $f_{\textit{NULL}}: (\textit{Var} \rightarrow \mathcal{L}) \times V \rightarrow (\textit{Var} \rightarrow \mathcal{L})$
 as follows:
@@ -377,26 +395,31 @@ as follows:
 \]
 
 
-To propagate information from node $n$ to its succeeding nodes and to represent the
-effect of traversing a node, we define the following two equations:
+To propagate information from node $n$ to its succeeding nodes (in the CFG) and to represent the
+effect of passing through a node, we define the following two equations:
 \begin{align*}
   \text{in}(n) &= \begin{cases} \{ v \rightarrow \bot \mid \forall v \in $\textit{Var}$ \} & $if $ n $ is Entry$ \\ \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p) & $otherwise$ \end{cases} \\
   \text{out}(n) &= f_{\mathit{NULL}}(\text{in}(n),n)
 \end{align*}
-where $\text{pred}(n) = \{ p \mid (p,n)\in E\}$.
+where $\text{pred}(n)$ is the set of predecessor of the node $n$, i.e., $\text{pred}(n) = \{ p \mid (p,n)\in E\}$.
 We have defined the $in$ and the $out$ sets to model the information that is available
 before and after passing through a node, respectively. The $in$ set gathers the available
 information before entering the node, while the $out$ set captures the effect
 of applying the transfer function $f_{\textit{NULL}}$ on the $in$ set.
+This kind of analysis is called a \emph{forward analysis} because it propagates information
+from the entry node to the exit node.
 
 These equations can be adapted to perform backward analyses, i.e., analyses that
 propagate information from the exit node to the entry node.
 Given a monotonic transfer function $f$ and a finite lattice $\mathcal{L}$, the equations for
-a backward analysis are defined as follow:
+a backward analysis is defined as follow:
 \begin{align*}
   \text{out}(n) &= \bigsqcup\limits_{s \in \text{succ}(n)} \text{in}(s) \\
   \text{in}(n) &= f(\text{out}(n),n)
 \end{align*}
+where $\text{succ}(n)$ is the set of successors of the node $n$, i.e., $\text{succ}(n) = \{ s \mid (n,s)\in E\}$.
+The boundary condition for the $\text{out}$ set when $n$ is the Exit node differs depending on the
+analysis. 
 
 The equations for both forward and backward analyses define a mutual dependency
 between the $in$ and $out$ sets of a node.
@@ -648,7 +671,7 @@ syn boolean Type.compatibleType(Type t) = this == this;
     attributed and used in the definition of other attributes. In \textsc{JastAdd}, HOAs
     are defined using the \code{nta} keyword. HOAs are widely used to reify information
     that is not explicit in the source code and, therefore, not present in the AST.
-    For example, we use HOAs to reify a method's entry and exit points. In CFGs, it
+    For example, we use HOAs to reify a method's entry and exit point. In CFGs, it
     is common to have a unique entry point and exit point for each method.
     \begin{lstlisting}[language=JastAdd]
 syn nta Entry FunDecl.entry() = new Entry();
