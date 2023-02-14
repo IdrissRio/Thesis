@@ -5,6 +5,8 @@ in recent years, with various frameworks being proposed to aid in the constructi
 of precise intraprocedural CFGs~\cite{smits2020flowspec,10.1016/j.scico.2012.02.002}.
 We contribute to the state-of-the-art by introducing \textsc{IntraCFG}, a declarative, RAG-based,
 and language-independent framework for constructing precise intraprocedural CFGs.
+In this section we give an overview of \textsc{IntraCFG}, and more details are available
+in Paper~\ref{paper:intraj}.
 
 Unlike most other frameworks, which build CFGs on the IR level,
 e.g.,  bytecode, \textsc{IntraCFG}'s approach superimposes the CFGs
@@ -15,23 +17,38 @@ Diffrently from the existing RAG-based framework~\cite{10.1016/j.scico.2012.02.0
 \textsc{IntraCFG} enables the construction of \textsc{AST-Unrestricted} CFGs,
 which are CFGs whose shape is not restricted to the AST structure.
 \subsection{Overall Architecture}
-The overall architecture of our proposed framework, \textsc{IntraCFG}, is shown in Figure~\ref{fig:intraCFG}.
-The framework provides the skeleton and default behaviour for constructing CFGs,
+The overall architecture of how to use our proposed framework, \textsc{IntraCFG}, is shown in Figure~\ref{fig:intraCFG}.
+\textsc{IntraCFG} provides the skeleton and default behaviour for constructing CFGs,
 which can be instantiated for specific languages\footnote{\textbf{\texttt{IntraX}} in the diagram.}, e.g., Java or Teal.
+The \emph{Control-flow analysis} (CFA) module is specifically tailored for a particular 
+programming language and implements the interfaces defined in \textsc{IntraCFG}.
+This module is responsible for constructing the CFG for the program. 
+Once the CFA module has generated the CFG, 
+other client analyses can added, for example, different dataflow analyses.
+The compiler module plays a crucial role as it defines the AST nodes
+on which the CFA module heavily relies. The compiler also provides access to 
+several APIs that can be used by the CFA module and client analyses, such as 
+the type of a variable or the constant value of an expression, to perform 
+advanced optimizations.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{kappa/img/architecture.pdf}
-    \caption{\label{fig:intraCFG} Overall architecture of \textsc{IntraCFG} and its ecosystem.}
+    \caption{\label{fig:intraCFG} Overall architecture of instantiating \textsc{IntraCFG} for a language \textbf{X}.}
 \end{figure}
 
-The framework consists of several key components, including interfaces
-(e.g., \astnode{CFGRoot}, \astnode{CFGSupport}, and \astnode{CFGNode}), attribute equations that define the
+\textsc{IntraCFG} consists of several key components, including interfaces, attribute equations that define the
 default behaviour, and APIs. The interfaces provide the structure for the
 CFG, and the attribute equations define the default behaviour for the CFG
-construction. Language specific AST nodes implement the different interfaces
-according to the precision desired for the CFG.
-The framework exposes the CFG to client analyses through APIs, which can query 
-the CFG for information, such as the entry and exit nodes, or traverse the CFG.
+construction. 
+In the language dependent control-flow module, implementations of the \textsc{IntraCFG}
+interfaces are added to the AST types of the language. This can be done according to the
+precision desired for the CFG.
+% Language specific AST nodes implement the different interfaces
+% according to the precision desired for the CFG.
+
+\textsc{IntraCFG} has APIs in the form of attributes, allowing clients to access entry
+and exit nodes and to traverse the CFG.
 The language-independent nature of \textsc{IntraCFG} allows for easy integration
 with various programming languages and enables the construction of precise CFGs
 for those languages. The use of attribute equations and interfaces also allows
@@ -55,7 +72,7 @@ We built \textsc{IntraJ} upon the \textsc{ExtendJ} extensible Java compiler~\cit
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.52]{kappa/img/architecturejava.pdf}
-    \caption{\label{fig:intraJ} Overall architecture of \textsc{IntraCFG} instantiated for the Java language.}
+    \caption{\label{fig:intraJ} Overall architecture of instansiating \textsc{IntraCFG} for the Java language.}
 \end{figure}
 
 %Discussing modularity
