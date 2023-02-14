@@ -389,14 +389,14 @@ students to apply the concepts they had learned in a practical setting and gain 
 deeper understanding of dataﬂow analysis.
 
 Another key aspect of \textsc{IntraTeal} and \textsc{IntraJ} implementations is that they
-construct enhanced control-sensitive CFGs, i.e., it understands that the following code, 
+construct enhanced control sensitive CFGs, i.e., it understands that the following code, 
 dereferencing \code{x} inside the body of the if-statement, is safe:
 \begin{lstlisting}[language=JastAdd]
 if (x != null){
   x.f = 1
 }
 \end{lstlisting}
-Control-sensitive CFGs are a more precise representation of the control flow of a program, as they take
+Control sensitive CFGs are a more precise representation of the control flow of a program, as they take
 into account the different behavior when a branching condition is true or false. This is achieved by
 using HOAs to synthesise two AST nodes, i.e., \astnode{ControlTrue} and \astnode{ControlFalse}, for each
 comparison operator, e.g.,  ``$\le$'', ``$==$'', ``$!=$'', inside a conditional expression.
@@ -416,28 +416,31 @@ fun foo(x) = {
 			\end{lstlisting}
 		};
 	\end{tikzpicture}
-	\caption{\label{fig:ExampleTEAL} Example of control-sensitivity in \textsc{IntraTeal}.}
+	\caption{\label{fig:ExampleTEAL} Example of control sensitivity in \textsc{IntraTeal}.}
 \end{figure}
 \begin{lstlisting}[language=JastAdd,label={lst:ControlTrueEq}, caption={Transfer function for \astnode{ControlTrue} HOA.}]
 eq ControlTrue.nullnessTransfer(NullDomain lattice) = new NullDomain(lattice).join(getCond().getImplicitAssignment());
 \end{lstlisting}
-The example presented in Figure~\ref{fig:ExampleTEAL} along with the \textsc{JastAdd} code
-provided in Listing~\ref{lst:ControlTrueEq} illustrates how the nullness precision of the
-analysis is enhanced by considering implicit assignments (modelled as assertions in~\cite{spa}) in the control flow of
-the program. Specifically, the transfer function for the \astnode{ControlTrue} HOA
-records the effect of the implicit assignment when the condition is true of the \astnode{IfStmt} node.
-In this case, the variable \texttt{x} is assigned the value \texttt{null} and the transfer function
-records this information in the \astnode{ControlTrue} HOA.
+Figure~\ref{fig:ExampleTEAL} shows \textsc{IntraTeal}'s control sensitive CFG for a simple 
+program with an if-statement. The \astnode{ControlTrue} and \astnode{ControlFalse} HOAs are
+used to distinguish the execution path when the condition in the if-statement evaluates to 
+true or false, respectively. The \code{NullPointerException} analysis can benefit from this more refined CFG.
+In Listing~\ref{lst:ControlTrueEq}, we show how this enhanced CFG is used to improve the precision of the analysis.
+The Listing shows the equation for the transfer function of the \astnode{ControlTrue} HOA.
+Specifically, the transfer function for the \astnode{ControlTrue} HOA
+records the effect of the implicit assignment\footnote{Modelled as assertions in~\cite{spa}} when the condition of the \astnode{IfStmt} evaluates to true.
+In this case, the variable \texttt{x} is assigned the value \texttt{null} and the \astnode{ControlTrue}'s transfer function
+records this information.
 
 \begin{minipage}{0.45\textwidth}
-  \begin{lstlisting}[language=JastAdd,caption={Control-sensitivity to improve null pointer analysis.}, label={lst:control-null}]
+  \begin{lstlisting}[language=JastAdd,caption={Control sensitivity to improve null pointer analysis.}, label={lst:control-null}]
 if(x!=null){
 //x is not null here
 }
   \end{lstlisting}
   \end{minipage}\hfill%
   \begin{minipage}{0.45\textwidth}
-  \begin{lstlisting}[language=JastAdd,caption={Control-sensitivity to improve interval analysis.}, label={lst:control-interval}]
+  \begin{lstlisting}[language=JastAdd,caption={Control sensitivity to improve interval analysis.}, label={lst:control-interval}]
 if(x > 4 and x <= 6){
   //x is [5,6] here
 }
@@ -514,7 +517,7 @@ framework has gained attention from the \textsc{MagpieBridge} maintainer and res
 to present at the \textsc{PRIDE}\footnote{\textbf{P}ractical \textbf{R}esearch \textbf{IDE}s.} workshop, held in conjunction with \textsc{ECOOP 2022}, with the
 title \emph{``Source-Level Dataflow-Based Fixes: Experiences From Using \textsc{IntraJ} and \textsc{MagpieBridge}''}.
 
-This integration process and evaluation are not covered in any of the paper included in this thesis.
+This integration process and evaluation are not covered in any of the papers included in this thesis.
 However, it was developed as an application of the research and methods previously
 described in these papers, and was carried out subsequently.
 
@@ -537,7 +540,7 @@ abstraction layer between the IDE and the static analysis tool, simplifying the
 integration process and allowing for the development of IDE plug-ins with minimal effort.
 \textsc{MagpieBridge} provides an abstraction layer between the IDE and the static
 analysis tool allowing the display of warnings, quick-fixes, and explanations
-for bugs within the IDE, providing developers with a immediate and convenient way to
+for bugs within the IDE, providing developers with an immediate and convenient way to
 access and interact with analysis results, while also facilitating communication
 between the static analysis tool and the IDE. Additionally, the framework allows
 for the display of web pages within the IDE, providing developers with a new level
@@ -555,7 +558,11 @@ to the developer.
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.92\textwidth]{kappa/img/IDEExample.pdf}
-  \caption{\label{fig:IDEExample} Bug detection and quick-fix in \textsc{Visual Studio Code} using \textsc{IntraJ}.}
+  \caption{\label{fig:IDEExample} Bug detection and quick-fix in \textsc{Visual Studio Code} using \textsc{IntraJ}.
+  1. The \texttt{NullPointerException} is detected by \textsc{IntraJ} (squiggly line under \code{x}) with a quick-fix available (\includegraphics[height=8pt]{kappa/img/bulb.png}).
+  2. The user can hover over the warning to see an explanation of the issue.
+  3. The user can click on the quick-fix icon (\includegraphics[height=8pt]{kappa/img/bulb.png}) to apply the fix.
+  }
 \end{figure}
 To enable a better user experience, we extended the functionality of the existing analysis.
 Specifically, we enhanced the \texttt{NullPointerException} analysis to not only detect issues
@@ -569,12 +576,12 @@ The ``\includegraphics[height=8pt]{kappa/img/bulb.png}''  icon indicates that an
 which can be applied by clicking on the icon.
 
 \subsubsection{Visualisation via \textsc{CodeProber}}
-In this Section, we will give an overview of the integration of \textsc{IntraJ} and \textsc{IntraTeal}
+In this Section, we will give an overview of the integration of \textsc{IntraTeal}
 with \textsc{CodeProber}, a tool for visualizing and
 exploring the results of compilers and static analysers. \textsc{CodeProber}
 allows developers to interact with the results of the analysis in a visual and intuitive
 manner. It enables real-time interaction with the AST node's attributes and the source code,
-enabling analyses developers to explore results and partial results, making
+enabling analysis developers to explore results and partial results, making
 debugging and troubleshooting more efficient with respect the traditional debugging
 approaches. As a browser-based tool that is not restricted to the Language Server Protocol,
 \textsc{CodeProber} enables the visualisation of analysis results in different
@@ -602,10 +609,11 @@ observe their progress and the outcomes of their analysis within a realistic IDE
 \label{sec:JFeature}
 \textsc{JFeature} is a RAG-based static analysis tool for the Java programming language that extracts
 syntactic and semantic features from Java programs. The tool is designed to assist
-researcher and developers in selecting appropriate software corpora to better evaluate the robustness
+researchers and developers in selecting appropriate software corpora to better evaluate the robustness
 and performance of software tools, such as static analysers.
 \textsc{JFeature} is implemented as an extension of the \textsc{ExtendJ} Java compiler. It is declarative
-and extensible, allowing for the easy addition of new queries.
+and extensible, allowing for the easy addition of new queries. In this Section, 
+we give an overview of this work, and more details are available in Paper~\ref{paper:JFeature}.
 
 The need for \textsc{JFeature} arose during the evaluation of \textsc{IntraJ}.
 While analysing Java projects from the \textsc{DaCapo Benchmark suite}~\cite{DaCapo:paper} corpus to evaluate the precision
@@ -616,7 +624,7 @@ representation of Java 8 projects.
 
 To address this problem, we developed \textsc{JFeature}, a tool that extracts features from
 Java programs categorised by the Java version they were introduced in.
-The goal of \textsc{JFeature} is to provide insight and a comprehensive overview of
+The goal of \textsc{JFeature} is to provide insight and an overview of
 the composition of a Java project or corpus, specifically in terms of the different
 Java features categorized by the Java version in use.
 \textsc{JFeature} comes with twenty-six predefined queries and can be easily extended
@@ -630,8 +638,8 @@ In Figure~\ref{fig:JFeature}, we show the architecture of \textsc{JFeature}.
   \caption{\label{fig:JFeature} \textsc{JFeature} architecture.}
 \end{figure}
 
-We conduced a case study, applying \textsc{JFeature} to four widely used corpora in the
-program analysis area: the \textsc{Da Capo Benchmark suite}, \textsc{Defects4J}~\cite{just2014defects4j},
+We conducted a case study, applying \textsc{JFeature} to four widely used corpora in the
+program analysis area: the \textsc{Da Capo Benchmark suite}~\cite{DaCapo:paper}, \textsc{Defects4J}~\cite{just2014defects4j},
 \textsc{Qualitas Corpus}~\cite{QualitasCorpus:APSEC:2010}, and \textsc{XCorpus}~\cite{dietrich2017xcorpus}.
 The results showed that Java 1-5 features were predominant among the corpora,
 suggesting that some of the corpora may be less suited for the evaluation of
