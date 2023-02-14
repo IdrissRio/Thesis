@@ -99,7 +99,7 @@ all the bugs or vulnerabilities in a program~\cite{livshits2015defense}.
 \subsection{Control-flow analysis}
 Control-flow analysis refers to the computation of
  the execution and evaluation order of the program's statements and expressions.
-Each possible evaluation order of a program is called a control-flow path.
+Each possible execution order of a program is called a control-flow path.
 The result of the control-flow analysis is a control-flow graph (CFG) $G=(V,E)$.
 Each vertex $v \in V$ represents a unit of execution, e.g., a single statement or expression,
 or a basic block (a sequence of statements without labels and jumps).
@@ -134,14 +134,28 @@ However, there are also some disadvantages to constructing the CFG on the source
 One of the main limitations is that it can be more difficult to accurately capture the
 control-flow of a program since the source code may contain unsugared constructs,
 such as macros and preprocessor directives, that
-can complicate the analysis specification. In addition, the source code may be written in a variety
+can complicate the analysis specification.
+In comparison to the engineering effort required by the IR approach, the source-level 
+approach presents complex implementation challenges. Despite the advantage 
+of IRs being generally smaller than the source language, thus reducing the number 
+of constructs to be handled in constructing the CFG and potentially reducing 
+the size or complexity of the analysis code, the source-level approach requires 
+a higher level of complexity in its implementation.
+In addition, the source code may be written in a variety
 of languages with different syntax and semantics, making it challenging to
 design a single analysis that works across all languages.
 
 The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the source-level and bytecode control-flow
-graphs of a simple method \texttt{foo}. To simplify dataflow analyses, it is
-a common practice to add two additional nodes to the CFG, the \emph{Entry}
-and \emph{Exit} nodes. These nodes represent the unique entry and exit points of the method, respectively.
+graphs of a simple method \texttt{foo}. 
+Adding \emph{Entry} and \emph{Exit} nodes to a CFG is a common practice to 
+simplify the implementation of dataflow analyses.
+These nodes represent the unique entry and exit points of the method, respectively.
+The Entry node serves as a starting point for the 
+analysis, allowing for a proper initialisation of the parameters.
+The Exit node is particularly useful in backward dataflow analyses (see Section~\ref{sec:dataflowanalysis}), as it is used 
+as unique starting point for the analysis.
+the starting point for the analysis.
+
 \begin{figure}[H]
   \centering
 \begin{tabular}{l r}
@@ -160,7 +174,7 @@ void foo(){
       \node (assign) [rectangle, below of=start] {\texttt{x = 0}};
       \node (if) [rectangle, below of=assign] {\texttt{if (x > 0)}};
       \node (then) [rectangle, below of=if] {\texttt{x = 1}};
-      \node (else) [rectangle, right of=then] {\texttt{x = null}};
+      \node (else) [rectangle, right = 0.3cm of then] {\texttt{x = null}};
       \node (end) [rectangle, below of=else] {\texttt{Exit}};
       \draw [->] (start) -- (assign);
         \draw [->] (assign) -- (if);
@@ -260,7 +274,7 @@ void foo(){
 \subsection{Dataflow Analysis}%
 \label{sec:dataflowanalysis}
 Dataflow analysis is a technique used in computer science to analyse the flow of
-data through a program. It has its roots in the field of program optimisation,
+data through a program. It has its roots in the field of program optimisation~\cite{kildall1973dataflow},
 where it was initially used to identify opportunities for improving the performance
 of programs by tracking variable definitions and uses. This information can be used to optimise the program by eliminating
 unnecessary computations (e.g., Very Busy Expression or Available Expression
@@ -286,9 +300,11 @@ where the data may be exposed to unauthorized access or manipulation.
 We will demonstrate an application of intraprocedural dataflow analysis by presenting the following
 practical example. Let us reconsider the \code{foo} method introduced in Figure~\ref{fig:cfgsourcelevel}.
 Our goal is to determine at each stage of the program whether the variable \code{x}
-has a \code{null} value or not\footnote{For simplicity, we assume that the language
+has a \code{null} value or not\footnote{For simplicity, just for this example, we assume that the language
 allows only assignments of the form \code{x = y} where \code{y} can
-be either variables a numeric constants or the \code{null} literal.}.
+be either a  variables, a numeric constants or the \code{null} literal. We also assume 
+that CFG nodes are individual assignments.
+}.
 
 At the entry point of the method, i.e., Entry node,
 it is indeterminate whether \code{x} is \code{null} or not, as it has not been initialized yet.
@@ -296,23 +312,27 @@ However, at the declaration of the variable \code{x}, we can determine that it i
 not \code{null} because it is initialised to a non-\code{null}
 value. Then, if the condition \code{if(x > 0)} is \code{true}, the
 variable \code{x} is assigned a new value, which is not \code{null}. If the condition
-is \code{false}, the variable \code{x} is assigned to \code{null}. Therefore, at the
+is \code{false}, the variable \code{x} is assigned \code{null}. Therefore, at the
 end of the method, the variable \code{x} may be either \code{null} or not \code{null}.
-This information can be used to identify potential bugs in the program, such as
-\code{NullPointerException}.
+Consider the scenario where \code{x} is used dereferenced immediately after the 
+if-else statement. The program may crash if \code{x} is \code{null}. This is a potential
+bug in the program. 
+
+This information can be used to identify potential bugs in the program, such as,
+unexpected \code{NullPointerException} exceptions.
 
 We keep track of the value of \code{x} by mapping it to a finite set of possible values:
-\code{null}, \code{notnull}, \code{maybenull}, or \code{undefined}.
+\code{null}, \code{notnull}, \code{maybenull}, or \code{unknown}.
 As we traverse the control-flow graph, we propagate this information from node
 $n$ to node $n'$ if $(n,n')\in E$, until it reaches the Exit node.
 
 The information is updated at each node $n$ according to the following rules:
 \begin{itemize}
 \item If $n$ is an assignment node, the information is updated according to the
-assignment operation. For example, if the assignment is \code{x = null}, then the
+assignment operation. For example, if the assignment is \code{x = null}, then
 it is recorded that \code{x} is updated to \code{null}. If the assignment is \code{x = y}, then
 \code{x} is mapped to the value \code{y} maps to.
-\item If $n$ is a conditional, an Entry or an Exit node, no update is performed.
+\item If $n$ is not an assignment node, no information is updated.
 \end{itemize}
 
 The dataflow analysis just described is an instance of the mathematical concept of
@@ -325,15 +345,15 @@ about program dataflow properties.
 This approach provides a flexible and generic framework for expressing and solving
 dataflow equations, which can be used to reason about a wide range of dataflow
 properties, such as live variables, reaching definitions and available expressions analyses.
-Monotone frameworks are built on the concept of lattice~\cite{Donnellan1968}.
+Monotone frameworks are built on the concept of lattices~\cite{Donnellan1968}.
 
-A lattice is a partially ordered set in which any two elements have a unique least
+A lattice $\mathcal{L} = (S, \leq)$ is a partially ordered set in which any two elements have a unique least
 upper bound (also known as a join or a supremum) and a unique greatest lower bound
 (also known as a meet or an infimum). This means that, for any elements $a$ and $b$ in
-the lattice, there exists a unique element denoted as  $a \vee b$  (or  $a \cup b$)
-such that  $a \leq a \vee b$  and  $ b \leq a \vee b$, and  $a \wedge b$
-(or  $ a\cap b$) such that  $ a\wedge b\leq a$  and  $a \wedge b\leq b$.
-A well-formed lattice has a unique least element, commonly denoted as $\bot$,
+$S$, there exists a unique element denoted as  $a \sqcup b$  (or  $a \vee b$)
+such that  $a \leq a \sqcup b$  and  $ b \leq a \sqcup b$, and  $a \sqcap b$
+(or  $ a\wedge b$) such that  $ a\sqcap b\leq a$  and  $a \sqcap b\leq b$.
+A complete lattice has a unique least element, commonly denoted as $\bot$,
 and a unique greatest element commonly denoted as $\top$. These elements satisfy
 the properties that for any element $x$ in the lattice, $\bot \leq x$ and $x \leq \top$.
 In dataflow analysis, lattices are widely used to represent the information flow in a program.
@@ -342,7 +362,7 @@ elements \emph{true} and \emph{false}, which is used to represent the presence o
 a property. Another example is the \emph{interval lattice}, which is used
 to represent ranges of numbers. This lattice, compared to the binary lattice, is more
 complex but provides more precise information about the flow of numerical values
-in a program. Additionally, while the binary lattice is \emph{finite}, the interval lattice can
+in a program. Additionally, while the binary lattice is \emph{finite} height, the interval lattice can
 be potentially \emph{infinite}.
 \begin{wrapfigure}{r}{0.5\textwidth}
      \begin{center}
@@ -350,34 +370,41 @@ be potentially \emph{infinite}.
       \node (top) at (0,1) {\code{maybenull}};
       \node (null) at (-1,0) {\code{null}};
       \node (notnull) at (1,0) {\code{notnull}};
-      \node (bot) at (0,-1) {\code{undefined}};
+      \node (bot) at (0,-1) {\code{unknown}};
       \draw (bot) -- (null) -- (top) -- (notnull) -- (bot);
     \end{tikzpicture}
-    \caption{\label{fig:lattice}Diagram of the lattice used in the example in Section~\ref{sec:dataflowanalysis}.
-    In this case, \code{maybenull} $= \top$ and \code{undefined}$= \bot$.}
+    \caption{\label{fig:lattice}Diagram of the partial order in the example in 
+    Section~\ref{sec:dataflowanalysis}, showing the order relation between \code{maybenull} 
+    ($\top$), \code{unknown} ($\bot$), \code{null}, and \code{notnull}.}
   \end{center}
 \end{wrapfigure}
 
 
-Monotone frameworks include a join operator $\bigsqcup$\footnote{
-  For analyses over sets, the join operator can be $\bigcup$ or $\bigcap$.
-}, a monotone transfer function $f$,
-and a finite lattice $\mathcal{L}$.
+Monotone frameworks include a join operator $\sqcup$, a monotone transfer function $f$,
+and a finite height lattice $\mathcal{L}$. 
+A monotone transfer function is a mathematical function that maps an element of a
+partially ordered set to another element in the same set such that the partial 
+ordering is preserved under the function. More formally, if $(S, \leq)$ is a 
+partially ordered set and $f: S \rightarrow S$ is a function, $f$ is called a 
+monotone transfer function iff, for all $x, y \in S$ such that $x \leq y$, it follows 
+that $f(x) \leq f(y)$.
 
 In our example, the lattice $\mathcal{L}$ is the set of possible values of the variable \code{x}.
 This lattice is shown in Figure~\ref{fig:lattice}. Here \code{maybenull} is
 the greatest element in the lattice, as it represents the set of all possible values
 that a variable can take. On the other hand, \code{undefined} is the least element
 representing the absence of information.
-The join operator $\bigsqcup$ merges the information of two nodes by taking their
+The join operator $\sqcup$ merges the information of two nodes by taking their
 union. For instance, if node $n$ has information \code{null} and node $n'$ has
 information \code{notnull}, then the information at the merged node $n \bigsqcup n'$
 becomes \code{maybenull}.
 In the previous section, we explained how a node affects the flow of data
 using natural language. Now, we will present this concept in a formal manner
-as a transfer function. Let \textit{Var} be the set of variables in the program, we define
-the monotone transfer function $f_{\textit{NULL}}: (\textit{Var} \rightarrow \mathcal{L}) \times V \rightarrow (\textit{Var} \rightarrow \mathcal{L})$
-as follows:
+as a transfer function. Let \textit{Var} be the set of variables in the program, 
+$V$ be the set of nodes in the CFG, and  $\textit{Var} \rightarrow \mathcal{L}$
+be the function that maps variables to elements of the lattice $\mathcal{L}$.
+The monotone transfer function $f_{\textit{NULL}}: (\textit{Var} \rightarrow \mathcal{L}) \times V \rightarrow (\textit{Var} \rightarrow \mathcal{L})$
+is defined as follows:
 
 \[
   f_{\textit{NULL}}(\Gamma, \vterminal{node}) =
@@ -388,9 +415,9 @@ as follows:
 
 \[
 \begin{array}{llcl}
-\textrm{where}&\semNPA{\vterminal{n}\in \mathbb{N}}^\Gamma			&=& \textbf{notnull}\\
+\textrm{where}&\semNPA{\vterminal{n}}^\Gamma  \text{ for } \vmetavar{n}\in \textit{Num}			&=& \textbf{notnull}\\
 &\semNPA{\vterminal{null}}^\Gamma			&=& \textbf{null}\\
-&\semNPA{\vmetavar{v}}^\Gamma				&=& \Gamma(\vmetavar{v})\\
+&\semNPA{\vmetavar{v}}^\Gamma \text{ for } \vmetavar{v}\in \textit{Var}				&=& \Gamma(\vmetavar{v}) \\
 \end{array}
 \]
 
@@ -399,9 +426,9 @@ To propagate information from node $n$ to its succeeding nodes (in the CFG) and 
 effect of passing through a node, we define the following two equations:
 \begin{align*}
   \text{in}(n) &= \begin{cases} \{ v \rightarrow \bot \mid \forall v \in $\textit{Var}$ \} & $if $ n $ is Entry$ \\ \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p) & $otherwise$ \end{cases} \\
-  \text{out}(n) &= f_{\mathit{NULL}}(\text{in}(n),n)
+  \text{out}(n) &= f_{\text{\textit{NULL}}}(\text{in}(n),n)
 \end{align*}
-where $\text{pred}(n)$ is the set of predecessor of the node $n$, i.e., $\text{pred}(n) = \{ p \mid (p,n)\in E\}$.
+where $\text{pred}(n)$ is the set of predecessor of the node $n$, i.e., $\text{pred}(n) = \{ p \mid (p,n)\in E\}$ where $E$ is the set of edges in the CFG.
 We have defined the $in$ and the $out$ sets to model the information that is available
 before and after passing through a node, respectively. The $in$ set gathers the available
 information before entering the node, while the $out$ set captures the effect
@@ -410,7 +437,8 @@ This kind of analysis is called a \emph{forward analysis} because it propagates 
 from the entry node to the exit node.
 
 These equations can be adapted to perform backward analyses, i.e., analyses that
-propagate information from the exit node to the entry node.
+propagate information from the exit node to the entry node. Let us look at the
+general definition of a backward analysis.
 Given a monotonic transfer function $f$ and a finite lattice $\mathcal{L}$, the equations for
 a backward analysis is defined as follow:
 \begin{align*}
@@ -418,17 +446,19 @@ a backward analysis is defined as follow:
   \text{in}(n) &= f(\text{out}(n),n)
 \end{align*}
 where $\text{succ}(n)$ is the set of successors of the node $n$, i.e., $\text{succ}(n) = \{ s \mid (n,s)\in E\}$.
-The boundary condition for the $\text{out}$ set when $n$ is the Exit node differs depending on the
+The boundary condition for the $\textit{out}$ set when $n$ is the Exit node differs depending on the
 analysis. 
 
 The equations for both forward and backward analyses define a mutual dependency
 between the $in$ and $out$ sets of a node.
-This circular dependency is solved through a fix point computation,
-a mathematical technique that finds a stable state, or fix point, in a system.
+A fixpoint computation is used to resolve this circular dependency. A fixpoint is
+a mathematical technique that finds a stable state, in a system.
 In the context of the Monotone frameworks, this
 refers to finding a state where the $in$ and $out$ sets of all nodes in the CFG have reached a
-stable value, and no further changes will occur. The fix point is guaranteed to exist
-because the transfer function $f$ is monotone~\cite{Knaster1929}.
+stable value, and no further changes will occur. The authors of~\cite{Nielson2010Principles}
+present several techniques for computing fixpoints and demonstrate that exists a fixpoint~\cite{Knaster1929} and that the resulting 
+fixpoint is unique and the minimum among all fixed points of the transfer function $f$.
+
 
 
 
