@@ -79,18 +79,23 @@ We built \textsc{IntraJ} upon the \textsc{ExtendJ} extensible Java compiler~\cit
 As seen in Figure~\ref{fig:intraJ}, we designed \textsc{IntraJ}
 following a  modular approach, and we separately
 instantiated the framework for different versions of Java, such as Java 4,
-Java 5, Java 7 and Java 8. Each version of Java is implemented as a separate
-aspect of the compiler. This approach allows us and the users of \textsc{IntraJ}
+Java 5, Java 7 and Java 8.
+\textsc{ExtendJ} has a similar modularisation of different Java versions. 
+When \textsc{ExtendJ} is extended to support new versions of Java, this approach
+will allow us to extend \textsc{IntraJ} in a corresponding way.
+This approach allows us and the users of \textsc{IntraJ}
 to easily extend the framework to support new versions of Java.
 
 % Discussing precision
 The degree of precision in creating CFGs using \textsc{IntraCFG} can differ in order
 to meet the requirements of a given application.
 This ﬂexibility allows the framework users to optimise the analysis's eﬃciency 
-by selectively excluding/including specific nodes from the CFG.
+by selectively excluding/including specific AST nodes from the CFG.
 For example, nodes such as \astnode{WhileStmt}, which are essential for the
 construction of CFGs, as they are used to define the shape of CFGs, can be excluded
-from the CFGs as they do not provide any information relevant to the analysis.
+from the CFGs as all relevant execution points for the \astnode{WhileStmt} are
+already captured by other AST nodes, i.e., evaluation of the condition, and execution
+of the body.
 \begin{figure}[H]
 	\centering
 	\begin{tikzpicture}
@@ -115,7 +120,7 @@ The example in Figure~\ref{fig:CFG} is a visual representation of the AST and CF
 to the specific requirements of the analysis and eliminate unnecessary complexity for improved performance.
 In this example, nodes like \astnode{IfStmt} or \astnode{Dot} are not included in the CFG,
 resulting in a more concise but precise representation of the control flow of the program.
-On the other hand, the precision of the CFGs can be improved by synthesising new nodes and subtrees.
+On the other hand, the precision of the CFGs can be improved by synthesising new nodes and subtrees as HOAs.
 For instance, we designed \textsc{IntraJ} to compute an exception-sensitive
 control-flow analysis, i.e., new AST subtrees are synthesized for each possible exceptional path.
 The resulting CFGs are more precise but also more complex, resulting
@@ -131,10 +136,10 @@ In \textsc{IntraJ}, we implemented five different dataflow analyses:
   \item \emph{Dead Assignment Analysis}: detects assignments to l-values that are never used from that point on.
   \item \emph{Indirect Dead Assignment Analysis}: detects assignments to l-values which uses always flow to a dead assignment.
 \end{itemize}
-All the analyses rely on the result of the control-flow analysis. To the analysis are exposed
+All the analyses rely on the result of the control-flow analysis. The analyses use
 the \Ahoa{CFGRoot}{entry} and \Ahoa{CFGRoot}{exit} attributes of the CFG, as well as the \Asyn{CFGNode}{succ} and \Asyn{CFGNode}{pred}
 attributes of each node.
-Each analysis is implemented as a separate aspect of the compiler.
+Each analysis is implemented as a separate aspect.
 Still, some analyses' results are used as input for other analyses. For instance,
 the result of Live Variable Analysis is used as input for the Dead Assignment Analysis.
 Similarly, the result of Dead Assignment Analysis is used to compute Indirect Dead Assignment Analysis.
@@ -142,16 +147,37 @@ Similarly, the result of Dead Assignment Analysis is used to compute Indirect De
 The implemented analyses are instances of the monotone frameworks (see Section~\ref{sec:monotoneframeworks}).
 Each analysis defines its abstract domain, transfer function and \emph{in} and
 \emph{out}\footnote{Or \emph{kill} and \emph{gen}.} circular attributes for each \astnode{CFGNode} (i.e., \AcircSyn{CFGRoot}{in} and  \AcircSyn{CFGRoot}{out}).
-The language dependency of the dataflow analysis arises from the fact that the
-transfer function, which defines the relationship between the \emph{in} and \emph{out},
-is modelled as an attribute. This transfer function attribute is
-define for each AST node in the CFG to capture the semantics of passing
-through that node.
+While the core of each dataflow analysis is language independent, relying only on the
+attributes defined by \textsc{IntraCFG}, there are language dependencies in the 
+transfer function, which is modelled as a circular parametrised attribute.
+The transfer function attribute is define for each AST node in the CFG to capture the semantics of passing
+through that node, and for different AST node types, the transfer function is defined differently.
+For example, in the case of \code{NullPointerException} analysis,
+the general and language-independent definition of the transfer function is
+defined as follows:
+\begin{lstlisting}[language=JastAdd]
+  syn CFGNode.trFun(Gamma gamma) circular [new Gamma()] {
+    return gamma;
+  }
+\end{lstlisting}
+While the transfer function for \astnode{AssignStmt} is defined as follows:
+\begin{lstlisting}[language=JastAdd]
+  eq AssignStmt.trFun(Gamma gamma) {
+    Variable decl = getDeclarationLHS();
+    if (getNullyRHS()){
+      gamma.put(decl, NULL);
+    }
+    else{
+      gamma.put(decl, NOTNULL);
+    }
+    return gamma;
+  }
+\end{lstlisting}
 
 
 \subsubsection{\textsc{IntraJ} Artifact Evaluation}
 Artifact evaluation is an essential part of the scientific process as it enables
-researchers to demonstrate the reproducibility and practicality of their work.
+researchers to demonstrate the reproducibility and practicality of their work~\cite{KrishnamurthiArtifact2013}.
 It also allows other researchers to build upon and reuse the work in their
 studies, helping to advance the field as a whole.
 
