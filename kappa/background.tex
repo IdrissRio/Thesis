@@ -409,7 +409,7 @@ because the transfer function $f$ is monotone~\cite{Knaster1929}.
 
 
 
-\subsection{Attribute Grammars}
+\subsection{Attribute Grammars}%
 \label{chap:attr-grammars}
 Attribute grammars~\cite{knuth1968semantics} (AGs) are a formalism for specifying
 the syntax and semantics of programming languages. This formalism is based on the concept of attributes,
@@ -433,48 +433,53 @@ We can distinguish two types of attributes: synthesized attributes and inherited
 A \emph{synthesized} attribute is a property of a node that is computed
 based on the attributes of the subtree rooted at that node. For example, the type of an expression
 in a programming language may be a synthesized attribute computed based
-on the types of sub-expressions in the expression. For instance, if a variable is initialized
-with the expression ``3 + 4'', the variable type would be determined to
-be integer based on the types of the operands in the expression.
+on the types of sub-expressions in the expression. For instance, the type of the expression ``3 + 4'',
+is determined to be integer based on the types of the operands.
 
 Synthesized attributes are composed by a declaration and an equation:
+\begin{align*}
+  \astnode{T}\ &\Asyn{A}{x} \\
+   &\Asyn{A}{x} = e
+\end{align*}
+where \astnode{T} is the type of the attribute, \astnode{A} is the node type and \textcolor{ATGsym}{x} is the attribute name.
+The up-arrow symbol (\textcolor{ATGsym}{\mSyn{}}) is used to denote a synthesized attribute. 
+The right-hand side of the equation, is an expression, $e$, that may use other attributes of the \astnode{A} node or its children.
+If \astnode{A} has subtypes, say \astnode{A}$_1$ and \astnode{A}$_2$, different equations can be given for
+\astnode{A}$_1$ and \astnode{A}$_2$. If all subtypes will use the same equation, the declaration and the quation can be combined 
+into a single line, as follows:
 \begin{equation*}
-  \Asyn{A}{x} \quad\quad \quad\quad \Asyn{A}{x} = e
-\end{equation*}
-where \astnode{A} is the name of the node type. Sometimes, the declaration and the equation
-are combined into a single line, as follows:
-\begin{equation*}
-  \Asyn{A}{x} = e.
+  \Asyn{A}{x} = e
 \end{equation*}
 
 For the sake of readability, we use the notation introduced by Fors et al. in~\cite{fors2020patterns},
 where attribute names are preceded by a symbol (e.g.,\textcolor{ATGsym}{\mSyn{}},\textcolor{ATGsym}{\mInh{}}) 
 that indicates the kind of the attribute (e.g., synthesized or inherited).
-We use the symbol \Abase{x} to denote the attribute name and the symbol $e$ to denote the attribute value,
-e.g., a constant, or a function of the node's children and/or the node's own attributes.
+% We use the symbol \Abase{x} to denote the attribute name and the symbol $e$ to denote the attribute value,
+% e.g., a constant, or a function of the node's children and/or the node's own attributes.
 
 An \emph{inherited} attribute is a property of a node that gets its value from
 its parent in the abstract syntax tree.
 An example of inherited attribute is the expected type of an expression.
 The expected type of an expression is inherited from the context in which the expression is used.
-For example, the expected type of an expression in a \code{if} statement has to be a boolean value.
+For example, the expected type of the condition of a \code{if} statement has to be a boolean value.
 This information is inherited from the \code{if} statement node.
 
 Inherited attributes are defined in two parts: a declaration and an equation.
-\begin{equation*}
-\Ainh{A}{x} \quad\quad \quad\quad \Ainhdef{B}{A}{x} = e
-\end{equation*}
-where \astnode{A} and \astnode{B} are node types.
-The first part of the equation declares the attribute \Ainh{A}{x} as inherited by \astnode{A},
-so every node of type \astnode{A}  can access it. The second part of the
-equation defines the attribute for each child \astnode{A} of \astnode{B}.
+\begin{align*}
+ \astnode{T} \ &\Ainh{A}{x} \\
+ &\Ainhdef{B}{A}{x} = e
+\end{align*}
+where \astnode{A} and \astnode{B} are node types and the down-arrow symbol (\textcolor{ATGsym}{\mInh{}}) is used to denote an inherited attribute.
+The equation defines the \textcolor{ATGsym}{x} attribute of \astnode{B}'s child \astnode{A}.
+The expression $e$ may use the attributes of \astnode{B} and any of its children.
+
 
 \begin{figure}
 \centering
 \includegraphics[width=1\textwidth]{kappa/img/AGExample.pdf}
-    \caption{\label{fig:ragsExample} Graphical representation of the attribute grammar example.
-    The tree to the left represents the abstract syntax tree with attribute equations and definitions.
-    The tree to the right shows the values of the attributes. 
+    \caption{\label{fig:ragsExample} Attribute grammar example.
+    Left: Abstract syntax tree with attribute equation system. Right: solution of the equation system. 
+    Dashed arrows indicates the location of the equation for an inherited attribute.
     }
 \end{figure}
 
@@ -485,25 +490,30 @@ We start by defining the following abstract grammar:
         B& \\
         C& ::= B
     \end{align*}
-and the following attribute declarations:
+and the following attribute declarations and equations (synthesized to the left and inherited to the right):
     \begin{align*}
-        &\Asyn{A}{z} = \Asyn{B}{x} + 2 &&\Ainhdef{A}{C}{y} = \Asyn{A}{z} + \Asyn{C}{v} \\
-        &\Asyn{B}{x} = \Ainh{B}{w} -1  &&\Ainhdef{C}{B}{w} = 5 \\
-        &\Asyn{C}{v} = \Ainh{B}{w}   & &\Ainhdef{A}{B}{w} = 36\\
-        &\Ainh{C}{y} &&\Ainh{B}{w} 
+        \astnode{int} \ &\Asyn{A}{z} = \Asyn{B}{x} + 2  &&\astnode{int} \ \Ainh{C}{y} \\
+        \astnode{int} \ &\Asyn{B}{x} = \Ainh{B}{w} -1   &&\astnode{int} \ \Ainh{B}{w}  \\
+        \astnode{int} \ &\Asyn{C}{v} = \Ainh{B}{w}   & &\Ainhdef{A}{B}{w} = 36\\
+        & && \Ainhdef{C}{B}{w} = 5\\
+        &&& \Ainhdef{A}{C}{y} = \Asyn{A}{z} + \Asyn{C}{v} \\
     \end{align*}
-The value for the synthesized attribute \Asyn{A}{z} is computed by solving
-the equation systems for the attributes \Asyn{A}{z}, \Asyn{B}{x} and \Ainh{B}{w}:
+It should be noted that there are two equations for the inherited attribute \Ainh{B}{w},
+due to the presence of \astnode{B} as a child node in both \astnode{A} and \astnode{C}.
+The attributes are variables in an equation system which, in this case, can be solved by substitution.
+For example, the value for the synthesized attribute \Asyn{A}{z} is computed by first 
+substituting the value of \Ainhdef{A}{B}{w} in the equation for \Asyn{B}{x}, and then
+substituting the value of \Asyn{B}{x} in the equation for \Asyn{A}{z}:
 \begin{align*}
     &\Asyn{A}{z} = \Asyn{B}{x} + 2 \\
     &\Asyn{B}{x} = \Ainhdef{A}{B}{w} - 1 \\
     &\Ainhdef{A}{B}{w} = 36
 \end{align*}
 resulting in \Asyn{A}{z} = 37. The value for the inherited attribute \Ainh{B}{w} is defined by node \astnode{A} for
-each child of type \astnode{B}. In this case, the value of \Ainh{B}{w} is defined by node \astnode{A} 
+its child of type \astnode{B}. In this case, the value of \Ainh{B}{w} is defined by node \astnode{A} 
 with value 36.
 The value for the inherited attribute \Ainh{C}{y} is defined by node \astnode{A} for
-each child of type \astnode{C}. The value of \Ainh{C}{y} is computed by solving the equation system:
+its child of type \astnode{C}. The value of \Ainh{C}{y} is computed by solving the equation system:
 \begin{align*}
     &\Ainh{C}{y} = \Asyn{A}{z} + \Asyn{C}{v} \\
     &\Asyn{C}{v} = \Ainhdef{C}{B}{w}\\
@@ -535,13 +545,13 @@ the children of \astnode{A} can be distinguished by the index of the child, i.e.
 Reference Attribute Grammars (RAGs) were introduced in~\cite{DBLP:journals/informaticaSI/Hedin00}
 and are an extension of AGs to Object-Oriented languages. While attributes in AGs
 can only refer to terminal values, RAGs allow attributes to refer to non-terminals, i.e., nodes in the AST.
-RAGs are well-suited for the analysis of object-oriented languages since they enable
+RAGs are well-suited for the analysis of programming languages since they enable
 the definition of relations between AST nodes. Attributes referring
 to AST nodes can declaratively construct relations, i.e., graphs, on the AST.
 Examples of the relations that can be constructed using RAGs are:
 \begin{itemize}
     \item Name analysis: checks that all names are well-defined and used correctly. A relation between
-    the name and the definition of the name is constructed,
+    the name and the declaration of the name is constructed,
     \item Type analysis: checks that all expressions have a valid type. A relation between the expression
     and its type is constructed,
     \item Graph of a class hierarchy: a graph where nodes are classes and edges are inheritance relations,
@@ -551,13 +561,13 @@ Examples of the relations that can be constructed using RAGs are:
 
 
 
-\subsection{The \textsc{JastAdd} Metacompiler}
+\subsection{The \textsc{JastAdd} Metacompiler}%
 \label{sec:jastadd}
-The \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a powerful tool for constructing
-RAGs.
-\textsc{JastAdd} allows language designers to handle complex language constructs in a modular and extensible
-manner through the use of the RAGs formalism.
-The \textsc{JastAdd} metacompiler is a Java-based tool that generates
+% The \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a powerful tool for constructing
+% RAGs.
+% \textsc{JastAdd} allows language designers to handle complex language constructs in a modular and extensible
+% manner through the use of the RAGs formalism.
+The \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a Java-based tool that generates
 Java code from a RAG specification. The generated code can be used to construct an AST and to perform
 analysis on the AST.
 Another important aspect of \textsc{JastAdd} is its support for on-demand attribute evaluation.
@@ -584,108 +594,57 @@ The abstract grammar is defined in a ``\code{.ast}'' file with the following syn
         B;
         C ::= B;
     \end{lstlisting}
-where each line defines a node in the AST.
+where each line defines an AST node type.
 The attributes are defined in a ``\code{.jrag}'' file with the following syntax:
-    \begin{lstlisting}[language=JastAdd]
-        syn int A.z() = getB().x() + 2;
-        syn int B.x() = w() - 1;
-        syn int C.v() = getB().w();
-        eq A.getC().y() = A.z() + C.v();
-        eq C.getB().w() = 5;
-        eq A.getB().w() = 36;
-        inh int C.y();
-        inh int B.y();
+    \begin{lstlisting}[language=JastAdd, numbers=left,]
+  syn int A.z() = getB().x() + 2;
+  syn int B.x() = w() - 1;
+  syn int C.v() = getB().w();
+  inh int C.y();
+  inh int B.y();
+  eq A.getC().y() = z() + getC.v();
+  eq C.getB().w() = 5;
+  eq A.getB().w() = 36;
     \end{lstlisting}
-
-
-The last line is the equation that defines the value of the inherited attribute \Ainh{C}{y} for each child of \astnode{A} of type \astnode{C}.
+An equation is defined in the context of a node type, and children are accessed using getters.
+For example, the equation on line 6 (``\code{eq A.getC().y() = z() + getC.v();}'') defines the value of the 
+inherited attribute \textcolor{ATGsym}{y} of an \astnode{A} node's child \astnode{C}. 
+It uses the \astnode{A} node's synthesized attribute \textcolor{ATGsym}{z} and the \astnode{C} node's
+synthesized attribute \textcolor{ATGsym}{v} to compute the value of the inherited attribute \textcolor{ATGsym}{y}.
 \begin{figure}
     \begin{center}
-        \begin{tikzpicture}
-            \tikzstyle{block} = [rectangle, draw, text centered, minimum height=8em, minimum width=8em]
-            \tikzstyle{line} = [draw, -latex]
-            \node [block] (A) {
-                \begin{lstlisting}[language=JastAdd]
-aspect AttrDecl {
-  syn int A.x() = 1;
-  syn int B.x() = 2;
-}
-                \end{lstlisting}
-            };
-            \node [block, right=of A, yshift=5em] (B) {
-                \begin{lstlisting}[language=JastAdd]
-class A {
-    public int x(){
-        return 1;
-    }
-}
-                \end{lstlisting}
-            };
-            \node [block, below=of B] (C) {
-                \begin{lstlisting}[language=JastAdd]
-class B {
-    public int x(){
-        return 2;
-    }
-}
-                  \end{lstlisting}
-             };
-
-             \node (v1) at (-1.5,-0.05) {};
-             \node (v2) at (1.7,-0.05) {};
-             \node (v3) at (3,1.1) {};
-             \node (v4) at (6.3,1.1) {};
-             \node (v5) at (6.3,2.3) {};
-             \node (v6) at (3,2.3) {};
-             \node (v7) at (1.7,0.3) {};
-             \node (v8) at (-1.5,0.3) {};
-             \draw[opacity=0.2,fill=blue] (v1.center)--(v2.center)--(v3.center)--(v4.center)--(v5.center)--(v6.center)--(v7.center)--(v8.center)--(v1.center);
-
-             \fill [opacity=0.2,blue]
-                 (v1) \foreach \i in {2,...,8}{ -- (v\i) } -- cycle;
-
-            \node (vv1) at (-1.5,-0.1) {};
-            \node (vv2) at (1.7,-0.1) {};
-            \node (vv3) at (3,-1.5) {};
-            \node (vv4) at (6.3,-1.5) {};
-            \node (vv5) at (6.3,-2.8) {};
-            \node (vv6) at (3,-2.8) {};
-            \node (vv7) at (1.7,-0.45) {};
-            \node (vv8) at (-1.5,-0.45) {};
-            \draw[opacity=0.2,fill=red] (vv1.center)--(vv2.center)--(vv3.center)--(vv4.center)--(vv5.center)--(vv6.center)--(vv7.center)--(vv8.center)--(vv1.center);
-
-            \fill [opacity=0.2,red]
-                (v1) \foreach \i in {2,...,8}{ -- (vv\i) } -- cycle;
-        \end{tikzpicture}
+        \includegraphics[width=0.95\textwidth]{kappa/img/Intertype.pdf}
     \end{center}
-    \caption{\label{fig:interType} Example of intertype declaration.}
+    \caption{\label{fig:interType} \textsc{JastAdd} generates Java classes from the abstract grammar, and 
+    weaves in code correrponding to the intertype declarations in the aspect into the generated classes \code{A} and \code{B}.}
 \end{figure}
 
+An additional key feature of \textsc{JastAdd} is it support to AspectJ-style~\cite{Kiczales1997Aspect} intertype 
+declarations for the definition of attributes.
+Attribute declarations and equations can be written in aspects, and \textsc{JastAdd} 
+creates corresponding Java methods that are woven into the classes defined by the abstract grammar.
 
-Another key feature of \textsc{JastAdd}  is the support of \emph{intertype declarations} for the definition of attributes.
-An intertype declaration of an attribute is a declaration that is performed into
-an aspect\footnote{See \emph{Aspect-Oriented Programming}~\cite{Kiczales1997Aspect}.} that, at compile-time,
-is inlined in the class specified in the intertype declaration. The example in Figure~\ref{fig:interType}
+The example in Figure~\ref{fig:interType}
 shows an intertype declaration of an attribute.
 The attributes \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrDecl}
-that is inlined in the classes \code{A} and \code{B}, respectively.
+and are woven into the classes \code{A} and \code{B}, respectively.
 
 \textsc{JastAdd} supports not only synthesized and inherited attributes, but also:
-\begin{itemize}
-    \item \emph{Parametrised Attribute}: the value of the attribute might depend
+\emph{Parametrised Attribute}~\cite{hedin2000rags}, \emph{Higher-Order Attribute}~\cite{vogt1989higher}, \emph{Circular Attribute}~\cite{MAGNUSSON200721}, and \emph{Collection Attribute}~\cite{Magnusson2007ExtendingAG}.
+
+
+\subparagraph*{Parametrised Attributes} Are attributes witch value might depend
     not only on the AST node itself, but also on the value of the arguments supplied
     to it. Attributes of this kind are widely used, especially in the definition of
-    type-checking rules.
+    type-checking rules. For example:
     \begin{lstlisting}[language=JastAdd]
-syn boolean Type.compatibleType(Type t){
-    return this==t;
-}
+syn boolean Type.compatibleType(Type t) = this == this;
     \end{lstlisting}
 
-    \item \emph{Higher-Order Attribute (HOA)}\footnote{Also known as \emph{Non-Terminal Attributes (NTA)}.}:
-    the value of an HOA is a freshly new subtree. They are called \emph{Higher-Order Attributes}
+    \subparagraph*{Higher-Order Attribute (HOA)} Are also known as \emph{Non-Terminal Attributes (NTA)}, are attributes which
+    value is a freshly new subtree. They are called \emph{Higher-Order Attributes}
     because they are attributes and, at the same time, non-terminal; therefore, they can be attributed.
-    The subtree computed by an HOA behaves like a normal non-terminal, i.e., it can be
+    The subtree computed by an HOA behaves like a normal AST node, i.e., it can be
     attributed and used in the definition of other attributes. In \textsc{JastAdd}, HOAs
     are defined using the \code{nta} keyword. HOAs are widely used to reify information
     that is not explicit in the source code and, therefore, not present in the AST.
@@ -695,10 +654,12 @@ syn boolean Type.compatibleType(Type t){
 syn nta Entry FunDecl.entry() = new Entry();
 syn nta Exit FunDecl.exit() = new Exit();
     \end{lstlisting}
-    We use the right-arrow symbol to denote HOAs, e.g.,  \Ahoa{FunDecl}{entry} and \Ahoa{FunDecl}{exit}.
-    \item \emph{Circular Attribute}: an attribute which definition might depend directly
-    or indirectly on itself. In \textsc{JastAdd}, circular attributes are expressed using the \code{circular}
-    keyword. To guarantee termination, circular attributes are evaluated in a fixed-point
+    In our examples, in this thesis, we will often use the right-arrow symbol (\textcolor{ATGsym}{$\rightarrow$}) to
+    clarify that an attribute is an HOA. For example, \Ahoa{FunDecl}{entry} and \Ahoa{FunDecl}{exit}.
+    %  e.g.,  \Ahoa{FunDecl}{entry} and \Ahoa{FunDecl}{exit}.
+    \subparagraph*{Circular Attributes}  Are attributes which definition might depend directly
+    or indirectly on themselves. In \textsc{JastAdd}, circular attributes are expressed using the \code{circular}
+    keyword. To guarantee termination, circular attributes are given a bottom starting value, and are evaluated in a fixed-point
     computation, i.e., the attribute is evaluated until the value of the attribute does not change.
     The requirements, that are not checked by \textsc{JastAdd}, to guarantee termination are:
     \begin{itemize}
@@ -710,13 +671,23 @@ syn nta Exit FunDecl.exit() = new Exit();
         start as the empty set and monotonically grow with $\cup$.}.
     \end{itemize}
     We use the symbol \AcircSyn{A}{x} to denote a circular synthesized attribute.
+    An example of a circular attribute is the following:
+    \begin{lstlisting}[language=JastAdd]
+syn int A.x() circular[0] =  Math.min(3, x()+1);
+\end{lstlisting}
+In \textsc{JastAdd}, circular attributes are defined using the \code{circular} keyword.
+The circular synthesized attribute \AcircSyn{A}{x} begins with a value of 0 and
+a fix-point computation is performed until the attribute reaches stability. 
+In this example, the attribute evaluates to 3 after the third iteration as 
+the value of the attribute stops changing.
 
-    \item \emph{Collection Attribute}: these attributes have no equations but contributions. The
+
+    \subparagraph*{Collection Attributes} These attributes have no equations but contributions. The
     result of a collection attribute is the aggregation of contributions that can
     come from anywhere in the AST. A contribution clause is associated with
     an AST node type and describes the information to be included in a collection
     attribute, possibly under certain conditions. Collection attributes are especially
-    useful in compiler construction to collect all the semantic errors in a program
+    useful, for example, in compiler construction to collect all the semantic errors in a program
     from anywhere in the AST. In \textsc{JastAdd}, collection attributes are defined using the
     \code{coll} keyword.
 
@@ -727,9 +698,8 @@ Expr contributes this when type.compatible(expectedType()) to Program.errors();
     \end{lstlisting}
     The collection attribute, \texttt{Program.errors()}, denoted with \Acoll{Program}{errors},
     is used to collect all the semantic errors in the program. The contribution clause
-    states that the expression \texttt{this} contributes to the collection when
+    states that a reference to the \code{Expr} node (i.e., \code{this}) is contributed to the collection when
     the expression type is incompatible with the expected type.
-\end{itemize}
 
 
 
