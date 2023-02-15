@@ -154,8 +154,6 @@ The Entry node serves as a starting point for the
 analysis, allowing for a proper initialisation of the parameters.
 The Exit node is particularly useful in backward dataflow analyses (see Section~\ref{sec:dataflowanalysis}), as it is used
 as unique starting point for the analysis.
-the starting point for the analysis.
-
 \begin{figure}[H]
   \centering
 \begin{tabular}{l r}
@@ -298,7 +296,7 @@ across multiple methods or functions, thereby allowing identification of points
 where the data may be exposed to unauthorized access or manipulation.
 
 We will demonstrate an application of intraprocedural dataflow analysis by presenting the following
-practical example. Let us reconsider the \code{foo} method introduced in Figure~\ref{fig:cfgsourcelevel}.
+practical, but incomplete, example. Let us reconsider the \code{foo} method introduced in Figure~\ref{fig:cfgsourcelevel}.
 Our goal is to determine at each stage of the program whether the variable \code{x}
 has a \code{null} value or not\footnote{For simplicity, just for this example, we assume that the language
 allows only assignments of the form \code{x = y} where \code{y} can
@@ -315,11 +313,9 @@ variable \code{x} is assigned a new value, which is not \code{null}. If the cond
 is \code{false}, the variable \code{x} is assigned \code{null}. Therefore, at the
 end of the method, the variable \code{x} may be either \code{null} or not \code{null}.
 Consider the scenario where \code{x} is used dereferenced immediately after the
-if-else statement. The program may crash if \code{x} is \code{null}. This is a potential
-bug in the program.
-
-This information can be used to identify potential bugs in the program, such as,
-unexpected \code{NullPointerException} exceptions.
+if-else statement. The program may crash if \code{x} is \code{null}. 
+Indeed, this information can be used to identify potential bugs in the program, such as,
+unexpected \code{NullPointerException}, ahead of time.
 
 We keep track of the value of \code{x} by mapping it to a finite set of possible values:
 \code{null}, \code{notnull}, \code{maybenull}, or \code{unknown}.
@@ -344,7 +340,7 @@ Monotone frameworks are a theoretical approach for reasoning
 about program dataflow properties.
 This approach provides a flexible and generic framework for expressing and solving
 dataflow equations, which can be used to reason about a wide range of dataflow
-properties, such as live variables, reaching definitions and available expressions analyses.
+properties, such as \emph{live variables}, \emph{reaching definitions} and \emph{available expressions} analyses.
 Monotone frameworks are built on the concept of lattices~\cite{Donnellan1968}.
 
 A lattice $\mathcal{L} = (S, \leq)$ is a partially ordered set in which any two elements have a unique least
@@ -389,19 +385,19 @@ partially ordered set and $f: S \rightarrow S$ is a function, $f$ is called a
 monotone transfer function iff, for all $x, y \in S$ such that $x \leq y$, it follows
 that $f(x) \leq f(y)$.
 
-In our example, the lattice $\mathcal{L}$ is the set of possible values of the variable \code{x}.
+In our example, the lattice $\mathcal{L}$ is used to model the possible values, 
+i.e., \code{null}, \code{notnull}, \code{maybenull}, and \code{unknown}, that a variable can assume.
 This lattice is shown in Figure~\ref{fig:lattice}. Here \code{maybenull} is
 the greatest element in the lattice, as it represents the set of all possible values
 that a variable can take. On the other hand, \code{undefined} is the least element
 representing the absence of information.
-The join operator $\sqcup$ merges the information of two nodes by taking their
-union. For instance, if node $n$ has information \code{null} and node $n'$ has
+The join operator $\sqcup$ merges the information of two nodes. For instance, if node $n$ has information \code{null} and node $n'$ has
 information \code{notnull}, then the information at the merged node $n \bigsqcup n'$
 becomes \code{maybenull}.
 In the previous section, we explained how a node affects the flow of data
 using natural language. Now, we will present this concept in a formal manner
 as a transfer function. Let \textit{Var} be the set of variables in the program,
-$V$ be the set of nodes in the CFG, and  $\textit{Var} \rightarrow \mathcal{L}$
+$V$ be the set of nodes in the CFG, and  $\Gamma:\textit{Var} \rightarrow \mathcal{L}$
 be the function that maps variables to elements of the lattice $\mathcal{L}$.
 The monotone transfer function $f_{\textit{NULL}}: (\textit{Var} \rightarrow \mathcal{L}) \times V \rightarrow (\textit{Var} \rightarrow \mathcal{L})$
 is defined as follows:
@@ -428,7 +424,7 @@ effect of passing through a node, we define the following two equations:
   \text{in}(n) &= \begin{cases} \{ v \rightarrow \bot \mid \forall v \in $\textit{Var}$ \} & $if $ n $ is Entry$ \\ \bigsqcup\limits_{p \in \text{pred}(n)} \text{out}(p) & $otherwise$ \end{cases} \\
   \text{out}(n) &= f_{\text{\textit{NULL}}}(\text{in}(n),n)
 \end{align*}
-where $\text{pred}(n)$ is the set of predecessor of the node $n$, i.e., $\text{pred}(n) = \{ p \mid (p,n)\in E\}$ where $E$ is the set of edges in the CFG.
+where $\text{pred}(n)$ is the set of predecessor of the node $n$, i.e., $\text{pred}(n) = \{ p \mid (p,n)\in E\}$ and $E$ is the set of edges in the CFG.
 We have defined the $in$ and the $out$ sets to model the information that is available
 before and after passing through a node, respectively. The $in$ set gathers the available
 information before entering the node, while the $out$ set captures the effect
@@ -456,8 +452,8 @@ a mathematical technique that finds a stable state, in a system.
 In the context of the Monotone frameworks, this
 refers to finding a state where the $in$ and $out$ sets of all nodes in the CFG have reached a
 stable value, and no further changes will occur. The authors of~\cite{Nielson2010Principles}
-present several techniques for computing fixpoints and demonstrate that exists a fixpoint~\cite{Knaster1929} and that the resulting
-fixpoint is unique and the minimum among all fixed points of the transfer function $f$.
+present several techniques for computing fixpoints. They demonstrate that exists a fixpoint~\cite{Knaster1929} and that the resulting
+fixpoint is the unique and the minimum among all fixed points of the transfer function $f$.
 
 
 
@@ -473,7 +469,8 @@ language and for verifying compile-time correctness of programs written in that 
 AGs are composed of three components: a context-free grammar,
 which defines the language's syntax,  a set of attributes,
 which are properties associated with the nodes of the abstract syntax tree,
-and attribute equations, used to compute the values of the attributes associated with each node in the syntax tree.
+and attribute equations, used to compute the values of the attributes associated 
+with each node in the abstract syntax tree.
 
 Attribute grammars enable the description of the
 interdependence of syntactic and semantic elements of a programming language.
@@ -482,6 +479,7 @@ but the type of an expression may be determined by the types of its sub-expressi
 Attribute grammars provide a way to specify these rules.
 
 We can distinguish two types of attributes: synthesized attributes and inherited attributes.
+\todo{idriss: I would move the reference to Fors et al here.}
 
 A \emph{synthesized} attribute is a property of a node that is computed
 based on the attributes of the subtree rooted at that node. For example, the type of an expression
@@ -698,7 +696,7 @@ and are woven into the classes \code{A} and \code{B}, respectively.
     to it. Attributes of this kind are widely used, especially in the definition of
     type-checking rules. For example:
     \begin{lstlisting}[language=JastAdd]
-syn boolean Type.compatibleType(Type t) = this == this;
+syn boolean Type.compatibleType(Type t) = this == t;
     \end{lstlisting}
 
     \subsubsection*{Higher-Order Attribute (HOA)} Higher-Order Attribute, also known as \emph{Non-Terminal Attributes (NTA)}, are attributes which
