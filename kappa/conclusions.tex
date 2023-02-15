@@ -1,16 +1,23 @@
 \section{Conclusions and Future Work}%
 \label{sec:kappa:conclusions}%
-In this thesis, we have explored the use of declarative paradigms for
-dataflow analysis in static program analysis. Our main contributions include the
-development of a new framework for precise and light-weight construction of source-level
-control-flow graphs, called \textsc{IntraCFG}, and two case studies that demonstrate
-its effectiveness, namely \textsc{IntraJ} and \textsc{IntraTeal}.
-We have demonstrated the potential of IntraJ as a precise and light-weight tool
-for detecting complex dataflow analysis, such as \textsc{NullPointerExceptions} and \textsc{DeadAssignements},
-through its integration in IDEs. Additionally, we have shown the use of \textsc{IntraTeal}
+In this thesis, we have explored the use of the RAGs declarative paradigms for
+intraprocedural control-flow and dataflow analysis in static program analysis. Our main contributions include the
+development of a new framework for precise construction of source-level
+control-flow graphs, called \textsc{IntraCFG}.
+\textsc{IntraCFG} is language-agnostic and is a flexible framework that can be used to
+construct precise control-flow graphs for a wide range of programming languages.
+We have demonstrated the effectiveness of \textsc{IntraCFG} through two case studies,
+namely \textsc{IntraJ} and \textsc{IntraTeal}.
+\textsc{IntraJ} is an instance of \textsc{IntraCFG} for Java, 
+built upon the \textsc{ExtendJ} compiler.
+We have demonstrated the potential of \textsc{IntraJ} as a precise tool
+for detecting complex dataflow analysis, such as \textsc{NullPointerExceptions} and \textsc{DeadAssignements}.
+We compared its performance and precision with the industrial tool \textsc{SonarQube}. 
+The results showed that \textsc{IntraJ} is more efficient and as precise as \textsc{SonarQube}.
+Additionally, we have shown the use of \textsc{IntraTeal}
 for educational purposes, in combination with the visualisation tool \textsc{CodeProber},
 resulting in an effective tool for students to learn about dataflow analysis.
-Furthermore, we presented  \textsc{JFeature}, an extensible tool for automatically
+We also presented  \textsc{JFeature}, an extensible tool for automatically
 extracting and summarising the key features of a corpus of Java programs.
 \textsc{JFeature} allows researchers and developers to gain a deeper understanding of the composition and
 suitability of software corpora for their particular research or development needs.
@@ -21,23 +28,31 @@ Together, these contributions provide frameworks and practical tools
 for improving the development and maintenance of software systems.
 
 
-In future, we plan to investigate the support of interprocedural analysis
-to \textsc{IntraCFG}. Interprocedural analysis refers to the process of analysing
+In the future, we plan to investigate using RAGs to support interprocedural analysis in \textsc{IntraCFG}.
+Interprocedural analysis refers to the process of analysing
 the interactions and dependencies between different procedures or functions within a
-program. One of the main challenges in this area is the computation of call graphs,
+program. One of the main challenges in this area is the computation of precise \emph{call graphs},
 which are graphs representing the dependencies between procedures and functions.
-To achieve this, we plan to investigate the use of \emph{point-to} analysis, which is a
-technique used to determine the memory locations that a given variable may point to.
-This is a crucial step in interprocedural analysis, as it allows us to determine
-the flow of data between different procedures and functions. However, since we aim
-to run these analyses within IDEs, we want to investigate how to compute and refine
-the results of point-to analysis incrementally, rather than analysing the entire codebase.
+Call graphs are crucial for interprocedural dataflow analysis, as they allow to determine
+the flow of data between different procedures and functions.
+Static analysis techniques can be used to compute call graphs, including \emph{Rapid
+Type Analysis}~\cite{bacon1996fast} which is fast but imprecise, or \emph{points-to}~\cite{steensgaard1996points} analysis which is 
+computationally expensive but more precise. Points-to analysis involves determining 
+the memory locations that a variable may point to. 
+In order to achieve accurate and efficient program analysis within IDEs,
+we aim to explore a combination of static analysis techniques, including
+Rapid Type Analysis and Points-to Analysis. 
+Performing a precise analysis typically requires starting from the main entry 
+point of the program. However, in order to run the analysis within IDEs, we plan 
+to start with the methods that are currently being edited. This presents a significant 
+challenge for the analysis, as it must be able to accurately track data flow from 
+these partial starting points.
 
 Furthermore, we plan to push even further the use of the on-demand evaluation
-feature in \textsc{IntraJ}. As of now, we analyse entire compilation units at once,
-which can be inefficient for large files. We would like to let the user decide the 
-granularity of the analysis, e.g., by analysing only the methods that are currently
-being edited. This would allow for a more efficient use of \textsc{IntraJ} in IDEs.
+feature in \textsc{IntraJ}. Currently, quick-fixes are computed when the analyses are triggered.
+We plan to investigate the feasibility of computing quick-fixes on-demand,
+i.e., when they are requested by the user.
+The proposed change could help optimize the use of \textsc{IntraJ} in IDEs.
 Finally, we plan to add native support for widening and narrowing
 operators in \textsc{JastAdd}'s circular attributes, which would enable an easier implementation
 of analysis over infinite lattices.

@@ -156,15 +156,13 @@ For example, in the case of \code{NullPointerException} analysis,
 the general and language-independent definition of the transfer function is
 defined as follows:
 \begin{lstlisting}[language=JastAdd]
-  syn CFGNode.trFun(Gamma gamma) circular [new Gamma()] {
-    return gamma;
-  }
+  syn CFGNode.trFun(Gamma gamma) circular [new Gamma()] = gamma;
 \end{lstlisting}
 While the transfer function for \astnode{AssignStmt} is defined as follows:
 \begin{lstlisting}[language=JastAdd]
   eq AssignStmt.trFun(Gamma gamma) {
-    Variable decl = getDeclarationLHS();
-    if (getNullyRHS()){
+    Variable decl = getLHSDecl();
+    if (nullRHS()){
       gamma.put(decl, NULL);
     }
     else{
@@ -173,6 +171,25 @@ While the transfer function for \astnode{AssignStmt} is defined as follows:
     return gamma;
   }
 \end{lstlisting}
+The transfer function for \astnode{AssignStmt} in this example receives the 
+mapping of variables to their nullable status, denoted as $\Gamma$ 
+(see Section~\ref{sec:dataflowanalysis}). The equation begins by retrieving the 
+declaration of the left-hand side of the assignment statement, and 
+checks whether the right-hand side is null or not. 
+Depending on the result, the equation updates the status of the left-hand side 
+variable in $\Gamma$.
+Note that in this example, the attribute \astnode{trFun} for the AST node \astnode{AssignStmt} has been defined with a 
+body (sorrounded by \{ and \}) to specify its behavior, whereas we have previously declared attributes in a 
+single line without the body. This is because the attribute in this case is more 
+complex, and requires a more detailed definition to capture its functionality accurately.
+
+
+
+
+
+
+
+
 
 
 \subsubsection{\textsc{IntraJ} Artifact Evaluation}
