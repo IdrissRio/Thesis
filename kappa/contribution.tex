@@ -59,7 +59,80 @@ analysis being performed.
 % Additionally, language-specific dataflow analysis, such as \texttt{NullPointerException} or
 % \texttt{IndexOutOfBound} detection, can be built on top of the framework.
 
+\subsection{The \textsc{IntraCFG} Framework}
+The \textsc{IntraCFG} framework is our new approach for constructing intraprocedural 
+CFGs.
+In this section, we describe the main components of \textsc{IntraCFG} and how they are used to construct CFGs.
+A more detailed description of the framework can be found in Paper~\ref{paper:intraj}.
 
+\textsc{IntraCFG} provides three different interfaces: 
+\astnode{CFGRoot}, \astnode{CFGNode}, and \astnode{CFGSupport}.
+These interfaces are implemented by AST types to construct the CFG.
+Each interface has a set of attributes, and default equations that are used to
+construct the CFGs.
+
+The \astnode{CFGRoot} interface is intended to be implemented by AST nodes that represent
+subroutines, e.g., \astnode{MethodDecl} or \astnode{ConstructorDecl}.
+The \astnode{CFGRoot} interface defines two HOAs: \Ahoa{CFGRoot}{entry} and
+\Ahoa{CFGRoot}{exit}. These HOAs are used to represent the unique entry and unique exit points
+of the CFG.
+
+The \astnode{CFGNode} is the most important interface in \textsc{IntraCFG}.
+The purpose of the \astnode{CFGNode} interface is to represent AST nodes that can 
+be part of the CFG. This interface defines the synthesised
+attributes \Asyn{CFGNode}{succ} and \Asyn{CFGNode}{pred}, which are used to
+represent the sets of successors and predecessors of a CFG node, respectively.
+
+
+Finally, the \astnode{CFGSupport} interface is implemented by all the AST nodes that may 
+contain \astnode{CFGNode}s in their subtrees. Indeed, all \astnode{CFGNode}s are \astnode{CFGSupport} 
+nodes, but \astnode{CFGSupport} nodes that are not \astnode{CFGNode}s can 
+help steer the construction of the CFG.
+
+To compute the \Asyn{CFGNode}{succ} attribute, the framework uses the helper 
+attributes \Asyn{CFGNode}{firstNodes} and \Ainh{CFGNode}{nextNodes}. The 
+\Asyn{CFGNode}{firstNodes} attribute of a \astnode{CFGNode} $n$ 
+contains the first \astnode{CFGNode} within or after 
+the AST subtree rooted in $n$.
+The default definitions provided by \textsc{IntraCFG} for the \Asyn{CFGNode}{firstNodes} 
+attribute are the empty set for a \astnode{CFGSupport} node and the node itself 
+for a \astnode{CFGNode}.
+
+The inherited attribute \Ainh{CFGNode}{nextNodes} is used to keep track of the 
+\astnode{CFGNode}s that are outside the tree rooted in $n$, and that would immediately follow the 
+last \astnode{CFGNode} within $n$. 
+By default, the \Asyn{CFGNode}{succ} attribute is defined as equal to \Ainh{CFGNode}{nextNodes}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{kappa/img/IntraCFGExample1.pdf}
+    \caption{\label{fig:IntraCFGExample} Example of ad-hoc definition of  \Ainh{CFGNode}{nextNodes} and \Asyn{CFGNode}{firstNodes} for the TEAL \code{AddExpr}. 
+    All the nodes are \astnode{CFGNode}s. Dashed arrows indicates the location of the equation for an inherited attribute.
+    }
+\end{figure}
+The example in Figure~\ref{fig:IntraCFGExample} shows how the \Ainh{CFGNode}{nextNodes} and
+\Asyn{CFGNode}{firstNodes} attributes can be defined to achieve the desired CFG.%
+This example assumes that operands are evaluated right-to-left. 
+For any \astnode{AddExpr}, the \Asyn{CFGNode}{firstNodes} attribute is defined to 
+be equal to the \Asyn{CFGNode}{firstNodes} of its right operand. The \astnode{AddExpr} node
+also defines the \Ainh{CFGNode}{nextNodes} attribute of both its operands: 
+for the right operand, it is equal to the \Asyn{CFGNode}{firstNodes} of the left operand,
+while for the left operand, it is equal to a singleton set containing the \astnode{AddExpr} node itself.
+The \Asyn{CFGNode}{succ} attribute is not overridden by any node, and 
+therefore, it is defined to be equal to the \Ainh{CFGNode}{nextNodes} attribute.
+
+
+To support both forward and backward analyses, the framework provides a predecessor
+attribute that captures the inverse of the successor attribute, i.e., \Asyn{CFGNode}{succ}. However, 
+\Asyn{CFGNode}{succ} is also defined for \astnode{CFGNodes} that are not reachable from \astnode{Entry} by following 
+\Asyn{CFGNode}{succ} (i.e., that are ``dead code''). The framework computes predecessor edges \Asyn{CFGNode}{pred} 
+by not only inverting \Asyn{CFGNode}{succ} into the collection attribute \Acoll{CFGNode}{succInv}, but also by 
+filtering out ``dead'' nodes from \Acoll{CFGNode}{succInv} with a boolean circular attribute 
+reachable. 
+
+All \astnode{CFGNodes} have immediate access to the Entry and Exit nodes of the 
+CFG, through the inherited \Ainh{CFGNode}{entry} and \Ainh{CFGNode}{exit} attributes declared in \astnode{CFGNode} and 
+defined by the nearest \textsc{CFGRoot} ancestor.
 
 
 
