@@ -11,7 +11,7 @@ as seen in the \emph{Deepwater Horizon} oil spill~\cite{Shafer2010Oil}.
 \emph{Program analysis} is a branch of computer science that aims to study the behaviour
 and properties of computer programs. Program analysis plays a crucial role in software
 development and maintenance, as it helps to ensure the expected functioning of software
-systems and to identify potential bugs or security vulnerabilities such as the one mentioned above.
+systems and to identify potential bugs or security vulnerabilities such as the ones mentioned above.
 In this thesis, we focus on \emph{static program analysis}.
 Static program analysis (\emph{static analysis} for short) is
 \emph{``the art of reasoning about a program's behaviour without executing it''}~\cite{spa}.
@@ -47,10 +47,10 @@ such as \emph{FlowSpec}~\cite{smits2020flowspec}, a domain-specific language,
 or the functional language \emph{Flix}~\cite{madsen2016programming}.
 
 In this thesis, we use \emph{Reference Attribute Grammars}~\cite{hedin2000rags} (RAGs)
-as a declarative approach for implementing dataflow analysis. RAGs
+as a declarative approach for implementing dataflow analysis. RAGs is
 a powerful and flexible formalism for specifying the syntax and semantics of languages,
 and as such, they are widely used in the development of compilers and static analysis tools.
-Our implementation is build upon the \textsc{ExtendJ}~\cite{ekman2007jastadd} Java compiler,
+Our implementation is built upon the \textsc{ExtendJ}~\cite{ekman2007jastadd} Java compiler,
 which is written in \textsc{JastAdd}~\cite{DBLP:journals/entcs/HedinM01}.
 The \textsc{JastAdd} system supports RAGs and implements demand-driven evaluation algorithms,
 ensuring that properties are evaluated only
@@ -59,7 +59,7 @@ computations.
 
 The primary goal of this thesis is to explore the definition of static analysis
 frameworks using RAGs.
-Our intention are to exploit the declarative nature of RAGs and
+Our intention is to exploit the declarative nature of RAGs and
 demand-driven evaluation to explore the possibility of using static
 analysis directly in the development process, i.e., in the Integrated Development Environment (IDE).
 Our attention is mainly directed towards intraprocedural analyses,
@@ -99,12 +99,12 @@ codebase, including the use of different Java features (e.g., use of Lambda Expr
 Java versions, facilitating the identification of suitable corpora for evaluating
 their tools and methodologies.
 
-The following section of this thesis provide a detailed background on the
+The next section of this thesis provides background on the
 underlying concepts and techniques used in this work. We then present our main contributions:
 \begin{itemize}
 	\item \textsc{IntraCFG}: a language-agnostic framework for intraprocedural analysis.
 	 An overview of this contribution can be found in Section~\ref{sec:IntraCFG}, and more details are presented in Paper~\ref{paper:intraj}.
-	\item \textsc{IntraJ}: an instance of \textsc{IntraCFG} Java.
+	\item \textsc{IntraJ}: an instance of \textsc{IntraCFG} for Java.
 	We evaluate \textsc{IntraJ} compared to an industrial tool, showcasing its
 	performance and precision. An overview of this contribution can be found in Section~\ref{sec:IntraJ},
 	with more details provided in Paper~\ref{paper:intraj}.
