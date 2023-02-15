@@ -13,22 +13,22 @@ e.g.,  bytecode, \textsc{IntraCFG}'s approach superimposes the CFGs
 on the AST. This allows for accurate client analysis,
 as the CFGs are constructed directly on the source code level rather than an
 intermediate representation.
-Diffrently from the existing RAG-based framework~\cite{10.1016/j.scico.2012.02.002},
+Differently from the existing RAG-based framework~\cite{10.1016/j.scico.2012.02.002},
 \textsc{IntraCFG} enables the construction of \textsc{AST-Unrestricted} CFGs,
 which are CFGs whose shape is not restricted to the AST structure.
 \subsection{Overall Architecture}
 The overall architecture of how to use our proposed framework, \textsc{IntraCFG}, is shown in Figure~\ref{fig:intraCFG}.
 \textsc{IntraCFG} provides the skeleton and default behaviour for constructing CFGs,
 which can be instantiated for specific languages\footnote{\textbf{\texttt{IntraX}} in the diagram.}, e.g., Java or Teal.
-The \emph{Control-flow analysis} (CFA) module is specifically tailored for a particular 
+The \emph{Control-flow analysis} (CFA) module is specifically tailored for a particular
 programming language and implements the interfaces defined in \textsc{IntraCFG}.
-This module is responsible for constructing the CFG for the program. 
-Once the CFA module has generated the CFG, 
+This module is responsible for constructing the CFG for the program.
+Once the CFA module has generated the CFG,
 other client analyses can added, for example, different dataflow analyses.
 The compiler module plays a crucial role as it defines the AST nodes
-on which the CFA module heavily relies. The compiler also provides access to 
-several APIs that can be used by the CFA module and client analyses, such as 
-the type of a variable or the constant value of an expression, to perform 
+on which the CFA module heavily relies. The compiler also provides access to
+several APIs that can be used by the CFA module and client analyses, such as
+the type of a variable or the constant value of an expression, to perform
 advanced optimizations.
 
 \begin{figure}[H]
@@ -40,7 +40,7 @@ advanced optimizations.
 \textsc{IntraCFG} consists of several key components, including interfaces, attribute equations that define the
 default behaviour, and APIs. The interfaces provide the structure for the
 CFG, and the attribute equations define the default behaviour for the CFG
-construction. 
+construction.
 In the language dependent control-flow module, implementations of the \textsc{IntraCFG}
 interfaces are added to the AST types of the language. This can be done according to the
 precision desired for the CFG.
@@ -72,7 +72,7 @@ We built \textsc{IntraJ} upon the \textsc{ExtendJ} extensible Java compiler~\cit
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.52]{kappa/img/architecturejava.pdf}
-    \caption{\label{fig:intraJ} Overall architecture of instansiating \textsc{IntraCFG} for the Java language.}
+    \caption{\label{fig:intraJ} Overall architecture of instantiating \textsc{IntraCFG} for the Java language.}
 \end{figure}
 
 %Discussing modularity
@@ -80,7 +80,7 @@ As seen in Figure~\ref{fig:intraJ}, we designed \textsc{IntraJ}
 following a  modular approach, and we separately
 instantiated the framework for different versions of Java, such as Java 4,
 Java 5, Java 7 and Java 8.
-\textsc{ExtendJ} has a similar modularisation of different Java versions. 
+\textsc{ExtendJ} has a similar modularisation of different Java versions.
 When \textsc{ExtendJ} is extended to support new versions of Java, this approach
 will allow us to extend \textsc{IntraJ} in a corresponding way.
 This approach allows us and the users of \textsc{IntraJ}
@@ -89,7 +89,7 @@ to easily extend the framework to support new versions of Java.
 % Discussing precision
 The degree of precision in creating CFGs using \textsc{IntraCFG} can differ in order
 to meet the requirements of a given application.
-This ﬂexibility allows the framework users to optimise the analysis's eﬃciency 
+This flexibility allows the framework users to optimise the analysis's efficiency
 by selectively excluding/including specific AST nodes from the CFG.
 For example, nodes such as \astnode{WhileStmt}, which are essential for the
 construction of CFGs, as they are used to define the shape of CFGs, can be excluded
@@ -148,7 +148,7 @@ The implemented analyses are instances of the monotone frameworks (see Section~\
 Each analysis defines its abstract domain, transfer function and \emph{in} and
 \emph{out}\footnote{Or \emph{kill} and \emph{gen}.} circular attributes for each \astnode{CFGNode} (i.e., \AcircSyn{CFGRoot}{in} and  \AcircSyn{CFGRoot}{out}).
 While the core of each dataflow analysis is language independent, relying only on the
-attributes defined by \textsc{IntraCFG}, there are language dependencies in the 
+attributes defined by \textsc{IntraCFG}, there are language dependencies in the
 transfer function, which is modelled as a circular parametrised attribute.
 The transfer function attribute is define for each AST node in the CFG to capture the semantics of passing
 through that node, and for different AST node types, the transfer function is defined differently.
@@ -171,16 +171,16 @@ While the transfer function for \astnode{AssignStmt} is defined as follows:
     return gamma;
   }
 \end{lstlisting}
-The transfer function for \astnode{AssignStmt} in this example receives the 
-mapping of variables to their nullable status, denoted as $\Gamma$ 
-(see Section~\ref{sec:dataflowanalysis}). The equation begins by retrieving the 
-declaration of the left-hand side of the assignment statement, and 
-checks whether the right-hand side is null or not. 
-Depending on the result, the equation updates the status of the left-hand side 
+The transfer function for \astnode{AssignStmt} in this example receives the
+mapping of variables to their nullable status, denoted as $\Gamma$
+(see Section~\ref{sec:dataflowanalysis}). The equation begins by retrieving the
+declaration of the left-hand side of the assignment statement, and
+checks whether the right-hand side is null or not.
+Depending on the result, the equation updates the status of the left-hand side
 variable in $\Gamma$.
-Note that in this example, the attribute \astnode{trFun} for the AST node \astnode{AssignStmt} has been defined with a 
-body (sorrounded by \{ and \}) to specify its behavior, whereas we have previously declared attributes in a 
-single line without the body. This is because the attribute in this case is more 
+Note that in this example, the attribute \astnode{trFun} for the AST node \astnode{AssignStmt} has been defined with a
+body (surrounded by \{ and \}) to specify its behaviour, whereas we have previously declared attributes in a
+single line without the body. This is because the attribute in this case is more
 complex, and requires a more detailed definition to capture its functionality accurately.
 
 
@@ -248,12 +248,12 @@ TEAL is divided in layers, with each version building
 upon the features of the previous one. TEAL-0 is the most basic version and includes
 support for variable declarations and use, procedures, and basic control structures such as if
 and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2
-introduces user-defined classes. 
+introduces user-defined classes.
 In this section,  we will use TEAL-0 to exemplify the use of RAGs
 and \textsc{IntraCFG}.
 The concrete and abstract grammar of TEAL-0 are shown in Figure~\ref{fig:tealGrammar}.
-The concrete grammar is used for parssing. The abstract grammar is given using
-\textsc{JastAdd} syntax, and will be used in examples throughout this section 
+The concrete grammar is used for parsing. The abstract grammar is given using
+\textsc{JastAdd} syntax, and will be used in examples throughout this section
 to describe analyses in TEAL.
 \newsavebox{\mylistingbox}
 
@@ -333,7 +333,7 @@ to describe analyses in TEAL.
     FunDecl : Decl ::= IdDecl [DeclRetTy:Type] Formal:VarDecl* [Body:Stmt];
 
     abstract Expr;
-    abstract BinExpr : Expr ::= 
+    abstract BinExpr : Expr ::=
           Left:Expr Right:Expr;
     AddExpr : BinExpr;
     SubExpr : BinExpr;
@@ -378,14 +378,14 @@ to describe analyses in TEAL.
 \scalebox{0.75}{\usebox{\mylistingbox}}
 
         \end{minipage}
-\caption{\label{fig:tealGrammar} The concrete parsing grammar and parts of the abstract \textsc{JastAdd} grammar of the Teal language. 
- Color coding highlights declarations ({\bfseries\color{orange}orange}), expressions ({\bfseries\color{lightblue}blue}) and statements ({\bfseries\color{magenta}magenta}).}
+\caption{\label{fig:tealGrammar} The concrete parsing grammar and parts of the abstract \textsc{JastAdd} grammar of the Teal language.
+ Colour coding highlights declarations ({\bfseries\color{orange}orange}), expressions ({\bfseries\color{lightblue}blue}) and statements ({\bfseries\color{magenta}magenta}).}
 \end{figure}
 
-\textsc{IntraTeal} is our implementation of \textsc{IntraCFG} for the Teal language. 
-In line with the approach taken for the implementation of the control-flow analysis for \textsc{IntraJ} 
-and different versions of Java, we created separate aspects for the 
-control-flow analysis of Teal-0 and Teal-1.  The control-flow analysis is then 
+\textsc{IntraTeal} is our implementation of \textsc{IntraCFG} for the Teal language.
+In line with the approach taken for the implementation of the control-flow analysis for \textsc{IntraJ}
+and different versions of Java, we created separate aspects for the
+control-flow analysis of Teal-0 and Teal-1.  The control-flow analysis is then
 used to implement the \code{NullPointerException} analysis. The overall architecture of \textsc{IntraTeal} is
 shown in Figure~\ref{fig:IntraTeal}.
 \begin{figure}[H]
@@ -397,16 +397,16 @@ shown in Figure~\ref{fig:IntraTeal}.
 % The Teal programming language is used for teaching purposes
 % and provides a simple and easy-to-learn syntax for students to understand the
 % concepts of static program analysis (see Section~\ref{sec:teal}).
-As part of the course, the complete source code of \textsc{IntraTeal} was provided 
-to students, along with instructions and guidelines for utilizing the API to implement 
-their analyses. We also made available a reference implementation of the \code{NullPointerException} 
-analysis. To extend their understanding and skills, we then asked students to implement 
-an \code{IndexOutOfBound} analysis on the interval abstract domain. This exercise allowed the 
-students to apply the concepts they had learned in a practical setting and gain a 
-deeper understanding of dataﬂow analysis.
+As part of the course, the complete source code of \textsc{IntraTeal} was provided
+to students, along with instructions and guidelines for utilizing the API to implement
+their analyses. We also made available a reference implementation of the \code{NullPointerException}
+analysis. To extend their understanding and skills, we then asked students to implement
+an \code{IndexOutOfBound} analysis on the interval abstract domain. This exercise allowed the
+students to apply the concepts they had learned in a practical setting and gain a
+deeper understanding of dataflow analysis.
 
 Another key aspect of \textsc{IntraTeal} and \textsc{IntraJ} implementations is that they
-construct enhanced control sensitive CFGs, i.e., it understands that the following code, 
+construct enhanced control sensitive CFGs, i.e., it understands that the following code,
 dereferencing \code{x} inside the body of the if-statement, is safe:
 \begin{lstlisting}[language=JastAdd]
 if (x != null){
@@ -414,11 +414,11 @@ if (x != null){
 }
 \end{lstlisting}
 Control sensitive CFGs are a more precise representation of the control flow of a program, as they take
-into account the different behavior when a branching condition is true or false. This is achieved by
+into account the different behaviour when a branching condition is true or false. This is achieved by
 using HOAs to synthesise two AST nodes, i.e., \astnode{ControlTrue} and \astnode{ControlFalse}, for each
 comparison operator, e.g.,  ``$\le$'', ``$==$'', ``$!=$'', inside a conditional expression.
 These HOAs are used to enhance the control flow of the program with the information that can be inferred from
-it. 
+it.
 \begin{figure}
 	\centering
 	\begin{tikzpicture}
@@ -438,9 +438,9 @@ fun foo(x) = {
 \begin{lstlisting}[language=JastAdd,label={lst:ControlTrueEq}, caption={Transfer function for \astnode{ControlTrue} HOA.}]
 eq ControlTrue.nullnessTransfer(NullDomain lattice) = new NullDomain(lattice).join(getCond().getImplicitAssignment());
 \end{lstlisting}
-Figure~\ref{fig:ExampleTEAL} shows \textsc{IntraTeal}'s control sensitive CFG for a simple 
+Figure~\ref{fig:ExampleTEAL} shows \textsc{IntraTeal}'s control sensitive CFG for a simple
 program with an if-statement. The \astnode{ControlTrue} and \astnode{ControlFalse} HOAs are
-used to distinguish the execution path when the condition in the if-statement evaluates to 
+used to distinguish the execution path when the condition in the if-statement evaluates to
 true or false, respectively. The \code{NullPointerException} analysis can benefit from this more refined CFG.
 In Listing~\ref{lst:ControlTrueEq}, we show how this enhanced CFG is used to improve the precision of the analysis.
 The Listing shows the equation for the transfer function of the \astnode{ControlTrue} HOA.
@@ -470,7 +470,7 @@ This information is used to improve the precision of the analysis and provide
 more accurate results without affecting the performance of the analysis.
 
 We also asked students to use the \astnode{ControlTrue} and \astnode{ControlFalse}
-HOAs to improve the precision of the interval analysis. Similarly to the previous example, in 
+HOAs to improve the precision of the interval analysis. Similarly to the previous example, in
 Listing~\ref{lst:control-interval} the \astnode{ControlTrue} and \astnode{ControlFalse}
 are used to keep track of the information that the object \texttt{x} is in the interval $[5,6]$.
 
@@ -480,7 +480,7 @@ The interval domain, being an infinite domain, poses a significant challenge for
 dataflow analysis. In particular,
 the iterative nature of dataflow analysis algorithms, which rely on the computation
 of a sequence of approximations, may not terminate when applied to an infinite domain.
-Even if the computation terminates, it can result in an excessive consumption of computational resources. 
+Even if the computation terminates, it can result in an excessive consumption of computational resources.
 The example in Figure~\ref{fig:nonConverging}
 illustrates a non-converging program.
 \begin{figure}
@@ -629,7 +629,7 @@ syntactic and semantic features from Java programs. The tool is designed to assi
 researchers and developers in selecting appropriate software corpora to better evaluate the robustness
 and performance of software tools, such as static analysers.
 \textsc{JFeature} is implemented as an extension of the \textsc{ExtendJ} Java compiler. It is declarative
-and extensible, allowing for the easy addition of new queries. In this Section, 
+and extensible, allowing for the easy addition of new queries. In this Section,
 we give an overview of this work, and more details are available in Paper~\ref{paper:jfeature}.
 
 The need for \textsc{JFeature} arose during the evaluation of \textsc{IntraJ}.

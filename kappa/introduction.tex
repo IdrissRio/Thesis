@@ -44,23 +44,23 @@ the emphasis is on the desired outcome, rather than the specific steps required 
 achieve it.
 There are several declarative languages for specifying dataflow analysis,
 such as \emph{FlowSpec}~\cite{smits2020flowspec}, a domain-specific language,
-or the functional language \emph{Flix}~\cite{madsen2016programming}. 
+or the functional language \emph{Flix}~\cite{madsen2016programming}.
 
 In this thesis, we use \emph{Reference Attribute Grammars}~\cite{hedin2000rags} (RAGs)
-as a declarative approach for implementing dataflow analysis. RAGs 
+as a declarative approach for implementing dataflow analysis. RAGs
 a powerful and flexible formalism for specifying the syntax and semantics of languages,
-and as such, they are widley used in the development of compilers and static analysis tools.
+and as such, they are widely used in the development of compilers and static analysis tools.
 Our implementation is build upon the \textsc{ExtendJ}~\cite{ekman2007jastadd} Java compiler,
 which is written in \textsc{JastAdd}~\cite{DBLP:journals/entcs/HedinM01}.
-The \textsc{JastAdd} system supports RAGs and implements demand-driven evaluation algorithms, 
+The \textsc{JastAdd} system supports RAGs and implements demand-driven evaluation algorithms,
 ensuring that properties are evaluated only
 when necessary, reducing the overall evaluation time by avoiding redundant
 computations.
 
 The primary goal of this thesis is to explore the definition of static analysis
 frameworks using RAGs.
-Our intention are to exploit the declarative nature of RAGs and 
-demand-driven evaluation to explore the possibility of using static 
+Our intention are to exploit the declarative nature of RAGs and
+demand-driven evaluation to explore the possibility of using static
 analysis directly in the development process, i.e., in the Integrated Development Environment (IDE).
 Our attention is mainly directed towards intraprocedural analyses,
 including control-flow and dataflow analysis, which involve examining the
@@ -74,9 +74,9 @@ interactions with other methods or functions).
 % control-flow graph, which represents all possible paths in a program, did not
 % accurately reflect the actual evaluation order of the program.
 
-We initially employed the older RAG-based framework, \textsc{JastAddJ-intraflow}~\cite{10.1016/j.scico.2012.02.002}, 
-but we encountered some limitations, including the constuction of imprecise control-flow graphs (CFGs).
-A CFG is a directed graph that represents all possible paths in a program, and 
+We initially employed the older RAG-based framework, \textsc{JastAddJ-intraflow}~\cite{10.1016/j.scico.2012.02.002},
+but we encountered some limitations, including the construction of imprecise control-flow graphs (CFGs).
+A CFG is a directed graph that represents all possible paths in a program, and
 represents the evaluation order of the program. An imprecise CFG can lead to
 incorrect results in subsequent analyses, such as dataflow analysis.
 

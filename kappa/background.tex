@@ -32,17 +32,17 @@ all possible execution paths.
 In contrast, static analysis performs the analysis without executing the program,
 relying on information gathered from the source code. This approach has
 the advantage of being more exhaustive, as it can analyse the entire program,
-including infeasible execution paths. 
-One limitation of static analysis is that it can result in \emph{false positive} 
-and \emph{false negative} results. False positive results occur when the analysis 
-incorrectly reports a problem in the code, whereas false negative results occur 
-when the analysis fails to report an actual problem in the code. The \emph{soundness} and 
-\emph{completeness} of the analysis determine the accuracy of the results. Soundness refers 
-to the property that if the analysis reports a problem, then there is indeed a 
+including infeasible execution paths.
+One limitation of static analysis is that it can result in \emph{false positive}
+and \emph{false negative} results. False positive results occur when the analysis
+incorrectly reports a problem in the code, whereas false negative results occur
+when the analysis fails to report an actual problem in the code. The \emph{soundness} and
+\emph{completeness} of the analysis determine the accuracy of the results. Soundness refers
+to the property that if the analysis reports a problem, then there is indeed a
 problem in the code.
-Completeness refers to the property that if there is a problem 
-in the code, the analysis will eventually report it. In practice, it is often 
-difficult to achieve both soundness and completeness, which leads to the trade-off 
+Completeness refers to the property that if there is a problem
+in the code, the analysis will eventually report it. In practice, it is often
+difficult to achieve both soundness and completeness, which leads to the trade-off
 between false positive and false negative results in static analysis.
 
 Static Analysis can be further divided into several categories, including \emph{Type}
@@ -54,10 +54,10 @@ produce, such as the mutation of data. This information can be used to identify
 potential bugs and improve program understandability.
 
 In the context of this thesis, we focus on intraprocedural control-flow and dataflow analysis.
-Intraprocedural control-flow analysis focuses on determining the order in which 
-statements and expressions within a single method in a program will be executed, 
+Intraprocedural control-flow analysis focuses on determining the order in which
+statements and expressions within a single method in a program will be executed,
 without considering any function or method calls that may occur.
-Intraprocedural dataflow analysis uses the control-flow information to 
+Intraprocedural dataflow analysis uses the control-flow information to
 determine properties on the flow of data within a single method.
 Our implementations are instances of the Monotone Framework, a mathematical framework that provides a
 foundation for dataflow analysis. In the future, we aim to improve the precision of the analysis
@@ -75,7 +75,7 @@ efficient dataflow analysis results.
 In the context of our research, we have chosen to compute control-sensitive and
 exception-sensitive control-flow analyses.
 Control-sensitivity refers to the ability of the analysis to distinguish between
-true and false branches of conditional statements, such as if-statements, and 
+true and false branches of conditional statements, such as if-statements, and
 taking into account the implicit side effects of the conditional expressions.
 Exception-sensitivity refers to the ability of the analysis to distinguish between
 the normal and exceptional execution paths of a program.
@@ -135,24 +135,24 @@ One of the main limitations is that it can be more difficult to accurately captu
 control-flow of a program since the source code may contain unsugared constructs,
 such as macros and preprocessor directives, that
 can complicate the analysis specification.
-In comparison to the engineering effort required by the IR approach, the source-level 
-approach presents complex implementation challenges. Despite the advantage 
-of IRs being generally smaller than the source language, thus reducing the number 
-of constructs to be handled in constructing the CFG and potentially reducing 
-the size or complexity of the analysis code, the source-level approach requires 
+In comparison to the engineering effort required by the IR approach, the source-level
+approach presents complex implementation challenges. Despite the advantage
+of IRs being generally smaller than the source language, thus reducing the number
+of constructs to be handled in constructing the CFG and potentially reducing
+the size or complexity of the analysis code, the source-level approach requires
 a higher level of complexity in its implementation.
 In addition, the source code may be written in a variety
 of languages with different syntax and semantics, making it challenging to
 design a single analysis that works across all languages.
 
 The examples in Figures~\ref{fig:cfgsourcelevel} and~\ref{fig:cfgintermediatelevel} show the source-level and bytecode control-flow
-graphs of a simple method \texttt{foo}. 
-Adding \emph{Entry} and \emph{Exit} nodes to a CFG is a common practice to 
+graphs of a simple method \texttt{foo}.
+Adding \emph{Entry} and \emph{Exit} nodes to a CFG is a common practice to
 simplify the implementation of dataflow analyses.
 These nodes represent the unique entry and exit points of the method, respectively.
-The Entry node serves as a starting point for the 
+The Entry node serves as a starting point for the
 analysis, allowing for a proper initialisation of the parameters.
-The Exit node is particularly useful in backward dataflow analyses (see Section~\ref{sec:dataflowanalysis}), as it is used 
+The Exit node is particularly useful in backward dataflow analyses (see Section~\ref{sec:dataflowanalysis}), as it is used
 as unique starting point for the analysis.
 the starting point for the analysis.
 
@@ -292,7 +292,7 @@ Many static analysis tools for Java programs, e.g., FindBugs, employ intraproced
 data-flow analysis to identify potential bugs in Java code.
 % I looked here how they cited pmd, findbugs and spotbugs. https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8103456
 Dataflow analysis, particularly interprocedural dataflow analysis, is widely
-used to identify potential security vulnerabilities in software~\cite{flowDroid}. 
+used to identify potential security vulnerabilities in software~\cite{flowDroid}.
 In fact, an interprocedural control-flow graph enables tracking of the flow
 across multiple methods or functions, thereby allowing identification of points
 where the data may be exposed to unauthorized access or manipulation.
@@ -302,7 +302,7 @@ practical example. Let us reconsider the \code{foo} method introduced in Figure~
 Our goal is to determine at each stage of the program whether the variable \code{x}
 has a \code{null} value or not\footnote{For simplicity, just for this example, we assume that the language
 allows only assignments of the form \code{x = y} where \code{y} can
-be either a  variables, a numeric constants or the \code{null} literal. We also assume 
+be either a  variables, a numeric constants or the \code{null} literal. We also assume
 that CFG nodes are individual assignments.
 }.
 
@@ -314,9 +314,9 @@ value. Then, if the condition \code{if(x > 0)} is \code{true}, the
 variable \code{x} is assigned a new value, which is not \code{null}. If the condition
 is \code{false}, the variable \code{x} is assigned \code{null}. Therefore, at the
 end of the method, the variable \code{x} may be either \code{null} or not \code{null}.
-Consider the scenario where \code{x} is used dereferenced immediately after the 
+Consider the scenario where \code{x} is used dereferenced immediately after the
 if-else statement. The program may crash if \code{x} is \code{null}. This is a potential
-bug in the program. 
+bug in the program.
 
 This information can be used to identify potential bugs in the program, such as,
 unexpected \code{NullPointerException} exceptions.
@@ -373,20 +373,20 @@ be potentially \emph{infinite}.
       \node (bot) at (0,-1) {\code{unknown}};
       \draw (bot) -- (null) -- (top) -- (notnull) -- (bot);
     \end{tikzpicture}
-    \caption{\label{fig:lattice}Diagram of the partial order in the example in 
-    Section~\ref{sec:dataflowanalysis}, showing the order relation between \code{maybenull} 
+    \caption{\label{fig:lattice}Diagram of the partial order in the example in
+    Section~\ref{sec:dataflowanalysis}, showing the order relation between \code{maybenull}
     ($\top$), \code{unknown} ($\bot$), \code{null}, and \code{notnull}.}
   \end{center}
 \end{wrapfigure}
 
 
 Monotone frameworks include a join operator $\sqcup$, a monotone transfer function $f$,
-and a finite height lattice $\mathcal{L}$. 
+and a finite height lattice $\mathcal{L}$.
 A monotone transfer function is a mathematical function that maps an element of a
-partially ordered set to another element in the same set such that the partial 
-ordering is preserved under the function. More formally, if $(S, \leq)$ is a 
-partially ordered set and $f: S \rightarrow S$ is a function, $f$ is called a 
-monotone transfer function iff, for all $x, y \in S$ such that $x \leq y$, it follows 
+partially ordered set to another element in the same set such that the partial
+ordering is preserved under the function. More formally, if $(S, \leq)$ is a
+partially ordered set and $f: S \rightarrow S$ is a function, $f$ is called a
+monotone transfer function iff, for all $x, y \in S$ such that $x \leq y$, it follows
 that $f(x) \leq f(y)$.
 
 In our example, the lattice $\mathcal{L}$ is the set of possible values of the variable \code{x}.
@@ -400,7 +400,7 @@ information \code{notnull}, then the information at the merged node $n \bigsqcup
 becomes \code{maybenull}.
 In the previous section, we explained how a node affects the flow of data
 using natural language. Now, we will present this concept in a formal manner
-as a transfer function. Let \textit{Var} be the set of variables in the program, 
+as a transfer function. Let \textit{Var} be the set of variables in the program,
 $V$ be the set of nodes in the CFG, and  $\textit{Var} \rightarrow \mathcal{L}$
 be the function that maps variables to elements of the lattice $\mathcal{L}$.
 The monotone transfer function $f_{\textit{NULL}}: (\textit{Var} \rightarrow \mathcal{L}) \times V \rightarrow (\textit{Var} \rightarrow \mathcal{L})$
@@ -447,7 +447,7 @@ a backward analysis is defined as follow:
 \end{align*}
 where $\text{succ}(n)$ is the set of successors of the node $n$, i.e., $\text{succ}(n) = \{ s \mid (n,s)\in E\}$.
 The boundary condition for the $\textit{out}$ set when $n$ is the Exit node differs depending on the
-analysis. 
+analysis.
 
 The equations for both forward and backward analyses define a mutual dependency
 between the $in$ and $out$ sets of a node.
@@ -456,7 +456,7 @@ a mathematical technique that finds a stable state, in a system.
 In the context of the Monotone frameworks, this
 refers to finding a state where the $in$ and $out$ sets of all nodes in the CFG have reached a
 stable value, and no further changes will occur. The authors of~\cite{Nielson2010Principles}
-present several techniques for computing fixpoints and demonstrate that exists a fixpoint~\cite{Knaster1929} and that the resulting 
+present several techniques for computing fixpoints and demonstrate that exists a fixpoint~\cite{Knaster1929} and that the resulting
 fixpoint is unique and the minimum among all fixed points of the transfer function $f$.
 
 
@@ -495,17 +495,16 @@ Synthesized attributes are composed by a declaration and an equation:
    &\Asyn{A}{x} = e
 \end{align*}
 where \astnode{T} is the type of the attribute, \astnode{A} is the node type and \textcolor{ATGsym}{x} is the attribute name.
-The up-arrow symbol (\textcolor{ATGsym}{\mSyn{}}) is used to denote a synthesized attribute. 
+The up-arrow symbol (\textcolor{ATGsym}{\mSyn{}}) is used to denote a synthesized attribute.
 The right-hand side of the equation, is an expression, $e$, that may use other attributes of the \astnode{A} node or its children.
 If \astnode{A} has subtypes, say \astnode{A}$_1$ and \astnode{A}$_2$, different equations can be given for
-\astnode{A}$_1$ and \astnode{A}$_2$. If all subtypes will use the same equation, the declaration and the quation can be combined 
-into a single line, as follows:
+\astnode{A}$_1$ and \astnode{A}$_2$. If all subtypes will use the same equation, the declaration and the equation can be combined into a single line, as follows:
 \begin{equation*}
   \Asyn{A}{x} = e
 \end{equation*}
 
 For the sake of readability, we use the notation introduced by Fors et al. in~\cite{fors2020patterns},
-where attribute names are preceded by a symbol (e.g.,\textcolor{ATGsym}{\mSyn{}},\textcolor{ATGsym}{\mInh{}}) 
+where attribute names are preceded by a symbol (e.g.,\textcolor{ATGsym}{\mSyn{}},\textcolor{ATGsym}{\mInh{}})
 that indicates the kind of the attribute (e.g., synthesized or inherited).
 % We use the symbol \Abase{x} to denote the attribute name and the symbol $e$ to denote the attribute value,
 % e.g., a constant, or a function of the node's children and/or the node's own attributes.
@@ -531,12 +530,12 @@ The expression $e$ may use the attributes of \astnode{A} and any of its children
 \centering
 \includegraphics[width=1\textwidth]{kappa/img/AGExample.pdf}
     \caption{\label{fig:ragsExample} Attribute grammar example.
-    Left: Abstract syntax tree with attribute equation system. Right: solution of the equation system. 
+    Left: Abstract syntax tree with attribute equation system. Right: solution of the equation system.
     Dashed arrows indicates the location of the equation for an inherited attribute.
     }
 \end{figure}
 
-To better explain the concept of AGs, we present a very simple example. 
+To better explain the concept of AGs, we present a very simple example.
 We start by defining the following abstract grammar:
     \begin{align*}
         A& ::= B \quad C \\
@@ -557,7 +556,7 @@ due to the presence of \astnode{B} as a child node in both \astnode{A} and \astn
 Figure~\ref{fig:ragsExample} depicts the described example.
 
 The attributes are variables in an equation system which, in this case, can be solved by substitution.
-For example, the value for the synthesized attribute \Asyn{A}{z} is computed by first 
+For example, the value for the synthesized attribute \Asyn{A}{z} is computed by first
 substituting the value of \Ainhdef{A}{B}{w} in the equation for \Asyn{B}{x}, and then
 substituting the value of \Asyn{B}{x} in the equation for \Asyn{A}{z}:
 \begin{align*}
@@ -566,7 +565,7 @@ substituting the value of \Asyn{B}{x} in the equation for \Asyn{A}{z}:
     &\Ainhdef{A}{B}{w} = 36
 \end{align*}
 resulting in \Asyn{A}{z} = 37. The value for the inherited attribute \Ainh{B}{w} is defined by node \astnode{A} for
-its child of type \astnode{B}. In this case, the value of \Ainh{B}{w} is defined by node \astnode{A} 
+its child of type \astnode{B}. In this case, the value of \Ainh{B}{w} is defined by node \astnode{A}
 with value 36.
 The value for the inherited attribute \Ainh{C}{y} is defined by node \astnode{A} for
 its child of type \astnode{C}. The value of \Ainh{C}{y} is computed by solving the equation system:
@@ -576,20 +575,20 @@ its child of type \astnode{C}. The value of \Ainh{C}{y} is computed by solving t
     &\Asyn{A}{z} = 37 \\
     &\Ainhdef{C}{B}{w}  = 5
 \end{align*}
-resulting in \Ainh{C}{y} = 37 + 5 = 42. 
+resulting in \Ainh{C}{y} = 37 + 5 = 42.
 
-The attribute value of node \astnode{B} depends on the context in which it is 
+The attribute value of node \astnode{B} depends on the context in which it is
 evaluated, resulting in potentially different values. Specifically, the attribute
 value of \Ainh{B}{w}  can be either 36 or 5, depending on the context of node \astnode{B}.
-In this case, the value of \Ainh{B}{w} 
-is defined by node \astnode{C} with value 5. 
+In this case, the value of \Ainh{B}{w}
+is defined by node \astnode{C} with value 5.
 
 
 
-The previous example presents a straightforward instance of AGs 
-and does not display its full expressiveness. In real-life scenarios, AGs 
-tend to be more complex. Features, such as subtyping and declaration of nodes with multiple 
-children of the same type, play an essential role in expressing the semantics of 
+The previous example presents a straightforward instance of AGs
+and does not display its full expressiveness. In real-life scenarios, AGs
+tend to be more complex. Features, such as subtyping and declaration of nodes with multiple
+children of the same type, play an essential role in expressing the semantics of
 a programming language.
 
 For example, in the following grammar:
@@ -668,21 +667,21 @@ The attributes are defined in a ``\code{.jrag}'' file with the following syntax:
   eq A.getB().w() = 36;
     \end{lstlisting}
 An equation is defined in the context of a node type, and children are accessed using getters.
-For example, the equation on line 6 defines the value of the 
-inherited attribute \textcolor{ATGsym}{y} of an \astnode{A} node's child \astnode{C}. 
+For example, the equation on line 6 defines the value of the
+inherited attribute \textcolor{ATGsym}{y} of an \astnode{A} node's child \astnode{C}.
 It uses the \astnode{A} node's synthesized attribute \textcolor{ATGsym}{z} and the \astnode{C} node's
 synthesized attribute \textcolor{ATGsym}{v} to compute the value of the inherited attribute \textcolor{ATGsym}{y}.
 \begin{figure}
     \begin{center}
         \includegraphics[width=0.85\textwidth]{kappa/img/Intertype.pdf}
     \end{center}
-    \caption{\label{fig:interType} \textsc{JastAdd} generates Java classes from the abstract grammar, and 
-    weaves in code correrponding to the intertype declarations in the aspect into the generated classes \code{A} and \code{B}.}
+    \caption{\label{fig:interType} \textsc{JastAdd} generates Java classes from the abstract grammar, and
+    weaves in code corresponding to the intertype declarations in the aspect into the generated classes \code{A} and \code{B}.}
 \end{figure}
 
-An additional key feature of \textsc{JastAdd} is its support of \textsc{AspectJ}-style~\cite{Kiczales1997Aspect} intertype 
+An additional key feature of \textsc{JastAdd} is its support of \textsc{AspectJ}-style~\cite{Kiczales1997Aspect} intertype
 declarations for the definition of attributes.
-Attribute declarations and equations can be written in aspects, and \textsc{JastAdd} 
+Attribute declarations and equations can be written in aspects, and \textsc{JastAdd}
 creates corresponding Java methods that are woven into the classes defined by the abstract grammar.
 
 The example in Figure~\ref{fig:interType}
@@ -738,8 +737,8 @@ syn int A.x() circular[0] =  Math.min(3, x()+1);
 \end{lstlisting}
 In \textsc{JastAdd}, circular attributes are defined using the \code{circular} keyword.
 The circular synthesized attribute \AcircSyn{A}{x} begins with a value of 0 and
-a fix-point computation is performed until the attribute reaches stability. 
-In this example, the attribute evaluates to 3 after the third iteration as 
+a fix-point computation is performed until the attribute reaches stability.
+In this example, the attribute evaluates to 3 after the third iteration as
 the value of the attribute stops changing.
 
 
