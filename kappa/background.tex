@@ -790,5 +790,35 @@ Expr contributes this when !type.compatible(expectedType()) to Program.errors();
     Other examples of using collections include finding reverse relations, for example, 
     computing the predecessors in a CFG, given the set of successors.
 
+\subsubsection{Interfaces}
+\textsc{JastAdd} supports a mechanism for defining and extending AST classes with interfaces.
+Interfaces in \textsc{JastAdd}  provide a way to extend the behavior 
+of AST classes. By declaring an interface for an AST class, the class can inherit 
+equations and attributes defined in the interface. 
+This enables developers to modularise the behavior of AST classes, making it easier 
+to reuse and maintain code.
+Interfaces can be declared using the \code{interface} keyword, and, similary to Java,
+they can extend other interfaces.
+By using the \code{implements} keyword, it is possible to 
+state that an AST class implements an interface.
+For example, if we want to abstract a common operation for all the CFG nodes, we can define an interface
+\astnode{CFGNode} and then specify that all the CFG nodes implement it. For example:
+\begin{lstlisting}[language=JastAdd]
+public interface CFGNode;
 
+AddExpr implements CFGNode;
+AssignStmt implements CFGNode;
+//...
 
+syn Gamma CFGNode.in() circular[new Gamma()] { 
+  Gamma res = new Gamma(); 
+  for (CFGNode e : pred()) 
+    res.join(e.out()); 
+  return res; 
+}
+\end{lstlisting}
+In this case, both \astnode{AddExpr} and \astnode{AssignStmt} implement the interface \astnode{CFGNode}.
+We then define the \AcircSyn{CFGNode}{in} for the \astnode{CFGNode} interface.
+This attribute is then inherited by all the classes that implement the interface,
+i.e., \astnode{AddExpr} and \astnode{AssignStmt}, allowing them to share the 
+common behavior specified only for \astnode{CFGNode}.
