@@ -218,35 +218,36 @@ Similarly, the result of Dead Assignment Analysis is used to compute Indirect De
 
 The implemented analyses are instances of the monotone frameworks (see Section~\ref{sec:monotoneframeworks}).
 Each analysis defines its abstract domain, transfer function and \emph{in} and
-\emph{out}\footnote{Or \emph{kill} and \emph{gen}.} circular attributes for each \astnode{CFGNode} (i.e., \AcircSyn{CFGRoot}{in} and  \AcircSyn{CFGRoot}{out}).
+\emph{out}\footnote{Or \emph{kill} and \emph{gen}.} circular attributes for each \astnode{CFGNode} (e.g., \AcircSyn{CFGNode}{in} and  \AcircSyn{CFGNode}{out}).
 While the core of each dataflow analysis is language independent, relying only on the
 attributes defined by \textsc{IntraCFG}, there are language dependencies in the
-transfer function, which is modelled as a circular parametrised attribute.
-The transfer function attribute is define for each AST node in the CFG to capture the semantics of passing
+transfer function, which is modelled as a parametrised attribute.
+The transfer function attribute is defined for each AST node in the CFG to capture the semantics of passing
 through that node, and for different AST node types, the transfer function is defined differently.
 For example, in the case of \code{NullPointerException} analysis,
 the general and language-independent definition of the transfer function is
 defined as follows:
 \begin{lstlisting}[language=JastAdd]
-  syn CFGNode.trFun(Gamma gamma) circular [new Gamma()] = gamma;
+  syn CFGNode.trFun(Gamma gamma) = gamma;
 \end{lstlisting}
 While the transfer function for \astnode{AssignStmt} is defined as follows:
 \begin{lstlisting}[language=JastAdd]
   eq AssignStmt.trFun(Gamma gamma) {
+    Gamma newGamma = new Gamma(gamma);
     Variable decl = getLHSDecl();
     if (nullRHS()){
-      gamma.put(decl, NULL);
+      newGamma.put(decl, NULL);
     }
     else{
-      gamma.put(decl, NOTNULL);
+      newGamma.put(decl, NOTNULL);
     }
-    return gamma;
+    return newGamma;
   }
 \end{lstlisting}
 The transfer function for \astnode{AssignStmt} in this example receives the
 mapping of variables to their nullable status, denoted as $\Gamma$
 (see Section~\ref{sec:dataflowanalysis}). The equation begins by retrieving the
-declaration of the left-hand side of the assignment statement, and
+declaration of the left-hand side of the assignment statement (computed by the compiler), and
 checks whether the right-hand side is null or not.
 Depending on the result, the equation updates the status of the left-hand side
 variable in $\Gamma$.
@@ -254,6 +255,9 @@ Note that in this example, the attribute \astnode{trFun} for the AST node \astno
 body (surrounded by \{ and \}) to specify its behaviour, whereas we have previously declared attributes in a
 single line without the body. This is because the attribute in this case is more
 complex, and requires a more detailed definition to capture its functionality accurately.
+One requirement, to ensure the correct evaluation of results, for defining attributes in \textsc{JastAdd} is that the code
+within the body must be observationally pure, which means that it 
+should not produce any externally visible side-effects.
 
 
 
@@ -470,7 +474,7 @@ shown in Figure~\ref{fig:IntraTeal}.
 % The \textsc{Teal} programming language is used for teaching purposes
 % and provides a simple and easy-to-learn syntax for students to understand the
 % concepts of static program analysis (see Section~\ref{sec:teal}).
-As part of the course, the complete source code of \textsc{IntraTeal} was provided
+As part of the course, the complete source code of the \textsc{IntraTeal} control-flow analysis was provided
 to students, along with instructions and guidelines for utilizing the API to implement
 their analyses. We also made available a reference implementation of the \code{NullPointerException}
 analysis. To extend their understanding and skills, we then asked students to implement
@@ -612,7 +616,7 @@ This integration process and evaluation are not covered in any of the papers inc
 However, it was developed as an application of the research and methods previously
 described in these papers, and was carried out subsequently.
 
-\subsubsection{LSP support via MagpieBridge: warnings, quick-fixes and bug explanations}
+\subsection{LSP support via MagpieBridge: warnings, quick-fixes and bug explanations}
 \begin{figure}
   \centering
   \includegraphics[width=0.92\textwidth]{kappa/img/IDEIntegration.pdf}
@@ -661,19 +665,19 @@ but also provide developers with quick fixes and explanations, allowing them to 
 the problems more efficiently. Additionally, we enhanced the \texttt{(Indirect) Dead Assignment} analysis
 to provide explanations, giving developers a deeper understanding of the issues detected.
 Figure~\ref{fig:IDEExample} illustrates an example of interaction between \textsc{IntraJ} and
-\textsc{Visual Studio Code}. More specifically, illustrates an instance of a \texttt{NullPointerException}
+\textsc{Visual Studio Code}. More specifically, it illustrates an instance of a \texttt{NullPointerException}
 detected by \textsc{IntraJ} and its representation within the IDE.
 The ``\includegraphics[height=8pt]{kappa/img/bulb.png}''  icon indicates that an quick-fix is available,
 which can be applied by clicking on the icon.
 
-\subsubsection{Visualisation via \textsc{CodeProber}}
+\subsection{Visualisation via \textsc{CodeProber}}
 In this Section, we will give an overview of the integration of \textsc{IntraTeal}
 with \textsc{CodeProber}, a tool for visualizing and
 exploring the results of compilers and static analysers. \textsc{CodeProber}
 allows developers to interact with the results of the analysis in a visual and intuitive
 manner. It enables real-time interaction with the AST node's attributes and the source code,
 enabling analysis developers to explore results and partial results, making
-debugging and troubleshooting more efficient with respect the traditional debugging
+debugging and troubleshooting more efficient in comparison to the traditional debugging
 approaches. As a browser-based tool that is not restricted to the Language Server Protocol,
 \textsc{CodeProber} enables the visualisation of analysis results in different
 formats, including, but not limited to, graph representation and other visual forms, beyond
