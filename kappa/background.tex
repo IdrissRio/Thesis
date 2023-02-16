@@ -561,7 +561,7 @@ Solving the equation system for the attribute \Asyn{A}{z} gives:
   =& (36 - 1) + 2 \\
   =& 37
 \end{align*}
-Solving for  \Ainh{C}{y}, resuing the solved value for \Asyn{A}{z}, gives:
+Solving for  \Ainh{C}{y}, reusing the solved value for \Asyn{A}{z}, gives:
 \begin{align*}
   \astnode{A}.\Ainh{C}{y} = & \Asyn{A}{z} + \astnode{A}.\Asyn{C}{v}\\
   = & 37 + \astnode{A}.\Asyn{C}{v} \\
@@ -621,13 +621,13 @@ Examples of the relations that can be constructed using RAGs are:
 % \textsc{JastAdd} allows language designers to handle complex language constructs in a modular and extensible
 % manner through the use of the RAGs formalism.
 The \textsc{JastAdd} metacompiler~\cite{DBLP:journals/entcs/HedinM01} is a Java-based tool that generates
-Java code from a RAG specification. The generated code can be used to construct an AST and to perform
+Java code from a RAG specification. The generated code can be used by an analysis tool to construct an AST and to perform
 analysis on the AST.
 Another important aspect of \textsc{JastAdd} is its support for on-demand attribute evaluation.
 Attribute evaluation is performed only when the corresponding
-attribute is required and triggered by the program. This approach enables \textsc{JastAdd} to
+attribute is required and triggered by the anlaysis tool. This approach enables \textsc{JastAdd} to
 avoid performing unnecessary computations, which can improve the run-time
-performance of the generated program.
+performance of the tool.
 
 The \textsc{JastAdd} metacompiler is based on the following components:
 \begin{itemize}
@@ -662,20 +662,23 @@ The attributes are defined in a ``\code{.jrag}'' file with the following syntax:
 An equation is defined in the context of a node type, and children are accessed using getters.
 For example, the equation on line 6 defines the value of the
 inherited attribute \textcolor{ATGsym}{y} of an \astnode{A} node's child \astnode{C}.
-It uses the \astnode{A} node's synthesized attribute \textcolor{ATGsym}{z} and the \astnode{C} node's
+It uses the \astnode{A} node's synthesized attribute \textcolor{ATGsym}{z} and the \astnode{C} child's
 synthesized attribute \textcolor{ATGsym}{v} to compute the value of the inherited attribute \textcolor{ATGsym}{y}.
-\begin{figure}
-    \begin{center}
-        \includegraphics[width=0.85\textwidth]{kappa/img/Intertype.pdf}
-    \end{center}
-    \caption{\label{fig:interType} \textsc{JastAdd} generates Java classes from the abstract grammar, and
-    weaves in code corresponding to the intertype declarations in the aspect into the generated classes \code{A} and \code{B}.}
-\end{figure}
+
 
 An additional key feature of \textsc{JastAdd} is its support of \textsc{AspectJ}-style~\cite{Kiczales1997Aspect} intertype
 declarations for the definition of attributes.
 Attribute declarations and equations can be written in aspects, and \textsc{JastAdd}
 creates corresponding Java methods that are woven into the classes defined by the abstract grammar.
+
+\begin{figure}[H]
+  \begin{center}
+      \includegraphics[width=0.85\textwidth]{kappa/img/Intertype.pdf}
+  \end{center}
+  \caption{\label{fig:interType} \textsc{JastAdd} generates Java classes from the abstract grammar, and
+  weaves in code corresponding to the intertype declarations in the aspect into the generated classes \code{A} and \code{B}.
+  Additional RAG code for on-demand evaluation support is elided.}
+\end{figure}
 
 The example in Figure~\ref{fig:interType}
 shows an intertype declaration of an attribute.
@@ -683,7 +686,7 @@ The attributes \Asyn{A}{x} and \Asyn{B}{x} are defined in the aspect \code{AttrD
 and are woven into the classes \code{A} and \code{B}, respectively.
 
 \textsc{JastAdd} supports not only synthesized and inherited attributes, but also:
-\emph{Parametrised Attributes}~\cite{hedin2000rags}, \emph{Higher-Order Attributes}~\cite{vogt1989higher}, \emph{Circular Attributes}~\cite{MAGNUSSON200721}, and \emph{Collection Attributes}~\cite{boyland1996descriptional}.
+\emph{Parametrised Attributes}~\cite{hedin2000rags}, \emph{Higher-Order Attributes}~\cite{vogt1989higher}, \emph{Circular Attributes}~\cite{farrow1986automatic,jones1986hierarchical}, and \emph{Collection Attributes}~\cite{boyland1996descriptional}.
 
 
 \subsubsection*{Parametrised Attributes} Parametrised Attributes are attributes which value might depend
@@ -693,7 +696,8 @@ and are woven into the classes \code{A} and \code{B}, respectively.
     \begin{lstlisting}[language=JastAdd]
 syn boolean Type.compatibleType(Type t) = this == t;
     \end{lstlisting}
-
+    A more advanced set of rules, such as those desigend to handle subtyping, 
+    would be expected for a real language.
     \subsubsection*{Higher-Order Attribute (HOA)} Higher-Order Attribute, also known as \emph{Non-Terminal Attributes (NTA)}, are attributes which
     value is a freshly new subtree. They are called \emph{Higher-Order Attributes}
     because they are attributes and, at the same time, non-terminal; therefore, they can be attributed.
@@ -727,16 +731,43 @@ syn nta Exit FunDecl.exit() = new Exit();
     An example of a circular attribute is the following:
     \begin{lstlisting}[language=JastAdd]
 syn int A.x() circular[0] =  Math.min(3, x()+1);
-\end{lstlisting}
+    \end{lstlisting}
+
 In \textsc{JastAdd}, circular attributes are defined using the \code{circular} keyword.
 The circular synthesized attribute \AcircSyn{A}{x} begins with a value of 0 and
 a fix-point computation is performed until the attribute reaches stability.
 In this example, the attribute evaluates to 3 after the third iteration as
 the value of the attribute stops changing.
 
+Circular attributes can be used to directly encode mathematical recursive equations, 
+such as \emph{in} and \emph{out} in the monotone framework. 
+For example, the equations for the nullness analysis, defined in Section~\ref{sec:dataflowanalysis}, can be written as follows:
+\begin{lstlisting}[language=JastAdd, numbers=left]
+syn Gamma CFGNode.in() circular[new Gamma()] {
+  Gamma res = new Gamma();
+  for (CFGNode e : pred())
+    res.join(e.out());
+  return res;
+}
 
-    \subsubsection*{Collection Attributes} Collection Attributes have no equations but contributions. The
-    result of a collection attribute is the aggregation of contributions that can
+eq Entry.in() = new Gamma(allVars());
+
+syn Gamma CFGNode.out() circular[new Gamma()] {
+  Gamma res = new Gamma(in());
+  res = trFun(res);
+  return res;
+}
+\end{lstlisting}
+The attribute declarations and definitions at Lines 1 and 10, define the $in$ and
+$out$ attributes, respectively, for all the CFG nodes.
+The attribute equation ad line 8 define the boundary condition for the entry point 
+of the CFG, i.e., all the variables are mapped to $\bot$.
+
+
+
+    \subsubsection*{Collection Attributes} 
+    Collection Attributes are not defined using equations but instead using the so-called contributions.
+    The result of a collection attribute is the aggregation of contributions that can
     come from anywhere in the AST. A contribution clause is associated with
     an AST node type and describes the information to be included in a collection
     attribute, possibly under certain conditions. Collection attributes are especially
@@ -753,7 +784,10 @@ Expr contributes this when !type.compatible(expectedType()) to Program.errors();
     is used to collect all the semantic errors in the program. The contribution clause
     states that a reference to the \code{Expr} node (i.e., \code{this}) is contributed to the collection when
     the expression type is incompatible with the expected type.
-
+    There can be any number of contribution clauses for a particular collection attribute, so 
+    new kind of errors can be added simply by adding new contribution clauses.
+    Other examples of using collections include finding reverse relations, for example, 
+    computing the predecessors in a CFG, given the set of successors.
 
 
 
