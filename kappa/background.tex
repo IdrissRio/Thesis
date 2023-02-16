@@ -15,7 +15,7 @@ and their implementation through the \textsc{JastAdd} metacompiler.
 The dependency graph in Figure~\ref{fig:dependencygraph} shows the relationship between
 the concepts and the contributions of this thesis.
 
-\subsection{Automatic Program Analysis: Positioning My Research Within the Field}
+\subsection{Automatic Program Analysis}
 Automatic Program Analysis is a branch of computer science that aims to automatically
 analyse and evaluate programs' properties, e.g., \emph{correctness}, \emph{liveness} and \emph{safety}. We can distinguish two main
 approaches to program analysis: \emph{static} and \emph{dynamic} analysis.
@@ -31,8 +31,7 @@ all possible execution paths.
 
 In contrast, static analysis performs the analysis without executing the program,
 relying on information gathered from the source code. This approach has
-the advantage of being more exhaustive, as it can analyse the entire program,
-including infeasible execution paths.
+the advantage of being more exhaustive, as it can analyse the entire program. 
 One limitation of static analysis is that it can result in \emph{false positive}
 and \emph{false negative} results. False positive results occur when the analysis
 incorrectly reports a problem in the code, whereas false negative results occur
@@ -45,15 +44,16 @@ in the code, the analysis will eventually report it. In practice, it is often
 difficult to achieve both soundness and completeness, which leads to the trade-off
 between false positive and false negative results in static analysis.
 
-Static Analysis can be further divided into several categories, including \emph{Type}
-and \emph{Effect analyses}~\cite{nielson1999type}. \todo{idriss: In NNH, they divide in Type and Effect only. I think we should stick to that. IMO dataflow is a combination of type and effect analysis.}
+Important kinds of static analysis include  \emph{Type}
+and \emph{Effect analyses}~\cite{nielson1999type}.
 Type Analysis aims to determine the type of variables and expressions
 in a program, which can be used to identify type mismatches, type errors, and improve
 code readability. Effect analysis focuses on the study of side effects that a program can
 produce, such as the mutation of data. This information can be used to identify
 potential bugs and improve program understandability.
 
-In the context of this thesis, we focus on intraprocedural control-flow and dataflow analysis.
+In this thesis, we focus on intraprocedural control-flow and dataflow analysis,
+that are crucial for implementing many type and effect analyses.
 Intraprocedural control-flow analysis focuses on determining the order in which
 statements and expressions within a single method in a program will be executed,
 without considering any function or method calls that may occur.
@@ -64,7 +64,7 @@ foundation for dataflow analysis. In the future, we aim to improve the precision
 by considering the implementation of interprocedural analysis, which involves
 analysing the flow of data across multiple procedures in a program.
 
-Additionally, precision is a crucial aspect of dataflow analysis.
+Precision is a crucial aspect of dataflow analysis.
 Depending on the desired outcome, various levels of precision can be achieved,
 but it is important to weigh the trade-off between precision and performance.
 A higher level of precision often requires increased computational resources,
@@ -72,7 +72,7 @@ leading to a decrease in performance, and vice versa. Hence, finding the right
 balance between precision and performance is crucial in achieving effective and
 efficient dataflow analysis results.
 
-In the context of our research, we have chosen to compute control-sensitive and
+In our research, we have chosen to compute control-sensitive and
 exception-sensitive control-flow analyses.
 Control-sensitivity refers to the ability of the analysis to distinguish between
 true and false branches of conditional statements, such as if-statements, and
@@ -84,7 +84,7 @@ control-flow analysis.
 
 In terms of implementation strategies, there are various approaches that can be
 used, including Datalog~\cite{dura2021javadl}, functional programming~\cite{madsen2016datalog}, or ad-hoc implementation.
-However, we choose to implement the analysis using Reference Attribute Grammars.
+However, we choose to implement the analysis using Reference Attribute Grammars~\cite{hedin2000rags}.
 This approach allows us to exploit the benefits of modularity, high-level programming,
 and on-demand evaluation, which results in a flexible and efficient implementation.
 
