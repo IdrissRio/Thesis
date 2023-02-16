@@ -23,8 +23,10 @@
 
 \newcommand{\Abase}[1]{\textcolor{ATGsym}{\mbox{\umlcode{#1}}}}
 \newcommand{\Asyn}[2]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\mSyn{}\umlcode{#2}}}}
+\newcommand{\Asynno}[2]{\textcolor{ATGsym}{\mbox{\mSyn{}\umlcode{#2}}}} % Ignoring the astnode. 
 \newcommand{\Asynaccess}[2]{\umlcode{get}\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}\textcolor{black}{\umlcode{()}}.\mSyn{}\umlcode{#2}\textcolor{black}{()}}}}
 \newcommand{\Ainh}[2]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\mInh{}\umlcode{#2}}}}
+\newcommand{\Ainhno}[2]{\textcolor{ATGsym}{\mbox{\mInh{}\umlcode{#2}}}} % Ignoring the astnode.
 \newcommand{\Ainhdef}[3]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\umlcode{\astnode{#2}}.\mInh{}\umlcode{#3}}}}
 \newcommand{\Ainhindex}[4]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\umlcode{\astnode{#2}}(#3).\mInh{}\umlcode{#4}}}}
 \newcommand{\Ahoa}[2]{\textcolor{ATGsym}{\mbox{\umlcode{\astnode{#1}}.\mHOA{}\umlcode{#2}}}}

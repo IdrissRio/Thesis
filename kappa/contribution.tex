@@ -24,7 +24,7 @@ The \emph{Control-flow analysis} (CFA) module is specifically tailored for a par
 programming language and implements the interfaces defined in \textsc{IntraCFG}.
 This module is responsible for constructing the CFG for the program.
 Once the CFA module has generated the CFG,
-other client analyses can added, for example, different dataflow analyses.
+other client analyses can be added, for example, different dataflow analyses.
 The compiler module plays a crucial role as it defines the AST nodes
 on which the CFA module heavily relies. The compiler also provides access to
 several APIs that can be used by the CFA module and client analyses, such as
@@ -60,8 +60,6 @@ analysis being performed.
 % \texttt{IndexOutOfBound} detection, can be built on top of the framework.
 
 \subsection{The \textsc{IntraCFG} Framework}
-The \textsc{IntraCFG} framework is our new approach for constructing intraprocedural 
-CFGs.
 In this section, we describe the main components of \textsc{IntraCFG} and how they are used to construct CFGs.
 A more detailed description of the framework can be found in Paper~\ref{paper:intraj}.
 
@@ -106,20 +104,21 @@ By default, the \Asyn{CFGNode}{succ} attribute is defined as equal to \Ainh{CFGN
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{kappa/img/IntraCFGExample1.pdf}
-    \caption{\label{fig:IntraCFGExample} Example of definition of  \Ainh{CFGNode}{nextNodes} and \Asyn{CFGNode}{firstNodes} for the \textsc{Teal} \astnode{AddExpr}. 
+    \caption{\label{fig:IntraCFGExample} Example of definition of  \Ainhno{CFGNode}{nextNodes} and \Asynno{CFGNode}{firstNodes} for the \textsc{Teal} \astnode{AddExpr} using right-to-left operand evaluation. 
     All the nodes are \astnode{CFGNode}s. Dashed arrows indicates the location of the equation for an inherited attribute.
     }
 \end{figure}
-The example in Figure~\ref{fig:IntraCFGExample} shows how the \Ainh{CFGNode}{nextNodes} and
-\Asyn{CFGNode}{firstNodes} attributes can be defined to achieve the desired CFG.
-This example assumes that operands are evaluated right-to-left. 
-For any \astnode{AddExpr}, the \Asyn{CFGNode}{firstNodes} attribute is defined to 
-be equal to the \Asyn{CFGNode}{firstNodes} of its right operand. The \astnode{AddExpr} node
-also defines the \Ainh{CFGNode}{nextNodes} attribute of both its operands: 
-for the right operand, it is equal to the \Asyn{CFGNode}{firstNodes} of the left operand,
+The example in Figure~\ref{fig:IntraCFGExample} shows how the \Ainhno{CFGNode}{nextNodes} and
+\Asynno{CFGNode}{firstNodes} attributes can be defined to achieve the desired CFG.
+This example assumes that operands are evaluated right-to-left in order to illustrate the versatility of the approach.
+The \astnode{AddExpr} and its operands all implement the \astnode{CFGNode} interface. 
+For any \astnode{AddExpr}, the \Asynno{CFGNode}{firstNodes} attribute is defined to 
+be equal to the \Asynno{CFGNode}{firstNodes} of its right operand. The \astnode{AddExpr} node
+also defines the \Ainhno{CFGNode}{nextNodes} attribute of both its operands: 
+for the right operand, it is equal to the \Asynno{CFGNode}{firstNodes} of the left operand,
 while for the left operand, it is equal to a singleton set containing the \astnode{AddExpr} node itself.
-The \Asyn{CFGNode}{succ} attribute is not overridden by any node, and 
-therefore, it is defined to be equal to the \Ainh{CFGNode}{nextNodes} attribute.
+The \Asynno{CFGNode}{succ} attribute is not overridden by any node, and 
+therefore, it is defined to be equal to the node's \Ainhno{CFGNode}{nextNodes} attribute.
 
 
 To support both forward and backward analyses, the framework provides a predecessor
@@ -132,7 +131,7 @@ filtering out ``dead'' nodes from \Acoll{CFGNode}{succInv} with a boolean circul
 
 All \astnode{CFGNodes} have immediate access to the Entry and Exit nodes of the 
 CFG, through the inherited \Ainh{CFGNode}{entry} and \Ainh{CFGNode}{exit} attributes declared in \astnode{CFGNode} and 
-defined by the nearest \textsc{CFGRoot} ancestor.
+defined by the nearest \astnode{CFGRoot} ancestor.
 
 
 
