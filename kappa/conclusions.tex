@@ -1,7 +1,7 @@
 \section{Conclusions and Future Work}%
 \label{sec:kappa:conclusions}%
-In this thesis, we have explored the use of the RAGs declarative paradigms for
-intraprocedural control-flow and dataflow analysis in static program analysis. Our main contributions include the
+In this thesis, we have explored the use of RAGs declarative paradigms for
+intraprocedural control-flow and dataflow analysis in static program analysis. Our main contributions is the
 development of a new framework for precise construction of source-level
 control-flow graphs, called \textsc{IntraCFG}.
 \textsc{IntraCFG} is language-agnostic and is a flexible framework that can be used to
@@ -36,8 +36,8 @@ which are graphs representing the dependencies between procedures and functions.
 Call graphs are crucial for interprocedural dataflow analysis, as they allow to determine
 the flow of data between different procedures and functions.
 Static analysis techniques can be used to compute call graphs, including \emph{Rapid
-Type Analysis}~\cite{bacon1996fast} which is fast but imprecise, or \emph{points-to}~\cite{steensgaard1996points} analysis which is 
-computationally expensive but more precise. Points-to analysis involves determining 
+Type Analysis}~\cite{bacon1996fast} which is fast but imprecise, or \emph{call graph} analysis~\cite{SootJavaBytecode2010} in combination with \emph{points-to}~\cite{steensgaard1996points} analysis 
+which is computationally expensive but more precise. Points-to analysis involves determining 
 the memory locations that a variable may point to. 
 In order to achieve accurate and efficient program analysis within IDEs,
 we aim to explore a combination of static analysis techniques, including
