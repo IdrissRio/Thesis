@@ -546,26 +546,26 @@ If we instantiate the equations for the AST in Figure~\ref{fig:ragsExample},
 we get the following equation system where all variables (attribute instances) 
 are uniquely named from the root of the tree:
 \begin{align*}
-  &\astnode{A}.\textcolor{ATGsym}{\mSyn{}\umlcode{z}} = \astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mSyn{}\umlcode{x}} + 2 \\
-  &\astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mSyn{}\umlcode{x}} = \astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} - 1 \\
-  &\astnode{A}.\astnode{C}.\astnode{B}.\textcolor{ATGsym}{\mSyn{}\umlcode{x}} = \astnode{A}.\astnode{C}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} - 1 \\ 
-  &\astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mSyn{}\umlcode{v}} = \astnode{A}.\astnode{C}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} \\
-  &\astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} = 36 \\
-  &\astnode{A}.\astnode{C}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} = 5 \\
-  &\astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mInh{}\umlcode{y}} = \astnode{A}.\textcolor{ATGsym}{\mSyn{}\umlcode{z}} + \astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mSyn{}\umlcode{v}} \\
+  &\Asyn{A}{z} = \astnode{A}.\Asyn{B}{x} + 2 \\
+  &\astnode{A}.\Asyn{B}{x} = \astnode{A}.\Ainh{B}{w} - 1 \\
+  &\astnode{A}.\astnode{C}.\Asyn{B}{x} = \astnode{A}.\astnode{C}.\Ainh{B}{w} - 1 \\ 
+  &\astnode{A}.\Asyn{C}{v} = \astnode{A}.\astnode{C}.\Ainh{B}{w} \\
+  &\astnode{A}.\Ainh{B}{w} = 36 \\
+  &\astnode{A}.\astnode{C}.\Ainh{B}{w} = 5 \\
+  &\astnode{A}.\Ainh{C}{y} = \Asyn{A}{z} + \astnode{A}.\Asyn{C}{v} \\
 \end{align*}
 Solving the equation system for the attribute \Asyn{A}{z} gives:
 \begin{align*}
-  \astnode{A}.\textcolor{ATGsym}{\mSyn{}\umlcode{z}} =& \astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mSyn{}\umlcode{x}} + 2 \\
-  =& (\astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} - 1) + 2 \\
+  \Asyn{A}{z} =& \astnode{A}.\Asyn{B}{x} + 2 \\
+  =& (\astnode{A}.\Ainh{B}{w} - 1) + 2 \\
   =& (36 - 1) + 2 \\
   =& 37
 \end{align*}
 Solving for  \Ainh{C}{y}, resuing the solved value for \Asyn{A}{z}, gives:
 \begin{align*}
-  \astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mInh{}\umlcode{y}} = & \astnode{A}.\textcolor{ATGsym}{\mSyn{}\umlcode{z}} + \astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mSyn{}\umlcode{v}} \\
-  = & 37 + \astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mSyn{}\umlcode{v}} \\
-  = & 37 + \astnode{A}.\astnode{C}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} \\
+  \astnode{A}.\Ainh{C}{y} = & \Asyn{A}{z} + \astnode{A}.\Asyn{C}{v}\\
+  = & 37 + \astnode{A}.\Asyn{C}{v} \\
+  = & 37 + \astnode{A}.\astnode{C}.\Ainh{B}{w} \\
   = & 37 + 5 \\
   = & 42
 \end{align*}
