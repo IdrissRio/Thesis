@@ -19,7 +19,7 @@ which are CFGs whose shape is not restricted to the AST structure.
 \subsection{Overall Architecture}
 The overall architecture of how to use our proposed framework, \textsc{IntraCFG}, is shown in Figure~\ref{fig:intraCFG}.
 \textsc{IntraCFG} provides the skeleton and default behaviour for constructing CFGs,
-which can be instantiated for specific languages\footnote{\textbf{\texttt{IntraX}} in the diagram.}, e.g., Java or Teal.
+which can be instantiated for specific languages\footnote{\textbf{\texttt{IntraX}} in the diagram.}, e.g., Java or \textsc{Teal}.
 The \emph{Control-flow analysis} (CFA) module is specifically tailored for a particular
 programming language and implements the interfaces defined in \textsc{IntraCFG}.
 This module is responsible for constructing the CFG for the program.
@@ -106,7 +106,7 @@ By default, the \Asyn{CFGNode}{succ} attribute is defined as equal to \Ainh{CFGN
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{kappa/img/IntraCFGExample1.pdf}
-    \caption{\label{fig:IntraCFGExample} Example of definition of  \Ainh{CFGNode}{nextNodes} and \Asyn{CFGNode}{firstNodes} for the TEAL \astnode{AddExpr}. 
+    \caption{\label{fig:IntraCFGExample} Example of definition of  \Ainh{CFGNode}{nextNodes} and \Asyn{CFGNode}{firstNodes} for the \textsc{Teal} \astnode{AddExpr}. 
     All the nodes are \astnode{CFGNode}s. Dashed arrows indicates the location of the equation for an inherited attribute.
     }
 \end{figure}
@@ -300,34 +300,34 @@ demonstrates the high quality and usefulness of the artifact.
 \end{figure}
 
 
-\section{\textsc{IntraTeal}: \textsc{IntraCFG} for TEAL}
+\section{\textsc{IntraTeal}: \textsc{IntraCFG} for \textsc{Teal}}
 \label{sec:intraTeal}
 As a further demonstration\footnote{This application of \textsc{IntraCFG} has not been
 peer-reviewed by the scientific community.} of the applicability of \textsc{IntraCFG},
-we developed \textsc{IntraTeal}, an implementation of \textsc{IntraCFG} for the Teal programming language.
-% \subsection{The TEAL Programming Language}
+we developed \textsc{IntraTeal}, an implementation of \textsc{IntraCFG} for the \textsc{Teal} programming language.
+% \subsection{The \textsc{Teal} Programming Language}
 % \label{sec:teal}
-TEAL v0.4 (Typed Easily Analysable Language) is a programming language designed by Christoph Reichenbach and used in the
+\textsc{Teal} v0.4 (Typed Easily Analysable Language) is a programming language designed by Christoph Reichenbach and used in the
 program analysis\footnote{\url{https://fileadmin.cs.lth.se/cs/Education/EDAP15/2022/web/index.html}} course at Lund University.
-TEAL aims to provide a language that allows students to
+\textsc{Teal} aims to provide a language that allows students to
 focus on the challenges of performing program analysis on a real-world language
 without being overwhelmed by the details of a fully-featured language.
-% One of the key features of TEAL is that it is an object-oriented language,
+% One of the key features of \textsc{Teal} is that it is an object-oriented language,
 % which means that it allows the creation of classes and objects that can inherit
 % characteristics and behaviour from one another. However, it does not have a dynamic
 % dispatcher, which means that the method that is called for an object at run-time
 % is determined at compile-time based on the type of the object.
-TEAL is divided in layers, with each version building
-upon the features of the previous one. TEAL-0 is the most basic version and includes
+\textsc{Teal} is divided in layers, with each version building
+upon the features of the previous one. \textsc{Teal}-0 is the most basic version and includes
 support for variable declarations and use, procedures, and basic control structures such as if
-and while statements. TEAL-1 introduces the enhanced-for loop, and TEAL-2
+and while statements. \textsc{Teal}-1 introduces the enhanced-for loop, and \textsc{Teal}-2
 introduces user-defined classes.
-In this section,  we will use TEAL-0 to exemplify the use of RAGs
+In this section,  we will use \textsc{Teal}-0 to exemplify the use of RAGs
 and \textsc{IntraCFG}.
-The concrete and abstract grammar of TEAL-0 are shown in Figure~\ref{fig:tealGrammar}.
+The concrete and abstract grammar of \textsc{Teal}-0 are shown in Figure~\ref{fig:tealGrammar}.
 The concrete grammar is used for parsing. The abstract grammar is given using
 \textsc{JastAdd} syntax, and will be used in examples throughout this section
-to describe analyses in TEAL.
+to describe analyses in \textsc{Teal}.
 \newsavebox{\mylistingbox}
 
 \begin{figure}[H]
@@ -451,24 +451,24 @@ to describe analyses in TEAL.
 \scalebox{0.75}{\usebox{\mylistingbox}}
 
         \end{minipage}
-\caption{\label{fig:tealGrammar} The concrete parsing grammar and parts of the abstract \textsc{JastAdd} grammar of the Teal language.
+\caption{\label{fig:tealGrammar} The concrete parsing grammar and parts of the abstract \textsc{JastAdd} grammar of the \textsc{Teal} language.
  Colour coding highlights declarations ({\bfseries\color{orange}orange}), expressions ({\bfseries\color{lightblue}blue}), 
  attribute names ({\bfseries\color{CadetBlue}grey}), and statements ({\bfseries\color{magenta}magenta}).}
 \end{figure}
 
-\textsc{IntraTeal} is our implementation of \textsc{IntraCFG} for the Teal language.
+\textsc{IntraTeal} is our implementation of \textsc{IntraCFG} for the \textsc{Teal} language.
 In line with the approach taken for the implementation of the control-flow analysis for \textsc{IntraJ}
 and different versions of Java, we created separate aspects for the
-control-flow analysis of Teal-0 and Teal-1.  The control-flow analysis is then
+control-flow analysis of \textsc{Teal}-0 and \textsc{Teal}-1.  The control-flow analysis is then
 used to implement the \code{NullPointerException} analysis. The overall architecture of \textsc{IntraTeal} is
 shown in Figure~\ref{fig:IntraTeal}.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.65]{kappa/img/architectureteal.pdf}
-    \caption{\label{fig:IntraTeal} Overall architecture of \textsc{IntraCFG} instantiated for the Teal language.}
+    \caption{\label{fig:IntraTeal} Overall architecture of \textsc{IntraCFG} instantiated for the \textsc{Teal} language.}
 \end{figure}
 
-% The Teal programming language is used for teaching purposes
+% The \textsc{Teal} programming language is used for teaching purposes
 % and provides a simple and easy-to-learn syntax for students to understand the
 % concepts of static program analysis (see Section~\ref{sec:teal}).
 As part of the course, the complete source code of \textsc{IntraTeal} was provided
@@ -509,7 +509,8 @@ fun foo(x) = {
 	\end{tikzpicture}
 	\caption{\label{fig:ExampleTEAL} Example of control sensitivity in \textsc{IntraTeal}.}
 \end{figure}
-\begin{lstlisting}[language=JastAdd,label={lst:ControlTrueEq}, caption={Transfer function for \astnode{ControlTrue} HOA.}]
+
+\begin{lstlisting}[language=JastAdd,label={lst:ControlTrueEq},float=h,captionpos=b, caption={Transfer function for \astnode{ControlTrue} HOA.}]
 eq ControlTrue.nullnessTransfer(NullDomain lattice) = new NullDomain(lattice).join(getCond().getImplicitAssignment());
 \end{lstlisting}
 Figure~\ref{fig:ExampleTEAL} shows \textsc{IntraTeal}'s control sensitive CFG for a simple
