@@ -532,9 +532,9 @@ We start by defining the following abstract grammar:
 and the following attribute declarations and equations:
     \begin{align*}
         &\textit{Synthesized:}  && \textit{Inherited:} \\
-        &\astnode{int} \ \Asyn{A}{z} = \Asyn{B}{x} + 2  &&\astnode{int} \ \Ainh{C}{y} \\
-        &\astnode{int} \ \Asyn{B}{x} = \Ainh{B}{w} -1   &&\astnode{int} \ \Ainh{B}{w}  \\
-       &\astnode{int} \ \Asyn{C}{v} = \Ainh{B}{w}   & &\Ainhdef{A}{B}{w} = 36\\
+        &\nativetype{int} \ \Asyn{A}{z} = \Asyn{B}{x} + 2  &&\nativetype{int} \ \Ainh{C}{y} \\
+        &\nativetype{int} \ \Asyn{B}{x} = \Ainh{B}{w} -1   &&\nativetype{int} \ \Ainh{B}{w}  \\
+       &\nativetype{int} \ \Asyn{C}{v} = \Ainh{B}{w}   & &\Ainhdef{A}{B}{w} = 36\\
         & && \Ainhdef{C}{B}{w} = 5\\
         &&& \Ainhdef{A}{C}{y} = \Asyn{A}{z} + \Asyn{C}{v} \\
     \end{align*}

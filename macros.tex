@@ -124,9 +124,9 @@
   %keyword3
   morekeywords = [2]{inh, syn, coll, with, eq, NTA, contributes, to, for, each, circular, with, nta, when, }, %JASTADD keywords
   %keyword4
-  morekeywords = [3]{CFGNode, Assignments, Assign,AssignBitwiseExpr, TrueLiteral, Entry,ConstructorDecl,UnceckedException, TryWithResorucesStmt, NTAFinallyBlock,ClassDecl, CloseListNTA, BreakStmt,ThrowStmt,TryStmt,ReturnStmt, ContinueStmt, Exit, Expr, AssignShiftExpr, AssignMultiplicativeExpr, IntegerLiteral, AssignAdditiveExpr, UnaryIncDec,DoStmt,VariableDeclarator, NumericLiteral, ParameterDeclaration, FieldDeclarator, PostfixExpr, PreIncExpr, PreDecExpr, ReachedLVal, Variable,EQOp,CFGSupport, ForStmt, EmptyStmt,FunDecl, MethodDecl, ExprStmt, AssignStmt, IfStmt, AndOp, LessOp, WhileStmt, Block, AssignExpr, PostUnaryInc, PostUnaryDec, Entry, Exit, EQExpr, VarAccess, CFGRoot }, %ASTnode typess
+  morekeywords = [3]{CFGNode, A, B, C ,Assignments, Program,Assign,AssignBitwiseExpr, TrueLiteral, Entry,ConstructorDecl,UnceckedException, TryWithResorucesStmt, NTAFinallyBlock,ClassDecl, CloseListNTA, BreakStmt,ThrowStmt,TryStmt,ReturnStmt, ContinueStmt, Exit, Expr, AssignShiftExpr, AssignMultiplicativeExpr, Type,IntegerLiteral, AssignAdditiveExpr, UnaryIncDec,DoStmt,VariableDeclarator, NumericLiteral, ParameterDeclaration, FieldDeclarator, PostfixExpr, PreIncExpr, PreDecExpr, ReachedLVal, Variable,EQOp,CFGSupport, ForStmt, EmptyStmt,FunDecl, MethodDecl, ExprStmt, AssignStmt, IfStmt, AndOp, LessOp, WhileStmt, Block, AssignExpr, PostUnaryInc, PostUnaryDec, Entry, Exit, EQExpr, VarAccess, CFGRoot }, %ASTnode typess
   %keyword5
-  morekeywords = [4]{void,Array, ArrayList, Boolean, Byte, Object, BitSet, BufferedReader,Collections, Character, Class, Double, Float, Gamma, AbsDomain, NULL, NOTNULL, TOP,Integer, HashMap, PrintWriter, String, StringBuffer, StringBuilder, Thread, boolean, byte, char, color, double, float, int,Type, long, short, FloatDict, FloatList, IntDict, IntList, JSONArray, JSONObject, PFont, PGraphics, PImage, PShader, PShape, PVector, StringDict, StringList, Table, TableRow, XML, Set, HashSet},
+  morekeywords = [4]{void,Array, ArrayList, Boolean, Byte, Object, BitSet, BufferedReader,Collections, Character, Class, Double, Float, Gamma, AbsDomain, NULL, NOTNULL, TOP,Integer, HashMap, PrintWriter, String, StringBuffer, StringBuilder, Thread, boolean, byte, char, color, double, float, int, long, short, FloatDict, FloatList, IntDict, IntList, JSONArray, JSONObject, PFont, PGraphics, PImage, PShader, PShape, PVector, StringDict, StringList, Table, TableRow, XML, Set, HashSet},
   %keywordstyle = [1]\color{lightblue},
   %keywordstyle = [2]\color{lightgreen},
   keywordstyle = [1]\bfseries,
@@ -144,6 +144,7 @@
   frame=none
 }
 
+\newcommand{\nativetype}[1]{\ensuremath{\textcolor{lightblue}{\text{#1}}}}
 
 \lstdefinelanguage{ASTGrammar}{
   %keyword1&2&6
@@ -154,7 +155,7 @@
   morekeywords = [3]{Stmt, VarDeclStmt, ExprStmt, AssignStmt, Block, IfStmt, WhileStmt, ReturnStmt, SkipStmt}, %Stmt types
   %keyword5
   morekeywords = [4]{VarDecl, FunDecl, IdDecl, Decl, Program}, %Decls
-  morekeywords = [6]{DeclaredType, Initializer, DeclaredReturnType, Formal, Body, Left, Right, Base, Index, DeclType, Value, LValue, RValue, Cond, Then, Else,Identifier},
+  morekeywords = [6]{DeclTy, Initializer, DeclRetTy, Formal, Body, Left, Right, Base, Index, DeclType, Value, LValue, RValue, Cond, Then, Else},
   morekeywords = [7]{Type, Long, String},
   % keywordstyle = [1]\color{lightblue},
   %keywordstyle = [2]\color{lightgreen},
