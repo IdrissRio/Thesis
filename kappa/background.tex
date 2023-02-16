@@ -468,7 +468,9 @@ but the type of an expression may be determined by the types of its sub-expressi
 Attribute grammars provide a way to specify these rules.
 
 We can distinguish two types of attributes: synthesized attributes and inherited attributes.
-\todo{idriss: I would move the reference to Fors et al here.}
+For the sake of readability, we use the notation introduced by Fors et al. in~\cite{fors2020patterns},
+where attribute names are preceded by a symbol (e.g.,\textcolor{ATGsym}{\mSyn{}},\textcolor{ATGsym}{\mInh{}})
+that indicates the kind of the attribute (e.g., synthesized or inherited).
 
 A \emph{synthesized} attribute is a property of a node that is computed
 based on the attributes of the subtree rooted at that node. For example, the type of an expression
@@ -481,18 +483,15 @@ Synthesized attributes are composed by a declaration and an equation:
   \astnode{T}\ &\Asyn{A}{x} \\
    &\Asyn{A}{x} = e
 \end{align*}
-where \astnode{T} is the type of the attribute, \astnode{A} is the node type and \textcolor{ATGsym}{x} is the attribute name.
+where \astnode{T} is the type of the attribute, \astnode{A} is the node type, and \textcolor{ATGsym}{x} is the attribute name.
 The up-arrow symbol (\textcolor{ATGsym}{\mSyn{}}) is used to denote a synthesized attribute.
 The right-hand side of the equation, is an expression, $e$, that may use other attributes of the \astnode{A} node or its children.
-If \astnode{A} has subtypes, say \astnode{A}$_1$ and \astnode{A}$_2$, different equations can be given for
-\astnode{A}$_1$ and \astnode{A}$_2$. If all subtypes will use the same equation, the declaration and the equation can be combined into a single line, as follows:
+If \astnode{A} has subtypes, say \astnode{A1}$<:$\astnode{A} and \astnode{A2}$\l<:$\astnode{A}, different equations can be given for
+\astnode{A2} and \astnode{A1}. If all subtypes will use the same equation, the declaration and the equation can be combined into a single line, as follows:
 \begin{equation*}
-  \Asyn{A}{x} = e
+ \astnode{T} \  \Asyn{A}{x} = e
 \end{equation*}
 
-For the sake of readability, we use the notation introduced by Fors et al. in~\cite{fors2020patterns},
-where attribute names are preceded by a symbol (e.g.,\textcolor{ATGsym}{\mSyn{}},\textcolor{ATGsym}{\mInh{}})
-that indicates the kind of the attribute (e.g., synthesized or inherited).
 % We use the symbol \Abase{x} to denote the attribute name and the symbol $e$ to denote the attribute value,
 % e.g., a constant, or a function of the node's children and/or the node's own attributes.
 
@@ -541,40 +540,47 @@ and the following attribute declarations and equations:
 It should be noted that there are two equations for the inherited attribute \Ainh{B}{w},
 due to the presence of \astnode{B} as a child node in both \astnode{A} and \astnode{C}.
 Figure~\ref{fig:ragsExample} depicts the described example.
-
-The attributes are variables in an equation system which, in this case, can be solved by substitution.
-For example, the value for the synthesized attribute \Asyn{A}{z} is computed by first
-substituting the value of \Ainhdef{A}{B}{w} in the equation for \Asyn{B}{x}, and then
-substituting the value of \Asyn{B}{x} in the equation for \Asyn{A}{z}:
+The attributes and equations are instantiated for the AST, and then form an equation system which,
+in this case, can be solved by substitution.
+If we instantiate the equations for the AST in Figure~\ref{fig:ragsExample}, 
+we get the following equation system where all variables (attribute instances) 
+are uniquely named from the root of the tree:
 \begin{align*}
-    &\Asyn{A}{z} = \Asyn{B}{x} + 2 \\
-    &\Asyn{B}{x} = \Ainhdef{A}{B}{w} - 1 \\
-    &\Ainhdef{A}{B}{w} = 36
+  &\astnode{A}.\textcolor{ATGsym}{\mSyn{}\umlcode{z}} = \astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mSyn{}\umlcode{x}} + 2 \\
+  &\astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mSyn{}\umlcode{x}} = \astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} - 1 \\
+  &\astnode{A}.\astnode{C}.\astnode{B}.\textcolor{ATGsym}{\mSyn{}\umlcode{x}} = \astnode{A}.\astnode{C}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} - 1 \\ 
+  &\astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mSyn{}\umlcode{v}} = \astnode{A}.\astnode{C}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} \\
+  &\astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} = 36 \\
+  &\astnode{A}.\astnode{C}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} = 5 \\
+  &\astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mInh{}\umlcode{y}} = \astnode{A}.\textcolor{ATGsym}{\mSyn{}\umlcode{z}} + \astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mSyn{}\umlcode{v}} \\
 \end{align*}
-resulting in \Asyn{A}{z} = 37. The value for the inherited attribute \Ainh{B}{w} is defined by node \astnode{A} for
-its child of type \astnode{B}. In this case, the value of \Ainh{B}{w} is defined by node \astnode{A}
-with value 36.
-The value for the inherited attribute \Ainh{C}{y} is defined by node \astnode{A} for
-its child of type \astnode{C}. The value of \Ainh{C}{y} is computed by solving the equation system:
+Solving the equation system for the attribute \Asyn{A}{z} gives:
 \begin{align*}
-    &\Ainh{C}{y} = \Asyn{A}{z} + \Asyn{C}{v} \\
-    &\Asyn{C}{v} = \Ainhdef{C}{B}{w}\\
-    &\Asyn{A}{z} = 37 \\
-    &\Ainhdef{C}{B}{w}  = 5
+  \astnode{A}.\textcolor{ATGsym}{\mSyn{}\umlcode{z}} =& \astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mSyn{}\umlcode{x}} + 2 \\
+  =& (\astnode{A}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} - 1) + 2 \\
+  =& (36 - 1) + 2 \\
+  =& 37
 \end{align*}
-resulting in \Ainh{C}{y} = 37 + 5 = 42.
+Solving for  \Ainh{C}{y}, resuing the solved value for \Asyn{A}{z}, gives:
+\begin{align*}
+  \astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mInh{}\umlcode{y}} = & \astnode{A}.\textcolor{ATGsym}{\mSyn{}\umlcode{z}} + \astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mSyn{}\umlcode{v}} \\
+  = & 37 + \astnode{A}.\astnode{C}.\textcolor{ATGsym}{\mSyn{}\umlcode{v}} \\
+  = & 37 + \astnode{A}.\astnode{C}.\astnode{B}.\textcolor{ATGsym}{\mInh{}\umlcode{w}} \\
+  = & 37 + 5 \\
+  = & 42
+\end{align*}
 
-The attribute value of node \astnode{B} depends on the context in which it is
+The attribute value of a node \astnode{B} depends on the context in which it is
 evaluated, resulting in potentially different values. Specifically, the attribute
-value of \Ainh{B}{w}  can be either 36 or 5, depending on the context of node \astnode{B}.
-In this case, the value of \Ainh{B}{w}
+value of \Ainh{B}{w}  can be either 36 or 5, depending on the context of the node \astnode{B}.
+When we solve for \Ainh{C}{y}, the value of \Ainh{B}{w}
 is defined by node \astnode{C} with value 5.
 
 
 
 The previous example presents a straightforward instance of AGs
 and does not display its full expressiveness. In real-life scenarios, AGs
-tend to be more complex. Features, such as subtyping and declaration of nodes with multiple
+tend to be more complex. Features such as node subtyping and declaration of nodes with multiple
 children of the same type, play an essential role in expressing the semantics of
 a programming language.
 
