@@ -158,19 +158,19 @@ as unique starting point for the analysis.
   \centering
 \begin{tabular}{l r}
   \begin{lstlisting}[language=JastAdd]
-void foo(){
+void foo(boolean b){
   Integer x = 0;
-  if (x > 0) {
+  if (b) {
     x = 1;
   } else {
     x = null;
   }
 }
   \end{lstlisting} &\hspace{2.5cm}
-  \begin{tikzpicture}[node distance=1.25cm, baseline=(current bounding box.center)]
+  \begin{tikzpicture}[node distance=1.35cm, baseline=(current bounding box.center)]
       \node (start) [rectangle] {\texttt{Entry}};
       \node (assign) [rectangle, below of=start] {\texttt{x = 0}};
-      \node (if) [rectangle, below of=assign] {\texttt{if (x > 0)}};
+      \node (if) [rectangle, below of=assign] {\texttt{if (b)}};
       \node (then) [rectangle, below of=if] {\texttt{x = 1}};
       \node (else) [rectangle, right = 0.3cm of then] {\texttt{x = null}};
       \node (end) [rectangle, below of=else] {\texttt{Exit}};
@@ -191,19 +191,18 @@ void foo(){
 \begin{tabular}{l r}
 
 \begin{lstlisting}[language=bytecode, frame=none]
-1 : 0 : iconst_0
-2 : 1 : invokestatic  #7
-3 : 4 : astore_1
-4 : 5 : aload_1
-5 : 6 : invokevirtual #13
-6 : 9 : ifle          20
-7 : 12: iconst_1
-8 : 13: invokestatic  #7
-9 : 16: astore_1
-10: 17: goto          22
-11: 20: aconst_null
-12: 21: astore_1
-13: 22: return
+    1 :0 : iconst_0
+    2 :1 : invokestatic  #7
+    3 :4 : astore_2
+    4 :5 : iload_1
+    5 :6 : ifeq          17
+    6 :9 : iconst_1
+    7 :10: invokestatic  #7
+    8 :13: astore_2
+    9 :14: goto          19
+    10:17: aconst_null
+    11:18: astore_2
+    12:19: return
 \end{lstlisting}
 &\hspace{2.5cm}
 \scalebox{0.85}{
@@ -212,55 +211,45 @@ void foo(){
   every node/.style={shape=rectangle, align=center},
   baseline=(current bounding box.center)]
   % Nodes
-  \node (0) {0};
-  \node (1) [below=of 0] {1};
+  \node (1) {1};
   \node (2) [below=of 1] {2};
   \node (3) [below=of 2] {3};
   \node (4) [below=of 3] {4};
   \node (5) [below=of 4] {5};
-  \node (6) [below=of 5] {6};
-  \node (7) [left=of 6] {7};
+  \node (6) [left=of 5] {6};
+  \node (7) [below=of 6] {7};
   \node (8) [below=of 7] {8};
   \node (9) [below=of 8] {9};
-  \node (10) [below=of 9] {10};
-  \node (11) [right=of 6] {11};
-  \node (12) [below=of 11] {12};
-  \node (14) [below=of 6] {};
+  \node (10) [right=of 5] {10};
+  \node (11) [below=of 10] {11};
+  \node (14) [below=of 5] {};
   \node (15) [below=of 14] {};
   \node (16) [below=of 15] {};
-  \node (13) [right=of 10] {13};
-  \node (exit) [right=of 13] {\texttt{exit}};
-  \node (entry) [left=of 0] {\texttt{entry}};
+  \node (12) [right=of 9] {12};
+  \node (exit) [right=of 12] {\texttt{exit}};
+  \node (entry) [left=of 1] {\texttt{entry}};
 
   % Edges
-  \path[-stealth] (0) edge (1);
+
   \path[-stealth] (1) edge (2);
   \path[-stealth] (2) edge (3);
   \path[-stealth] (3) edge (4);
   \path[-stealth] (4) edge (5);
-  \path[-stealth] (5) edge (6);
-  \path[-stealth] (6) edge[bend right] (7);
-  \path[-stealth] (6) edge[bend left] (11);
+  \path[-stealth] (5) edge[bend right] (6);
+  \path[-stealth] (5) edge[bend left] (10);
+  \path[-stealth] (6) edge (7);
   \path[-stealth] (7) edge (8);
   \path[-stealth] (8) edge (9);
-  \path[-stealth] (9) edge (10);
-  \path[-stealth] (10) edge (13);
+  \path[-stealth] (9) edge (12);
+  \path[-stealth] (10) edge (11);
   \path[-stealth] (11) edge (12);
-  \path[-stealth] (12) edge (13);
-
-  % \path[->] (0) edge (1) (1) edge (2) (2) edge (3) (3) edge[bend right] (6) (3) edge[bend left] (11) (6) edge (7) (7) edge (8) (8) edge (13) (11) edge (12) (12) edge (13);
-  \path[-stealth] (13) edge (exit) (entry) edge (0);
-   \draw[dashed] (0.north west) rectangle (1.south east);
-   \draw[dashed] (2.north west) rectangle (2.south east);
-   \draw[dashed] (3.north west) rectangle (5.south east);
-   \draw[dashed] (6.north west) rectangle (6.south east);
-   \draw[dashed] (7.north west) rectangle (8.south east);
-   \draw[dashed] (9.north west) rectangle (10.south east);
-   \draw[dashed] (11.north west) rectangle (12.south east);
-   \draw[dashed] (13.north west) rectangle (13.south east);
-  % \draw[dashed] (6.north west) rectangle (8.south east);
-  % \draw[dashed] (11.north west) rectangle (12.south east);
-
+  \path[-stealth] (12) edge (exit) (entry) edge (1);
+  \draw[dashed] (1.north west) rectangle (2.south east);
+  \draw[dashed] (3.north west) rectangle (5.south east);
+  \draw[dashed] (6.north west) rectangle (7.south east);
+  \draw[dashed] (8.north west) rectangle (9.south east);
+  \draw[dashed] (10.north west) rectangle (11.south east);
+  \draw[dashed] (12.north west) rectangle (12.south east);
 \end{tikzpicture}}
 \end{tabular}
 \caption{\label{fig:cfgintermediatelevel}Bytecode control-flow graph of the \texttt{foo} method. Each dashed box represents a basic block.}
@@ -271,7 +260,7 @@ void foo(){
 
 \subsection{Dataflow Analysis}%
 \label{sec:dataflowanalysis}
-Dataflow analysis is a technique used in computer science to analyse the flow of
+Dataflow analysis is a technique used to analyse the flow of
 data through a program. It has its roots in the field of program optimisation~\cite{kildall1973dataflow},
 where it was initially used to identify opportunities for improving the performance
 of programs by tracking variable definitions and uses. This information can be used to optimise the program by eliminating
@@ -287,11 +276,11 @@ incorrect ways. This can be particularly useful in identifying bugs that may
 not be immediately apparent, such as those that only occur under certain
 conditions or when certain combinations of input data are used (e.g., \texttt{IndexOutOfBound} exception).
 Many static analysis tools for Java programs, e.g., FindBugs, employ intraprocedural
-data-flow analysis to identify potential bugs in Java code.
+dataflow analysis to identify potential bugs in Java code.
 % I looked here how they cited pmd, findbugs and spotbugs. https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8103456
 Dataflow analysis, particularly interprocedural dataflow analysis, is widely
 used to identify potential security vulnerabilities in software~\cite{flowDroid}.
-In fact, an interprocedural control-flow graph enables tracking of the flow
+For example, an interprocedural control-flow graph enables tracking of the flow
 across multiple methods or functions, thereby allowing identification of points
 where the data may be exposed to unauthorized access or manipulation.
 
@@ -300,7 +289,7 @@ practical, but incomplete, example. Let us reconsider the \code{foo} method intr
 Our goal is to determine at each stage of the program whether the variable \code{x}
 has a \code{null} value or not\footnote{For simplicity, just for this example, we assume that the language
 allows only assignments of the form \code{x = y} where \code{y} can
-be either a  variables, a numeric constants or the \code{null} literal. We also assume
+be either a  variable, a numeric constant or the \code{null} literal. We also assume
 that CFG nodes are individual assignments.
 }.
 
@@ -308,14 +297,14 @@ At the entry point of the method, i.e., Entry node,
 it is indeterminate whether \code{x} is \code{null} or not, as it has not been initialized yet.
 However, at the declaration of the variable \code{x}, we can determine that it is
 not \code{null} because it is initialised to a non-\code{null}
-value. Then, if the condition \code{if(x > 0)} is \code{true}, the
+value. Then, if the condition \code{if(b)} is \code{true}, the
 variable \code{x} is assigned a new value, which is not \code{null}. If the condition
 is \code{false}, the variable \code{x} is assigned \code{null}. Therefore, at the
 end of the method, the variable \code{x} may be either \code{null} or not \code{null}.
-Consider the scenario where \code{x} is used dereferenced immediately after the
-if-else statement. The program may crash if \code{x} is \code{null}. 
-Indeed, this information can be used to identify potential bugs in the program, such as,
-unexpected \code{NullPointerException}, ahead of time.
+Consider the scenario where \code{x} is used and dereferenced immediately after the
+if-else statement, for example, calling a method on \code{x}. The program will then crash, 
+with a \code{NullPointerException}, if \code{x} is \code{null}. 
+Dataflow information can be used to identify potential bugs like this in a program.
 
 We keep track of the value of \code{x} by mapping it to a finite set of possible values:
 \code{null}, \code{notnull}, \code{maybenull}, or \code{unknown}.
@@ -452,7 +441,7 @@ a mathematical technique that finds a stable state, in a system.
 In the context of the Monotone frameworks, this
 refers to finding a state where the $in$ and $out$ sets of all nodes in the CFG have reached a
 stable value, and no further changes will occur. The authors of~\cite{Nielson2010Principles}
-present several techniques for computing fixpoints. They demonstrate that exists a fixpoint~\cite{Knaster1929} and that the resulting
+present several techniques for computing fixpoints. They demonstrate that there exists a fixpoint~\cite{Knaster1929} and that the resulting
 fixpoint is the unique and the minimum among all fixed points of the transfer function $f$.
 
 

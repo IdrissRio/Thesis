@@ -106,12 +106,12 @@ By default, the \Asyn{CFGNode}{succ} attribute is defined as equal to \Ainh{CFGN
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{kappa/img/IntraCFGExample1.pdf}
-    \caption{\label{fig:IntraCFGExample} Example of ad-hoc definition of  \Ainh{CFGNode}{nextNodes} and \Asyn{CFGNode}{firstNodes} for the TEAL \code{AddExpr}. 
+    \caption{\label{fig:IntraCFGExample} Example of definition of  \Ainh{CFGNode}{nextNodes} and \Asyn{CFGNode}{firstNodes} for the TEAL \astnode{AddExpr}. 
     All the nodes are \astnode{CFGNode}s. Dashed arrows indicates the location of the equation for an inherited attribute.
     }
 \end{figure}
 The example in Figure~\ref{fig:IntraCFGExample} shows how the \Ainh{CFGNode}{nextNodes} and
-\Asyn{CFGNode}{firstNodes} attributes can be defined to achieve the desired CFG.%
+\Asyn{CFGNode}{firstNodes} attributes can be defined to achieve the desired CFG.
 This example assumes that operands are evaluated right-to-left. 
 For any \astnode{AddExpr}, the \Asyn{CFGNode}{firstNodes} attribute is defined to 
 be equal to the \Asyn{CFGNode}{firstNodes} of its right operand. The \astnode{AddExpr} node
@@ -127,8 +127,8 @@ attribute that captures the inverse of the successor attribute, i.e., \Asyn{CFGN
 \Asyn{CFGNode}{succ} is also defined for \astnode{CFGNodes} that are not reachable from \astnode{Entry} by following 
 \Asyn{CFGNode}{succ} (i.e., that are ``dead code''). The framework computes predecessor edges \Asyn{CFGNode}{pred} 
 by not only inverting \Asyn{CFGNode}{succ} into the collection attribute \Acoll{CFGNode}{succInv}, but also by 
-filtering out ``dead'' nodes from \Acoll{CFGNode}{succInv} with a boolean circular attribute 
-reachable. 
+filtering out ``dead'' nodes from \Acoll{CFGNode}{succInv} with a boolean circular attribute, 
+\AcircSyn{CFGNode}{reachable}.
 
 All \astnode{CFGNodes} have immediate access to the Entry and Exit nodes of the 
 CFG, through the inherited \Ainh{CFGNode}{entry} and \Ainh{CFGNode}{exit} attributes declared in \astnode{CFGNode} and 
