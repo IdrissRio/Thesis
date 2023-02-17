@@ -267,16 +267,14 @@ the \textsc{JFreeChart} charting library and the \textsc{FOP} PDF formatter.
 The selection of these projects was aimed at representing diverse types of projects, 
 including libraries, frameworks, and applications, as well as varying sizes, 
 ranging from 30K for \textsc{ANTLR} to 100K for \textsc{FOP}.
-To evaluate \textsc{IntraJ}, we compared it with \textsc{SonarQube}~\cite{sonarqube}, an industrial 
-static analyzer. Additionally, we compared the precision and performance of 
-\textsc{IntraJ} with the RAG-based framework \textsc{JastAddJ-Intraflow}~\cite{10.1016/j.scico.2012.02.002}. 
+ We compared the precision and performance of 
+\textsc{IntraJ} with the RAG-based framework \textsc{JastAddJ-Intraflow}~\cite{10.1016/j.scico.2012.02.002}, 
+and the \textsc{SonarQube} static code analyser~\cite{sonarqube}. 
 In this section, we provide an overview of the evaluation compared to 
 \textsc{SonarQube}, while the evaluation compared to \textsc{JastAddJ-Intraflow} 
 can be found in Paper~\ref{paper:intraj}. Specifically, we compared \textsc{IntraJ} 
 with \textsc{SonarQube} on two distinct analyses: the \code{DeadAssignment} 
 and \code{NullPointerException} analysis.
-
-
 
 \begin{figure}[H]
   \includegraphics[width=1\linewidth]{kappa/img/DAATotalTime.pdf}
@@ -284,21 +282,19 @@ and \code{NullPointerException} analysis.
   checking the absence of errors, running the analysis.}
 \end{figure}
 
-%\begin{figure}[H]
-%  \includegraphics[width=1\linewidth]{kappa/img/DDAAnalysisTime.pdf}
-%  \caption{\label{fig:DAAAnalysisOnly}
-%    Time for executing only the \code{DeadAssignment} Analysis.}
-%\end{figure}
 
-The results of the evaluation for \code{DeadAssignment} analysis are shown in Figure~\ref{fig:DAATotalTime}.
-In this figure, we report two different measurements: the total
-time to load each benchmark, without running the analysis, i.e., \textcolor{grey}{\emph{Baseline}}
-and the total time to load and run the analysis, i.e., \textcolor{NavyBlue}{\emph{Analysis Execution}}.
-As can be seen, \textsc{IntraJ} is faster than \textsc{SonarQube} in all cases, as the
-\textcolor{grey}{\emph{Baseline}} in \textsc{SonarQube} is much higher than the \textcolor{grey}{\emph{Baseline}} in \textsc{IntraJ}.
-Here we see that \textsc{SonarQube} is faster than \textsc{IntraJ} for all benchmarks.
-We believe that this is due to the fact that \textsc{SonarQube} computes the CFGs
-in the \textcolor{grey}{\emph{Baseline}} phase.
+Figure~\ref{fig:DAATotalTime} shows the evaluation results for the \code{DeadAssignment} analysis. 
+The figure reports two distinct measurements: the total time to load each benchmark without 
+executing the analysis, i.e.,  \textcolor{grey}{\emph{Baseline}}, and the total 
+time to compute the analysis, i.e., \textcolor{NavyBlue}{\emph{Analysis Execution}}.
+
+Our analysis shows that \textsc{IntraJ} outperforms \textsc{SonarQube} in all 
+cases since the \textcolor{grey}{\emph{Baseline}} in \textsc{SonarQube} is 
+significantly higher than in \textsc{IntraJ}. However, we can observe, 
+that \textsc{SonarQube}'s \code{DeadAssignment} analysis is faster than \textsc{IntraJ}'s.
+We belive that this is due to the fact that \textsc{SonarQube} computes the 
+CFGs during the \textcolor{grey}{\emph{Baseline}} phase.
+
 
 \begin{figure}[H]
   \includegraphics[width=1\linewidth]{kappa/img/NPETotalTime.pdf}
@@ -307,24 +303,58 @@ in the \textcolor{grey}{\emph{Baseline}} phase.
 \end{figure}
 
 
-The results of the evaluation for \code{NullPointerException} analysis are shown in Figure~\ref{fig:NPETotal} and Figure~\ref{fig:NPEOnly}.
-As for the \code{DeadAssignment} analysis, we compared both the total time to process
-each benchmark, and the total time to load and run the analysis.
-As can be seen, \textsc{IntraJ} is faster than \textsc{SonarQube} in all cases. 
-Even by excluding the \textcolor{grey}{\emph{Baseline}}, \textsc{IntraJ} is still faster than \textsc{SonarQube} for all benchmarks.
-A strict comparison to SQ is therefore difficult,
-but we observe that INTRAJ is considerably faster including
-the baseline, at most 3.12 times slower for DAA only, and
-considerably faster for NPA only, though the latter is likely
-due to SQ's more expensive interprocedural analysis.
+The evaluation results for the \code{NullPointerException} analysis are presented in 
+Figure~\ref{fig:NPETotal}. Similarly to the \code{DeadAssignment} analysis, we
+compared both the total time to process each benchmark and the total time
+to load and run the analysis.
+The results indicate that, in all cases, \textsc{IntraJ} outperforms \textsc{SonarQube}.
+To be noticed that, even when excluding the \textcolor{grey}{\emph{Baseline}} measurements, \textsc{IntraJ} 
+still achieves faster execution times than \textsc{SonarQube} for all benchmarks.
 
-\begin{itemize}
-\item Discuss that IntraJ is faster.
-\item Discuss precision and where both the anlayses fails.
-\end{itemize}
+We also compared the precision of \textsc{IntraJ} with \textsc{SonarQube} for the
+\code{DeadAssignment} and \code{NullPointerException} analyses. 
+The precision of an analysis is measured as the ratio of true positives and false 
+positives to the total number of reports.
+
+\begin{figure}[H]
+  \includegraphics[width=1\linewidth]{kappa/img/DAAPrecision.pdf}
+  \caption{\label{fig:DAAPrecisino}Precision of the \code{DeadAssignment} Analysis.
+  The precision is measured as the ratio of true positives and false positives to the total number of reports.}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=1\linewidth]{kappa/img/NPAPrecision.pdf}
+  \caption{\label{fig:NPAPrecision}Precision of the \code{NullPointerException} Analysis.
+  The precision is measured as the ratio of true positives and false positives to the total number of reports.}
+\end{figure}
 
 
+In Figure~\ref{fig:DAAPrecisino}, it is evident that \textsc{IntraJ} outperforms 
+\textsc{SonarQube} in terms of precision for all benchmarks. 
+\textsc{IntraJ} is able to 
+identify additional true positives that are not reported by \textsc{SonarQube}.
+Conversely, \textsc{SonarQube} reports a significant number of false positives,
+especially in \textsc{FOP}, where it reports 44 false positives.
 
+For the \code{NullPointerException} analysis, \textsc{IntraJ} is slightly less precise than
+\textsc{SonarQube}.
+
+Generally, \textsc{IntraJ} detects at least as many reports as \textsc{SonarQube}. 
+However, there is one exception: in the case of \textsc{PMD}, where \textsc{SonarQube} 
+can identify three additional true positives by exploiting path sensitivity.
+On the other hand, \textsc{IntraJ} does report some additional true positives that \textsc{SonarQube} 
+does not. The false positives reported by \textsc{IntraJ} are a result of our analysis 
+lacking path sensitivity.
+
+While \textsc{IntraJ} detects at least as many reports as \textsc{SonarQube} in most
+cases, there is one benchmark, i.e., \textsc{PMD} where \textsc{SonarQube} is able to identify three 
+additional true positives by exploiting path sensitivity.
+Nevertheless, \textsc{IntraJ} is able to report some additional true positives that 
+are not reported by \textsc{SonarQube}. The false positives reported by \textsc{IntraJ}
+are due to the lack of path sensitivity in our analysis.
+
+Overall, the results suggest that \textsc{IntraJ} enables practical dataflow analyses, 
+with run-times and precision comparable to state-of-the-art tools.
 
 
 
