@@ -292,7 +292,7 @@ Our analysis shows that \textsc{IntraJ} outperforms \textsc{SonarQube} in all
 cases since the \textcolor{grey}{\emph{Baseline}} in \textsc{SonarQube} is 
 significantly higher than in \textsc{IntraJ}. However, we can observe, 
 that \textsc{SonarQube}'s \code{DeadAssignment} analysis is faster than \textsc{IntraJ}'s.
-We belive that this is due to the fact that \textsc{SonarQube} computes the 
+We believe that this is due to the fact that \textsc{SonarQube} computes the 
 CFGs during the \textcolor{grey}{\emph{Baseline}} phase.
 
 
@@ -306,9 +306,9 @@ CFGs during the \textcolor{grey}{\emph{Baseline}} phase.
 The evaluation results for the \code{NullPointerException} analysis are presented in 
 Figure~\ref{fig:NPETotal}. Similarly to the \code{DeadAssignment} analysis, we
 compared both the total time to process each benchmark and the total time
-to load and run the analysis.
+to run the analysis.
 The results indicate that, in all cases, \textsc{IntraJ} outperforms \textsc{SonarQube}.
-To be noticed that, even when excluding the \textcolor{grey}{\emph{Baseline}} measurements, \textsc{IntraJ} 
+It can be noticed that, even when excluding the \textcolor{grey}{\emph{Baseline}} measurements, \textsc{IntraJ} 
 still achieves faster execution times than \textsc{SonarQube} for all benchmarks.
 
 We compared the precision of \textsc{IntraJ} with \textsc{SonarQube} for the
@@ -328,30 +328,22 @@ positives to the total number of reports.
   We report the ratio of true positives and false positives to the total number of reports.}
 \end{figure}
 
-
-In Figure~\ref{fig:DAAPrecisino}, it is evident that \textsc{IntraJ} outperforms 
+Figure~\ref{fig:DAAPrecisino} shows the results for the \code{DeadAssignment} analysis.
+It is evident that \textsc{IntraJ} outperforms 
 \textsc{SonarQube} in terms of precision for all benchmarks. 
 \textsc{IntraJ} is able to 
 identify additional true positives that are not reported by \textsc{SonarQube}.
 Conversely, \textsc{SonarQube} reports a significant number of false positives,
 especially in \textsc{FOP}, where it reports 44 false positives.
 
-For the \code{NullPointerException} analysis, \textsc{IntraJ} is slightly less precise than
-\textsc{SonarQube}.
-
+The results for \code{NullPointerException} analysis are shown in Figure~\ref{fig:NPAPrecision}.
+For this analysis \textsc{IntraJ} is slightly less precise than \textsc{SonarQube}.
 Generally, \textsc{IntraJ} detects at least as many reports as \textsc{SonarQube}. 
 However, there is one exception: in the case of \textsc{PMD}, where \textsc{SonarQube} 
 can identify three additional true positives by exploiting path sensitivity.
 On the other hand, \textsc{IntraJ} does report some additional true positives that \textsc{SonarQube} 
 does not. The false positives reported by \textsc{IntraJ} are a result of our analysis 
 lacking path sensitivity.
-
-While \textsc{IntraJ} detects at least as many reports as \textsc{SonarQube} in most
-cases, there is one benchmark, i.e., \textsc{PMD} where \textsc{SonarQube} is able to identify three 
-additional true positives by exploiting path sensitivity.
-Nevertheless, \textsc{IntraJ} is able to report some additional true positives that 
-are not reported by \textsc{SonarQube}. The false positives reported by \textsc{IntraJ}
-are due to the lack of path sensitivity in our analysis.
 
 Overall, the results suggest that \textsc{IntraJ} enables practical dataflow analyses, 
 with run-times and precision comparable to state-of-the-art tools.
