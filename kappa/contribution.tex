@@ -311,7 +311,7 @@ The results indicate that, in all cases, \textsc{IntraJ} outperforms \textsc{Son
 To be noticed that, even when excluding the \textcolor{grey}{\emph{Baseline}} measurements, \textsc{IntraJ} 
 still achieves faster execution times than \textsc{SonarQube} for all benchmarks.
 
-We also compared the precision of \textsc{IntraJ} with \textsc{SonarQube} for the
+We compared the precision of \textsc{IntraJ} with \textsc{SonarQube} for the
 \code{DeadAssignment} and \code{NullPointerException} analyses. 
 The precision of an analysis is measured as the ratio of true positives and false 
 positives to the total number of reports.
@@ -319,13 +319,13 @@ positives to the total number of reports.
 \begin{figure}[H]
   \includegraphics[width=1\linewidth]{kappa/img/DAAPrecision.pdf}
   \caption{\label{fig:DAAPrecisino}Precision of the \code{DeadAssignment} Analysis.
-  The precision is measured as the ratio of true positives and false positives to the total number of reports.}
+  We report the ratio of true positives and false positives to the total number of reports.}
 \end{figure}
 
 \begin{figure}[H]
   \includegraphics[width=1\linewidth]{kappa/img/NPAPrecision.pdf}
   \caption{\label{fig:NPAPrecision}Precision of the \code{NullPointerException} Analysis.
-  The precision is measured as the ratio of true positives and false positives to the total number of reports.}
+  We report the ratio of true positives and false positives to the total number of reports.}
 \end{figure}
 
 
@@ -397,7 +397,10 @@ demonstrates the high quality and usefulness of the artifact.
 \label{sec:intraTeal}
 As a further demonstration\footnote{This application of \textsc{IntraCFG} has not been
 peer-reviewed by the scientific community.} of the applicability of \textsc{IntraCFG},
-we developed \textsc{IntraTeal}, an implementation of \textsc{IntraCFG} for the \textsc{Teal} programming language.
+we developed \textsc{IntraTeal}\footnote{
+  The complete source code of \textsc{IntraTeal} is available at 
+  \href{https://doi.org/10.5281/zenodo.7649171}{10.5281/zenodo.7649171}.
+}, an implementation of \textsc{IntraCFG} for the \textsc{Teal} programming language.
 % \subsection{The \textsc{Teal} Programming Language}
 % \label{sec:teal}
 \textsc{Teal} v0.4 (Typed Easily Analysable Language) is a programming language designed by Christoph Reichenbach and used in the
