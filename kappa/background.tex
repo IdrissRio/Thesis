@@ -31,7 +31,7 @@ all possible execution paths.
 
 In contrast, static analysis performs the analysis without executing the program,
 relying on information gathered from the source code. This approach has
-the advantage of being more exhaustive, as it can analyse the entire program. 
+the advantage of being more exhaustive, as it can analyse the entire program.
 One limitation of static analysis is that it can result in \emph{false positive}
 and \emph{false negative} results. False positive results occur when the analysis
 incorrectly reports a problem in the code, whereas false negative results occur
@@ -302,8 +302,8 @@ variable \code{x} is assigned a new value, which is not \code{null}. If the cond
 is \code{false}, the variable \code{x} is assigned \code{null}. Therefore, at the
 end of the method, the variable \code{x} may be either \code{null} or not \code{null}.
 Consider the scenario where \code{x} is used and dereferenced immediately after the
-if-else statement, for example, calling a method on \code{x}. The program will then crash, 
-with a \code{NullPointerException}, if \code{x} is \code{null}. 
+if-else statement, for example, calling a method on \code{x}. The program will then crash,
+with a \code{NullPointerException}, if \code{x} is \code{null}.
 Dataflow information can be used to identify potential bugs like this in a program.
 
 We keep track of the value of \code{x} by mapping it to a finite set of possible values:
@@ -374,7 +374,7 @@ partially ordered set and $f: S \rightarrow S$ is a function, $f$ is called a
 monotone transfer function iff, for all $x, y \in S$ such that $x \leq y$, it follows
 that $f(x) \leq f(y)$.
 
-In our example, the lattice $\mathcal{L}$ is used to model the possible values, 
+In our example, the lattice $\mathcal{L}$ is used to model the possible values,
 i.e., \code{null}, \code{notnull}, \code{maybenull}, and \code{unknown}, that a variable can assume.
 This lattice is shown in Figure~\ref{fig:lattice}. Here \code{maybenull} is
 the greatest element in the lattice, as it represents the set of all possible values
@@ -458,7 +458,7 @@ language and for verifying compile-time correctness of programs written in that 
 AGs are composed of three components: a context-free grammar,
 which defines the language's syntax,  a set of attributes,
 which are properties associated with the nodes of the abstract syntax tree,
-and attribute equations, used to compute the values of the attributes associated 
+and attribute equations, used to compute the values of the attributes associated
 with each node in the abstract syntax tree.
 
 Attribute grammars enable the description of the
@@ -542,13 +542,13 @@ due to the presence of \astnode{B} as a child node in both \astnode{A} and \astn
 Figure~\ref{fig:ragsExample} depicts the described example.
 The attributes and equations are instantiated for the AST, and then form an equation system which,
 in this case, can be solved by substitution.
-If we instantiate the equations for the AST in Figure~\ref{fig:ragsExample}, 
-we get the following equation system where all variables (attribute instances) 
+If we instantiate the equations for the AST in Figure~\ref{fig:ragsExample},
+we get the following equation system where all variables (attribute instances)
 are uniquely named from the root of the tree:
 \begin{align*}
   &\Asyn{A}{z} = \astnode{A}.\Asyn{B}{x} + 2 \\
   &\astnode{A}.\Asyn{B}{x} = \astnode{A}.\Ainh{B}{w} - 1 \\
-  &\astnode{A}.\astnode{C}.\Asyn{B}{x} = \astnode{A}.\astnode{C}.\Ainh{B}{w} - 1 \\ 
+  &\astnode{A}.\astnode{C}.\Asyn{B}{x} = \astnode{A}.\astnode{C}.\Ainh{B}{w} - 1 \\
   &\astnode{A}.\Asyn{C}{v} = \astnode{A}.\astnode{C}.\Ainh{B}{w} \\
   &\astnode{A}.\Ainh{B}{w} = 36 \\
   &\astnode{A}.\astnode{C}.\Ainh{B}{w} = 5 \\
@@ -625,7 +625,7 @@ Java code from a RAG specification. The generated code can be used by an analysi
 analysis on the AST.
 Another important aspect of \textsc{JastAdd} is its support for on-demand attribute evaluation.
 Attribute evaluation is performed only when the corresponding
-attribute is required and triggered by the anlaysis tool. This approach enables \textsc{JastAdd} to
+attribute is required and triggered by the analysis tool. This approach enables \textsc{JastAdd} to
 avoid performing unnecessary computations, which can improve the run-time
 performance of the tool.
 
@@ -696,7 +696,7 @@ and are woven into the classes \code{A} and \code{B}, respectively.
     \begin{lstlisting}[language=JastAdd]
 syn boolean Type.compatibleType(Type t) = this == t;
     \end{lstlisting}
-    A more advanced set of rules, such as those desigend to handle subtyping, 
+    A more advanced set of rules, such as those desigend to handle subtyping,
     would be expected for a real language.
     \subsubsection*{Higher-Order Attribute (HOA)} Higher-Order Attribute, also known as \emph{Non-Terminal Attributes (NTA)}, are attributes which
     value is a freshly new subtree. They are called \emph{Higher-Order Attributes}
@@ -739,8 +739,8 @@ a fix-point computation is performed until the attribute reaches stability.
 In this example, the attribute evaluates to 3 after the third iteration as
 the value of the attribute stops changing.
 
-Circular attributes can be used to directly encode mathematical recursive equations, 
-such as \emph{in} and \emph{out} in the monotone framework. 
+Circular attributes can be used to directly encode mathematical recursive equations,
+such as \emph{in} and \emph{out} in the monotone framework.
 For example, the equations for the nullness analysis, defined in Section~\ref{sec:dataflowanalysis}, can be written as follows:
 \begin{lstlisting}[language=JastAdd, numbers=left]
 syn Gamma CFGNode.in() circular[new Gamma()] {
@@ -760,12 +760,12 @@ syn Gamma CFGNode.out() circular[new Gamma()] {
 \end{lstlisting}
 The attribute declarations and definitions at Lines 1 and 10, define the $in$ and
 $out$ attributes, respectively, for all the CFG nodes.
-The attribute equation ad line 8 define the boundary condition for the entry point 
+The attribute equation ad line 8 define the boundary condition for the entry point
 of the CFG, i.e., all the variables are mapped to $\bot$.
 
 
 
-    \subsubsection*{Collection Attributes} 
+    \subsubsection*{Collection Attributes}
     Collection Attributes are not defined using equations but instead using the so-called contributions.
     The result of a collection attribute is the aggregation of contributions that can
     come from anywhere in the AST. A contribution clause is associated with
@@ -784,22 +784,22 @@ Expr contributes this when !type.compatible(expectedType()) to Program.errors();
     is used to collect all the semantic errors in the program. The contribution clause
     states that a reference to the \code{Expr} node (i.e., \code{this}) is contributed to the collection when
     the expression type is incompatible with the expected type.
-    There can be any number of contribution clauses for a particular collection attribute, so 
+    There can be any number of contribution clauses for a particular collection attribute, so
     new kinds of errors can be added simply by adding new contribution clauses.
-    
-    Other examples of using collections include finding reverse relations, for example, 
+
+    Other examples of using collections include finding reverse relations, for example,
     computing the predecessors in a CFG, given the set of successors.
 
 \subsubsection{Interfaces}
 \textsc{JastAdd} supports a mechanism for defining and extending AST classes with interfaces.
-Interfaces in \textsc{JastAdd}  provide a way to extend the behavior 
-of AST classes. By declaring an interface for an AST class, the class can inherit 
-equations and attributes defined in the interface. 
-This enables developers to modularise the behavior of AST classes, making it easier 
+Interfaces in \textsc{JastAdd}  provide a way to extend the behaviour
+of AST classes. By declaring an interface for an AST class, the class can inherit
+equations and attributes defined in the interface.
+This enables developers to modularise the behaviour of AST classes, making it easier
 to reuse and maintain code.
-Interfaces can be declared using the \code{interface} keyword, and, similary to Java,
+Interfaces can be declared using the \code{interface} keyword, and, similarly to Java,
 they can extend other interfaces.
-By using the \code{implements} keyword, it is possible to 
+By using the \code{implements} keyword, it is possible to
 state that an AST class implements an interface.
 For example, if we want to abstract a common operation for all the CFG nodes, we can define an interface
 \astnode{CFGNode} and then specify that all the CFG nodes implement it. For example:
@@ -810,15 +810,15 @@ AddExpr implements CFGNode;
 AssignStmt implements CFGNode;
 //...
 
-syn Gamma CFGNode.in() circular[new Gamma()] { 
-  Gamma res = new Gamma(); 
-  for (CFGNode e : pred()) 
-    res.join(e.out()); 
-  return res; 
+syn Gamma CFGNode.in() circular[new Gamma()] {
+  Gamma res = new Gamma();
+  for (CFGNode e : pred())
+    res.join(e.out());
+  return res;
 }
 \end{lstlisting}
 In this case, both \astnode{AddExpr} and \astnode{AssignStmt} implement the interface \astnode{CFGNode}.
 We then define the \AcircSyn{CFGNode}{in} for the \astnode{CFGNode} interface.
 This attribute is then inherited by all the classes that implement the interface,
-i.e., \astnode{AddExpr} and \astnode{AssignStmt}, allowing them to share the 
-common behavior specified only for \astnode{CFGNode}.
+i.e., \astnode{AddExpr} and \astnode{AssignStmt}, allowing them to share the
+common behaviour specified only for \astnode{CFGNode}.
