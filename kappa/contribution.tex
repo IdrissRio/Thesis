@@ -63,7 +63,7 @@ analysis being performed.
 In this section, we describe the main components of \textsc{IntraCFG} and how they are used to construct CFGs.
 A more detailed description of the framework can be found in Paper~\ref{paper:intraj}.
 
-\textsc{IntraCFG} provides three different interfaces: 
+\textsc{IntraCFG} provides three different interfaces:
 \astnode{CFGRoot}, \astnode{CFGNode}, and \astnode{CFGSupport}.
 These interfaces are implemented by AST types to construct the CFG.
 Each interface has a set of attributes, and default equations that are used to
@@ -76,61 +76,61 @@ The \astnode{CFGRoot} interface defines two HOAs: \Ahoa{CFGRoot}{entry} and
 of the CFG.
 
 The \astnode{CFGNode} is the most important interface in \textsc{IntraCFG}.
-The purpose of the \astnode{CFGNode} interface is to represent AST nodes that can 
+The purpose of the \astnode{CFGNode} interface is to represent AST nodes that can
 be part of the CFG. This interface defines the synthesised
 attributes \Asyn{CFGNode}{succ} and \Asyn{CFGNode}{pred}, which are used to
 represent the sets of successors and predecessors of a CFG node, respectively.
 
 
-Finally, the \astnode{CFGSupport} interface is implemented by all the AST nodes that may 
-contain \astnode{CFGNode}s in their subtrees. Indeed, all \astnode{CFGNode}s are \astnode{CFGSupport} 
-nodes, but \astnode{CFGSupport} nodes that are not \astnode{CFGNode}s can 
+Finally, the \astnode{CFGSupport} interface is implemented by all the AST nodes that may
+contain \astnode{CFGNode}s in their subtrees. Indeed, all \astnode{CFGNode}s are \astnode{CFGSupport}
+nodes, but \astnode{CFGSupport} nodes that are not \astnode{CFGNode}s can
 help steer the construction of the CFG.
 
-To compute the \Asyn{CFGNode}{succ} attribute, the framework uses the helper 
-attributes \Asyn{CFGNode}{firstNodes} and \Ainh{CFGNode}{nextNodes}. The 
-\Asyn{CFGNode}{firstNodes} attribute of a \astnode{CFGNode} $n$ 
-contains the first \astnode{CFGNode} within or after 
+To compute the \Asyn{CFGNode}{succ} attribute, the framework uses the helper
+attributes \Asyn{CFGNode}{firstNodes} and \Ainh{CFGNode}{nextNodes}. The
+\Asyn{CFGNode}{firstNodes} attribute of a \astnode{CFGNode} $n$
+contains the first \astnode{CFGNode} within or after
 the AST subtree rooted in $n$.
-The default definitions provided by \textsc{IntraCFG} for the \Asyn{CFGNode}{firstNodes} 
-attribute are the empty set for a \astnode{CFGSupport} node and the node itself 
+The default definitions provided by \textsc{IntraCFG} for the \Asyn{CFGNode}{firstNodes}
+attribute are the empty set for a \astnode{CFGSupport} node and the node itself
 for a \astnode{CFGNode}.
 
-The inherited attribute \Ainh{CFGNode}{nextNodes} is used to keep track of the 
-\astnode{CFGNode}s that are outside the tree rooted in $n$, and that would immediately follow the 
-last \astnode{CFGNode} within $n$. 
+The inherited attribute \Ainh{CFGNode}{nextNodes} is used to keep track of the
+\astnode{CFGNode}s that are outside the tree rooted in $n$, and that would immediately follow the
+last \astnode{CFGNode} within $n$.
 By default, the \Asyn{CFGNode}{succ} attribute is defined as equal to \Ainh{CFGNode}{nextNodes}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{kappa/img/IntraCFGExample1.pdf}
-    \caption{\label{fig:IntraCFGExample} Example of definition of  \Ainhno{CFGNode}{nextNodes} and \Asynno{CFGNode}{firstNodes} for the \textsc{Teal} \astnode{AddExpr} using right-to-left operand evaluation. 
+    \caption{\label{fig:IntraCFGExample} Example of definition of  \Ainhno{CFGNode}{nextNodes} and \Asynno{CFGNode}{firstNodes} for the \textsc{Teal} \astnode{AddExpr} using right-to-left operand evaluation.
     All the nodes are \astnode{CFGNode}s. Dashed arrows indicates the location of the equation for an inherited attribute.
     }
 \end{figure}
 The example in Figure~\ref{fig:IntraCFGExample} shows how the \Ainhno{CFGNode}{nextNodes} and
 \Asynno{CFGNode}{firstNodes} attributes can be defined to achieve the desired CFG.
 This example assumes that operands are evaluated right-to-left in order to illustrate the versatility of the approach.
-The \astnode{AddExpr} and its operands all implement the \astnode{CFGNode} interface. 
-For any \astnode{AddExpr}, the \Asynno{CFGNode}{firstNodes} attribute is defined to 
+The \astnode{AddExpr} and its operands all implement the \astnode{CFGNode} interface.
+For any \astnode{AddExpr}, the \Asynno{CFGNode}{firstNodes} attribute is defined to
 be equal to the \Asynno{CFGNode}{firstNodes} of its right operand. The \astnode{AddExpr} node
-also defines the \Ainhno{CFGNode}{nextNodes} attribute of both its operands: 
+also defines the \Ainhno{CFGNode}{nextNodes} attribute of both its operands:
 for the right operand, it is equal to the \Asynno{CFGNode}{firstNodes} of the left operand,
 while for the left operand, it is equal to a singleton set containing the \astnode{AddExpr} node itself.
-The \Asynno{CFGNode}{succ} attribute is not overridden by any node, and 
+The \Asynno{CFGNode}{succ} attribute is not overridden by any node, and
 therefore, it is defined to be equal to the node's \Ainhno{CFGNode}{nextNodes} attribute.
 
 
 To support both forward and backward analyses, the framework provides a predecessor
-attribute that captures the inverse of the successor attribute, i.e., \Asyn{CFGNode}{succ}. However, 
-\Asyn{CFGNode}{succ} is also defined for \astnode{CFGNodes} that are not reachable from \astnode{Entry} by following 
-\Asyn{CFGNode}{succ} (i.e., that are ``dead code''). The framework computes predecessor edges \Asyn{CFGNode}{pred} 
-by not only inverting \Asyn{CFGNode}{succ} into the collection attribute \Acoll{CFGNode}{succInv}, but also by 
-filtering out ``dead'' nodes from \Acoll{CFGNode}{succInv} with a boolean circular attribute, 
+attribute that captures the inverse of the successor attribute, i.e., \Asyn{CFGNode}{succ}. However,
+\Asyn{CFGNode}{succ} is also defined for \astnode{CFGNodes} that are not reachable from \astnode{Entry} by following
+\Asyn{CFGNode}{succ} (i.e., that are ``dead code''). The framework computes predecessor edges \Asyn{CFGNode}{pred}
+by not only inverting \Asyn{CFGNode}{succ} into the collection attribute \Acoll{CFGNode}{succInv}, but also by
+filtering out ``dead'' nodes from \Acoll{CFGNode}{succInv} with a boolean circular attribute,
 \AcircSyn{CFGNode}{reachable}.
 
-All \astnode{CFGNodes} have immediate access to the Entry and Exit nodes of the 
-CFG, through the inherited \Ainh{CFGNode}{entry} and \Ainh{CFGNode}{exit} attributes declared in \astnode{CFGNode} and 
+All \astnode{CFGNodes} have immediate access to the Entry and Exit nodes of the
+CFG, through the inherited \Ainh{CFGNode}{entry} and \Ainh{CFGNode}{exit} attributes declared in \astnode{CFGNode} and
 defined by the nearest \astnode{CFGRoot} ancestor.
 
 
@@ -256,14 +256,14 @@ body (surrounded by \{ and \}) to specify its behaviour, whereas we have previou
 single line without the body. This is because the attribute in this case is more
 complex, and requires a more detailed definition to capture its functionality accurately.
 One requirement, to ensure the correct evaluation of results, for defining attributes in \textsc{JastAdd} is that the code
-within the body must be observationally pure, which means that it 
+within the body must be observationally pure, which means that it
 should not produce any externally visible side-effects.
 
 \subsection{Performance and Precision}
 \label{sec:performanceandprecision}
-We evaluated the performance and precision of \textsc{IntraJ} on a set of 4 well-knwon 
+We evaluated the performance and precision of \textsc{IntraJ} on a set of 4 well-known
 open-source Java projects.
-The projects are: the \textsc{ANTLR} parser generator, the \textsc{PMD} static code analyzer,
+The projects are: the \textsc{ANTLR} parser generator, the \textsc{PMD} static code analyser,
 the \textsc{JFreeChart} charting library and the \textsc{FOP} PDF formatter.
 The projects were chosen to represent a variety of different types of projects, including
 libraries, frameworks and applications. We also chose projects representing
@@ -271,35 +271,34 @@ different sizes, ranging from 30K for \textsc{ANTLR}, to 100K for \textsc{FOP}.
 
 
 We compared \textsc{IntraJ} with the industrial staic analyser \textsc{SonarQube}.
-We also compared the precision and the performance of \textsc{IntraJ} with the 
+We also compared the precision and the performance of \textsc{IntraJ} with the
 older RAG-based framework \textsc{JastAddJ-Intraflow}.
-In this section, we will give an overview of the evaluation compared to \textsc{SonarQube}, 
+In this section, we will give an overview of the evaluation compared to \textsc{SonarQube},
 while the evaluation compared to \textsc{JastAddJ-Intraflow} can be found in Paper~\ref{paper:intraj}.
-We compared \textsc{IntraJ} with \textsc{SonarQube} on two different analyses: \code{DeadAssignment} 
+We compared \textsc{IntraJ} with \textsc{SonarQube} on two different analyses: \code{DeadAssignment}
 and \code{NullPointerException} analysis.
 
 
 
 \begin{figure}[H]
   \includegraphics[width=1\linewidth]{kappa/img/DAATotalTime.pdf}
-  \caption{\label{fig:DAATotalTime}Total time for the \code{DeadAssignment} Analysis. This includes time for parsing, 
-  checking the absence of errors, running the analysis.} 
+  \caption{\label{fig:DAATotalTime}Total time for the \code{DeadAssignment} Analysis. This includes time for parsing,
+  checking the absence of errors, running the analysis.}
 \end{figure}
 
-\begin{figure}[H]
-  \includegraphics[width=1\linewidth]{kappa/img/DDAAnalysisTime.pdf}
-  \caption{\label{fig:DAAAnalysisOnly}
-    Time for executing only the \code{DeadAssignment} Analysis.}
-\end{figure}
+%\begin{figure}[H]
+%  \includegraphics[width=1\linewidth]{kappa/img/DDAAnalysisTime.pdf}
+%  \caption{\label{fig:DAAAnalysisOnly}
+%    Time for executing only the \code{DeadAssignment} Analysis.}
+%\end{figure}
 
-The results of the evaluation for \code{DeadAssignment} analysis are shown in Figure~\ref{fig:DAATotalTime} and Figure~\ref{fig:DAAAnalysisOnly}.
-In Figure~\ref{fig:DAATotalTime}, we report two different measurements: the total 
+The results of the evaluation for \code{DeadAssignment} analysis are shown in Figure~\ref{fig:DAATotalTime}.
+In this figure, we report two different measurements: the total
 time to load each benchmark, without running the analysis, i.e., \textcolor{grey}{\emph{Baseline}}
 and the total time to load and run the analysis, i.e., \textcolor{NavyBlue}{\emph{Analysis Execution}}.
-As can be seen, \textsc{IntraJ} is faster than \textsc{SonarQube} in all cases, as the 
+As can be seen, \textsc{IntraJ} is faster than \textsc{SonarQube} in all cases, as the
 \textcolor{grey}{\emph{Baseline}} in \textsc{SonarQube} is much higher than the \textcolor{grey}{\emph{Baseline}} in \textsc{IntraJ}.
-In Figure~\ref{fig:DAAAnalysisOnly}, we compare only the time for executing the analysis.
-Here we see that \textsc{SonarQube} is faster than \textsc{IntraJ} for all benchmarks. 
+Here we see that \textsc{SonarQube} is faster than \textsc{IntraJ} for all benchmarks.
 We believe that this is due to the fact that \textsc{SonarQube} computes the CFGs
 in the \textcolor{grey}{\emph{Baseline}} phase.
 
@@ -309,14 +308,19 @@ in the \textcolor{grey}{\emph{Baseline}} phase.
   checking the absence of errors, running the analysis.}
 \end{figure}
 
-\begin{figure}[H]
-  \includegraphics[width=1\linewidth]{kappa/img/NPAAnalysisTime.pdf}
-  \caption{\label{fig:NPEOnly}Time for executing only the \code{NullPointerException}.}
-\end{figure}
+%\begin{figure}[H]
+%  \includegraphics[width=1\linewidth]{kappa/img/NPAAnalysisTime.pdf}
+%  \caption{\label{fig:NPEOnly}Time for executing only the \code{NullPointerException}.}
+%\end{figure}
 
 The results of the evaluation for \code{NullPointerException} analysis are shown in Figure~\ref{fig:NPETotal} and Figure~\ref{fig:NPEOnly}.
-As for the \code{DeadAssignment} analysis, we compare both the total time to process
-each benchmark, and the total time to load and run the analysis. 
+As for the \code{DeadAssignment} analysis, we compared both the total time to process
+each benchmark, and the total time to load and run the analysis.
+
+\begin{itemize}
+\item Discuss that IntraJ is faster.
+\item Discuss precision and where both the anlayses fails.
+\end{itemize}
 
 
 
@@ -510,7 +514,7 @@ to describe analyses in \textsc{Teal}.
 
         \end{minipage}
 \caption{\label{fig:tealGrammar} The concrete parsing grammar and parts of the abstract \textsc{JastAdd} grammar of the \textsc{Teal} language.
- Colour coding highlights declarations ({\bfseries\color{orange}orange}), expressions ({\bfseries\color{lightblue}blue}), 
+ Colour coding highlights declarations ({\bfseries\color{orange}orange}), expressions ({\bfseries\color{lightblue}blue}),
  attribute names ({\bfseries\color{CadetBlue}grey}), and statements ({\bfseries\color{magenta}magenta}).}
 \end{figure}
 
