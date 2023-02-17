@@ -3,7 +3,7 @@
 This section provides an overview of the research that underlies the main results
 of this thesis, with a focus on \emph{program analysis}. Specifically, we will delve into
 the concepts of dataflow analysis~\cite{aho2007compilers,Nielson2010Principles},
-control-flow analysis~\cite{allen1970control}, (Reference) attribute grammars~\cite{knuth1968semantics, DBLP:journals/informaticaSI/Hedin00},
+control-flow analysis~\cite{allen1970control}, (Reference) attribute grammars~\cite{knuth1968semantics,hedin2000rags},
 and their implementation through the \textsc{JastAdd} metacompiler.
 
 \usetikzlibrary{backgrounds}
@@ -595,7 +595,7 @@ the children of \astnode{A} can be distinguished by the index of the child, i.e.
 
 \subsection{Reference Attribute Grammars}%
 \label{sec:rag}
-Reference Attribute Grammars (RAGs) were introduced in~\cite{DBLP:journals/informaticaSI/Hedin00}
+Reference Attribute Grammars (RAGs) were introduced in~\cite{hedin2000rags}
 and are an extension of AGs to Object-Oriented languages. While attributes in AGs
 can only refer to terminal values, RAGs allow attributes to refer to non-terminals, i.e., nodes in the AST.
 RAGs are well-suited for the analysis of programming languages since they enable
