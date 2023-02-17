@@ -259,9 +259,64 @@ One requirement, to ensure the correct evaluation of results, for defining attri
 within the body must be observationally pure, which means that it 
 should not produce any externally visible side-effects.
 
+\subsection{Performance and Precision}
+\label{sec:performanceandprecision}
+We evaluated the performance and precision of \textsc{IntraJ} on a set of 4 well-knwon 
+open-source Java projects.
+The projects are: the \textsc{ANTLR} parser generator, the \textsc{PMD} static code analyzer,
+the \textsc{JFreeChart} charting library and the \textsc{FOP} PDF formatter.
+The projects were chosen to represent a variety of different types of projects, including
+libraries, frameworks and applications. We also chose projects representing
+different sizes, ranging from 30K for \textsc{ANTLR}, to 100K for \textsc{FOP}.
+
+
+We compared \textsc{IntraJ} with the industrial staic analyser \textsc{SonarQube}.
+We also compared the precision and the performance of \textsc{IntraJ} with the 
+older RAG-based framework \textsc{JastAddJ-Intraflow}.
+In this section, we will give an overview of the evaluation compared to \textsc{SonarQube}, 
+while the evaluation compared to \textsc{JastAddJ-Intraflow} can be found in Paper~\ref{paper:intraj}.
+We compared \textsc{IntraJ} with \textsc{SonarQube} on two different analyses: \code{DeadAssignment} 
+and \code{NullPointerException} analysis.
 
 
 
+\begin{figure}[H]
+  \includegraphics[width=1\linewidth]{kappa/img/DAATotalTime.pdf}
+  \caption{\label{fig:DAATotalTime}Total time for the \code{DeadAssignment} Analysis. This includes time for parsing, 
+  checking the absence of errors, running the analysis.} 
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=1\linewidth]{kappa/img/DDAAnalysisTime.pdf}
+  \caption{\label{fig:DAAAnalysisOnly}
+    Time for executing only the \code{DeadAssignment} Analysis.}
+\end{figure}
+
+The results of the evaluation for \code{DeadAssignment} analysis are shown in Figure~\ref{fig:DAATotalTime} and Figure~\ref{fig:DAAAnalysisOnly}.
+In Figure~\ref{fig:DAATotalTime}, we report two different measurements: the total 
+time to load each benchmark, without running the analysis, i.e., \textcolor{grey}{\emph{Baseline}}
+and the total time to load and run the analysis, i.e., \textcolor{NavyBlue}{\emph{Analysis Execution}}.
+As can be seen, \textsc{IntraJ} is faster than \textsc{SonarQube} in all cases, as the 
+\textcolor{grey}{\emph{Baseline}} in \textsc{SonarQube} is much higher than the \textcolor{grey}{\emph{Baseline}} in \textsc{IntraJ}.
+In Figure~\ref{fig:DAAAnalysisOnly}, we compare only the time for executing the analysis.
+Here we see that \textsc{SonarQube} is faster than \textsc{IntraJ} for all benchmarks. 
+We believe that this is due to the fact that \textsc{SonarQube} computes the CFGs
+in the \textcolor{grey}{\emph{Baseline}} phase.
+
+\begin{figure}[H]
+  \includegraphics[width=1\linewidth]{kappa/img/NPETotalTime.pdf}
+  \caption{\label{fig:NPETotal}Total time for the \code{NullPointerException}. This includes time for parsing,
+  checking the absence of errors, running the analysis.}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=1\linewidth]{kappa/img/NPAAnalysisTime.pdf}
+  \caption{\label{fig:NPEOnly}Time for executing only the \code{NullPointerException}.}
+\end{figure}
+
+The results of the evaluation for \code{NullPointerException} analysis are shown in Figure~\ref{fig:NPETotal} and Figure~\ref{fig:NPEOnly}.
+As for the \code{DeadAssignment} analysis, we compare both the total time to process
+each benchmark, and the total time to load and run the analysis. 
 
 
 
