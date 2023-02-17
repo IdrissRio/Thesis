@@ -262,20 +262,18 @@ should not produce any externally visible side-effects.
 \subsection{Performance and Precision}
 \label{sec:performanceandprecision}
 We evaluated the performance and precision of \textsc{IntraJ} on a set of 4 well-known
-open-source Java projects.
-The projects are: the \textsc{ANTLR} parser generator, the \textsc{PMD} static code analyser,
+open-source Java projects, including: the \textsc{ANTLR} parser generator, the \textsc{PMD} static code analyser,
 the \textsc{JFreeChart} charting library and the \textsc{FOP} PDF formatter.
-The projects were chosen to represent a variety of different types of projects, including
-libraries, frameworks and applications. We also chose projects representing
-different sizes, ranging from 30K for \textsc{ANTLR}, to 100K for \textsc{FOP}.
-
-
-We compared \textsc{IntraJ} with the industrial staic analyser \textsc{SonarQube}.
-We also compared the precision and the performance of \textsc{IntraJ} with the
-older RAG-based framework \textsc{JastAddJ-Intraflow}.
-In this section, we will give an overview of the evaluation compared to \textsc{SonarQube},
-while the evaluation compared to \textsc{JastAddJ-Intraflow} can be found in Paper~\ref{paper:intraj}.
-We compared \textsc{IntraJ} with \textsc{SonarQube} on two different analyses: \code{DeadAssignment}
+The selection of these projects was aimed at representing diverse types of projects, 
+including libraries, frameworks, and applications, as well as varying sizes, 
+ranging from 30K for \textsc{ANTLR} to 100K for \textsc{FOP}.
+To evaluate \textsc{IntraJ}, we compared it with \textsc{SonarQube}~\cite{sonarqube}, an industrial 
+static analyzer. Additionally, we compared the precision and performance of 
+\textsc{IntraJ} with the RAG-based framework \textsc{JastAddJ-Intraflow}~\cite{10.1016/j.scico.2012.02.002}. 
+In this section, we provide an overview of the evaluation compared to 
+\textsc{SonarQube}, while the evaluation compared to \textsc{JastAddJ-Intraflow} 
+can be found in Paper~\ref{paper:intraj}. Specifically, we compared \textsc{IntraJ} 
+with \textsc{SonarQube} on two distinct analyses: the \code{DeadAssignment} 
 and \code{NullPointerException} analysis.
 
 
@@ -308,14 +306,17 @@ in the \textcolor{grey}{\emph{Baseline}} phase.
   checking the absence of errors, running the analysis.}
 \end{figure}
 
-%\begin{figure}[H]
-%  \includegraphics[width=1\linewidth]{kappa/img/NPAAnalysisTime.pdf}
-%  \caption{\label{fig:NPEOnly}Time for executing only the \code{NullPointerException}.}
-%\end{figure}
 
 The results of the evaluation for \code{NullPointerException} analysis are shown in Figure~\ref{fig:NPETotal} and Figure~\ref{fig:NPEOnly}.
 As for the \code{DeadAssignment} analysis, we compared both the total time to process
 each benchmark, and the total time to load and run the analysis.
+As can be seen, \textsc{IntraJ} is faster than \textsc{SonarQube} in all cases. 
+Even by excluding the \textcolor{grey}{\emph{Baseline}}, \textsc{IntraJ} is still faster than \textsc{SonarQube} for all benchmarks.
+A strict comparison to SQ is therefore difficult,
+but we observe that INTRAJ is considerably faster including
+the baseline, at most 3.12 times slower for DAA only, and
+considerably faster for NPA only, though the latter is likely
+due to SQ's more expensive interprocedural analysis.
 
 \begin{itemize}
 \item Discuss that IntraJ is faster.
